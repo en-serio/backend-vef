@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+  apache:
+    image: php-mysql
+    build: 
+      context: .
+    ports:
+      - 3000:80
+    working_dir: /var/www/html
+    volumes:
+      - ./src:/var/www/html
+
+  mysql:
+    image: mysql:9.1.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=database 
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password 
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=mysql
+
+volumes:
+  mysql_data:
+
+  app:
