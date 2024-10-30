@@ -1,0 +1,39 @@
+# Node modules
+node_modules/
+
+# Laravel specific files
+/vendor
+/.env
+/.env.backup
+/.env.local
+/.env.development
+/.env.testing
+/.env.staging
+/.env.production
+/.env.example
+
+# Laravel log files
+/storage/*.key
+/storage/logs/*.log
+
+# Laravel cache files
+/bootstrap/cache/*.php
+
+# Laravel IDE helper files
+.phpstorm.meta.php
+_ide_helper.php
+_ide_helper_models.php
+
+# Laravel generated files
+/public/hot
+/public/storage
+/public/vendor
+
+# Laravel test result files
+/test-results
+
+# Laravel build files
+npm-debug.log
+yarn-error.log
+.pnp.*
+.pnp.js
