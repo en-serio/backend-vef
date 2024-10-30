@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@fullcalendar/core": "^6.1.15",
+    "@fullcalendar/daygrid": "^6.1.15",
+    "@fullcalendar/interaction": "^6.1.15",
+    "@fullcalendar/timegrid": "^6.1.15",
+    "bootstrap-icons": "^1.11.3",
+    "sweetalert2": "^11.14.3"
+  }
+}
