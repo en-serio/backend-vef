@@ -1,0 +1,37 @@
+services:
+  apache:
+    image: php-mysql
+    build: 
+      context: .
+    ports:
+      - 3001:80
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html  
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:9.1.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=ola1234
+      - MYSQL_DATABASE=IslaTransfersP2 
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=ola1234 
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=mysql
+    depends_on:
+        - mysql
+volumes:
+  mysql_data:
+
+  app:

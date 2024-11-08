@@ -1,40 +1,24 @@
-  <!doctype html>
-  <html lang="en">
+<!-- <form action="vehiculo.php" method="post">
+    Description: <input type="text" name="description">
+    Email: <input type="text" name="email">
+    Password <input type="password" name="password">
+    <input type="submit">
+</form> -->
 
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-    <link href="vendor/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+<?php
 
-    <script src="node_modules/sweetalert2/dist/sweetalert2.min.js"></script>
-    <link rel="stylesheet" href="node_modules/sweetalert2/dist/sweetalert2.min.css">
-  </head>
+// Autocarga de clases (con namespaces o PSR-4 en un proyecto más complejo)
+require_once './router/Router.php';
+//require_once './config/database.php';
+require_once './class/controller/HomeController.php';
 
-  <body>
-    <div class="container text-center">
-      <div class="row">
-        <div class="col">
-          <div class="card">
-            <div class="card-header">
-              MINION
-            </div>
-            <div class="card-body">
-              <h5 class="card-title">Special title treatment</h5>
-              <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-              <a href="https://google.es" class="btn btn-primary">Go somewhere</a>
-            </div>
-          </div>
-        </div>
-      </div>
 
-    </div>
+// Inicia el enrutador y define las rutas
+$router = new Router();
 
-    <script>
+// Define una ruta simple para la página de inicio
+$router->addRoute('/', 'HomeController@index');
 
-      Swal.fire("SweetAlert2 is working!");
 
-    </script>
-  </body>
-
-  </html>
+// Maneja la solicitud
+$router->handleRequest($_SERVER['REQUEST_URI']);
