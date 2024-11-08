@@ -21,7 +21,7 @@
                             <img src="/assets/media/Bootstrap-logo.png" class="rounded-circle" alt="Logo" style="width: 80px;">
                         </div>
                         <h4 class="text-center mb-4">Inicia sesión</h4>
-                        <form id="loginForm" action="./dashboard.php" method="post">
+                        <form id="loginForm" action="/login" method="post">
                             <div class="mb-3">
                                 <label for="userName" class="form-label">Nombre de usuario</label>
                                 <input type="text" class="form-control form-control-lg" id="userName" name="userName" placeholder="Introduce nombre de usuario" required>

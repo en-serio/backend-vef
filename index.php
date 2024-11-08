@@ -12,13 +12,15 @@ require_once './router/Router.php';
 //require_once './config/database.php';
 require_once './class/controller/HomeController.php';
 
+require_once './class/controller/SessionController.php';
+
 
 // Inicia el enrutador y define las rutas
 $router = new Router();
 
 // Define una ruta simple para la página de inicio
 $router->addRoute('/', 'HomeController@index');
-
+$router->addRoute('/login', 'SessionController@login');
 
 // Maneja la solicitud
 $router->handleRequest($_SERVER['REQUEST_URI']);
