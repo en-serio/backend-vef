@@ -233,6 +233,7 @@ function resetStepper() {
 
 function submitTransfer() {
     alert('Transfer reservado con éxito!');
+    
 }
 
 function updateDateTimeFields() {

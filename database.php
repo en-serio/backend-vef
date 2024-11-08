@@ -12,9 +12,9 @@ class Database
     {
         // Configuración por defecto de conexión a la base de datos
         $host = 'mysql';
-        $dbname = 'islaTransfer';
+        $dbname = 'IslaTransfersP2';
         $username = 'root';
-        $password = 'root';
+        $password = 'ola1234';
 
         $this->host = $host;
         $this->dbname = $dbname;

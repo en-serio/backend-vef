@@ -136,7 +136,7 @@
                     <h5 class="modal-title" id="addReservaModalLabel">Crear Transfer</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <form class="modal-body" action="registroNuevoTransfer" method="POST">
                     <!-- Stepper -->
                     <div class="container">
                         <!-- Íconos de los pasos en la cabecera del modal -->
@@ -204,21 +204,21 @@
                                     <div class="row mb-3">
                                         <div class="col-6">
                                             <label for="fechaIda" class="form-label">Día de llegada</label>
-                                            <input type="date" class="form-control" id="fechaIda">
+                                            <input type="date" class="form-control" id="fechaIda" name="fechaIda">
                                         </div>
                                         <div class="col-6">
                                             <label for="horaIda" class="form-label">Hora de llegada</label>
-                                            <input type="time" class="form-control" id="horaIda">
+                                            <input type="time" class="form-control" id="horaIda" name="horaIda">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-6">
                                             <label for="aeropuertoOrigen" class="form-label">Aeropuerto de origen</label>
-                                            <input type="text" class="form-control" id="aeropuertoOrigen" placeholder="Aeropuerto de origen">
+                                            <input type="text" class="form-control" id="aeropuertoOrigen" placeholder="Aeropuerto de origen" name="aeropuertoOrigen">
                                         </div>
                                         <div class="col-6">
                                             <label for="numeroVueloIda" class="form-label">Número de vuelo</label>
-                                            <input type="text" class="form-control" id="numeroVueloIda" placeholder="Número de vuelo">
+                                            <input type="text" class="form-control" id="numeroVueloIda" placeholder="Número de vuelo" name="numeroVueloIda">
                                         </div>
                                     </div>
                                 </div>
@@ -228,21 +228,21 @@
                                     <div class="row mb-3">
                                         <div class="col-6">
                                             <label for="fechaVuelta" class="form-label">Día del vuelo</label>
-                                            <input type="date" class="form-control" id="fechaVuelta">
+                                            <input type="date" class="form-control" id="fechaVuelta" name="fechaVuelta">
                                         </div>
                                         <div class="col-6">
                                             <label for="horaVueloVuelta" class="form-label">Hora del vuelo</label>
-                                            <input type="time" class="form-control" id="horaVueloVuelta">
+                                            <input type="time" class="form-control" id="horaVueloVuelta" name="horaVueloVuelta">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-6">
                                             <label for="horaRecogida" class="form-label">Hora de recogida</label>
-                                            <input type="time" class="form-control" id="horaRecogida">
+                                            <input type="time" class="form-control" id="horaRecogida" name="horaRecogida">
                                         </div>
                                         <div class="col-6">
                                             <label for="numeroVueloVuelta" class="form-label">Número de vuelo</label>
-                                            <input type="text" class="form-control" id="numeroVueloVuelta" placeholder="Número de vuelo">
+                                            <input type="text" class="form-control" id="numeroVueloVuelta" name="numeroVueloVuelta" placeholder="Número de vuelo">
                                         </div>
                                     </div>
                                 </div>
@@ -261,15 +261,15 @@
                                     <div class="row mb-3">
                                         <div class="col-6">
                                             <label for="hotelDestino" class="form-label">Hotel de destino/recogida</label>
-                                            <input type="text" class="form-control" id="hotelDestino" placeholder="Nombre del hotel">
+                                            <input type="text" class="form-control" id="hotelDestino" name="hotelDestino" placeholder="Nombre del hotel">
                                         </div>
                                         <div class="col-6">
                                             <label for="numeroViajeros" class="form-label">Número de viajeros</label>
-                                            <input type="number" class="form-control" id="numeroViajeros" placeholder="Número de personas">
+                                            <input type="number" class="form-control" id="numeroViajeros" name="numeroViajeros"  placeholder="Número de personas">
                                         </div>
                                         <div class="col-12 mt-2">
                                             <label for="direccionHotel" class="form-label">Dirección del hotel</label>
-                                            <input type="text" class="form-control" id="direccionHotel" placeholder="Nombre del hotel">
+                                            <input type="text" class="form-control" id="direccionHotel" name="direccionHotel" placeholder="Nombre del hotel">
                                         </div>
                                     </div>
                                 </div>
@@ -280,21 +280,21 @@
                                     <div class="row mb-3">
                                         <div class="col-6">
                                             <label for="nombreCliente" class="form-label">Nombre completo</label>
-                                            <input type="text" class="form-control" id="nombreCliente" placeholder="Nombre completo del cliente">
+                                            <input type="text" class="form-control" id="nombreCliente" name="nombreCliente" placeholder="Nombre completo del cliente">
                                         </div>
                                         <div class="col-6">
                                             <label for="emailCliente" class="form-label">Correo electrónico</label>
-                                            <input type="email" class="form-control" id="emailCliente" placeholder="Correo electrónico">
+                                            <input type="email" class="form-control" id="emailCliente" name="emailCliente" placeholder="Correo electrónico">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-6">
                                             <label for="telefonoCliente" class="form-label">Teléfono de contacto</label>
-                                            <input type="tel" class="form-control" id="telefonoCliente" placeholder="Número de teléfono">
+                                            <input type="tel" class="form-control" id="telefonoCliente" name="telefonoCliente" placeholder="Número de teléfono">
                                         </div>
                                         <div class="col-6">
                                             <label for="dniCliente" class="form-label">DNI/Pasaporte</label>
-                                            <input type="text" class="form-control" id="dniCliente" placeholder="DNI o pasaporte">
+                                            <input type="text" class="form-control" id="dniCliente" name="dniCliente" placeholder="DNI o pasaporte">
                                         </div>
                                     </div>
                                 </div>
@@ -319,9 +319,9 @@
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                         <button type="button" class="btn btn-dark" id="previousBtn" onclick="previousStep()" style="display: none;">Anterior</button>
                         <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextStep()">Siguiente</button>
-                        <button type="button" class="btn btn-success" id="submitBtn" onclick="submitTransfer()" style="display: none;">Reservar Transfer</button>
+                        <button type="submit" class="btn btn-success" id="submitBtn" style="display: none;">Reservar Transfer</button>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
