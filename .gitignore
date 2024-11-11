@@ -39,3 +39,5 @@ yarn-error.log
 .pnp.js
 
 wordpress/
+
+.env
