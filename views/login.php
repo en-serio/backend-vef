@@ -1,3 +1,11 @@
+<?php
+$error = isset($_GET['error']) ? $_GET['error'] : null;
+
+if ($error) {
+    echo '<div class="alert alert-danger" role="alert">Usuario o contraseña incorrectos</div>';
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +29,7 @@
                             <img src="/assets/media/Bootstrap-logo.png" class="rounded-circle" alt="Logo" style="width: 80px;">
                         </div>
                         <h4 class="text-center mb-4">Inicia sesión</h4>
-                        <form id="loginForm" action="./dashboard.php" method="post">
+                        <form id="loginForm" action="index.php?c=LoginController&a=iniciarSesion" method="POST">
                             <div class="mb-3">
                                 <label for="userName" class="form-label">Nombre de usuario</label>
                                 <input type="text" class="form-control form-control-lg" id="userName" name="userName" placeholder="Introduce nombre de usuario" required>
@@ -33,13 +41,13 @@
                             </div>
 
                             <div class="row">
-                              <div class="col-8">
-                                <button type="submit" href="/views/dashboard.php" class="btn btn-primary btn-lg loginBtn w-100">Login</button>
-                              </div>
-                            <div class="col-4">
-                                <button type="submit" href="" class="btn btn-secondary btn-lg registerBt nw-100">Registrarse</button>
+                                <div class="col-8">
+                                    <button type="submit" class="btn btn-primary btn-lg loginBtn w-100">Login</button>
+                                </div>
+                                <div class="col-4">
+                                    <button type="button" onclick="window.location.href='index.php?c=loginController&a=mostrarRegistro'" class="btn btn-secondary btn-lg registerBt nw-100">Registrarse</button>
+                                </div>
                             </div>
-                          </div>
                         </form>
                     </div>
                 </div>
