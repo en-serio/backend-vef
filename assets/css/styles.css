@@ -19,7 +19,7 @@
 }
 
 #sidebar.sidebar-collapsed {
-
+    margin-left: 0;
     overflow: hidden;
 }
 
@@ -40,5 +40,31 @@ p {
     --bs-btn-font-size: 1rem;
 }
    
+.hide {
+    display: none;
+}
 
+.main-content {
+
+    padding: 1rem;
+    overflow-y: auto; /* Permite que solo el contenido principal sea desplazable */
+    height: 100vh; /* Asegura que ocupe toda la altura de la ventana */
+    transition: padding-left 0.3s ease;
+}
+.main-content::-webkit-scrollbar {
+    display: none; /* Esto oculta la barra de desplazamiento */
+}
+
+.main-content.sidebar-collapsed {
+    padding-left: 0; /* Elimina padding cuando el sidebar se colapsa */
+}
+
+@media (max-width: 768px) {
+    .main-content {
+    margin-left: 60px; 
+    padding: 1rem;
+    overflow-y: auto; /* Permite que solo el contenido principal sea desplazable */
+    height: 100vh; /* Asegura que ocupe toda la altura de la ventana */
+    }
+}
 

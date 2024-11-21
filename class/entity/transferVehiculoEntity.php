@@ -51,11 +51,11 @@ class TransferVehiculoEntity
     $stmt->bindParam(':idCliente', $idCliente);
 
     if ($stmt->execute()) {
-        $this->idVehiculo = $this->conn->lastInsertId(); // Obtener el último ID insertado
-        return true;
+        $idVehiculo = $this->conn->lastInsertId(); // Obtener el último ID insertado
+        return $idVehiculo;
     }
 
-    return false;
+    return null;
     }
 
     public function selectTransferVehiculo()

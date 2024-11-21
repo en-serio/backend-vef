@@ -41,14 +41,14 @@ class TransferPreciosEntity
     }
 
     // CRUD
-    public function create()
+    public function insertPrecio($idHotel, $idVehiculo, $precioTotal)
     {
-    $sql = "INSERT INTO transfer_precios (idVehiculo, idHotel, Precio) VALUES (:idVehiculo, :idHotel, :Precio)";
+    $sql = "INSERT INTO transfer_precios (id_vehiculo, id_hotel, Precio) VALUES (:id_vehiculo, :id_hotel, :Precio)";
     $stmt = $this->conn->prepare($sql);
 
-    $stmt->bindValue(':idVehiculo', $this->idVehiculo, PDO::PARAM_INT);
-    $stmt->bindValue(':idHotel', $this->idHotel, PDO::PARAM_INT);
-    $stmt->bindValue(':Precio', $this->precio, PDO::PARAM_STR);
+    $stmt->bindValue(':id_vehiculo', $idVehiculo);
+    $stmt->bindValue(':id_hotel', $idHotel);
+    $stmt->bindValue(':Precio', $precioTotal);
 
     if ($stmt->execute()) {
         $this->idPrecios = $this->conn->lastInsertId();
@@ -57,7 +57,7 @@ class TransferPreciosEntity
     return false;
     }
 
-    public function read($idPrecios)
+    public function getPrecios($idPrecios)
     {
     $sql = "SELECT * FROM transfer_precios WHERE idPrecios = :idPrecios";
     $stmt = $this->conn->prepare($sql);
@@ -72,18 +72,46 @@ class TransferPreciosEntity
     return false;
     }
 
-    public function update()
+    public function getAllPreciosByUser($user)
     {
-    $sql = "UPDATE transfer_precios SET idVehiculo = :idVehiculo, idHotel = :idHotel, Precio = :Precio WHERE idPrecios = :idPrecios";
+    $sql = "
+        SELECT 
+            tp.id_hotel, 
+            tp.id_vehiculo, 
+            tp.precio, 
+            th.usuario, 
+            c.idCliente, 
+            c.email, 
+            c.nombre, 
+            c.apellido1, 
+            tr.id_tipo_reserva,
+            th.nombre_hotel AS nombre_hotel 
+        FROM 
+            transfer_precios tp
+        INNER JOIN 
+            tranfer_hotel th ON tp.id_hotel = th.id_hotel
+        INNER JOIN 
+            transfer_reservas tr ON tp.id_hotel = tr.id_hotel
+        INNER JOIN 
+            cliente c ON th.idCliente = c.idCliente
+        WHERE 
+            c.nombreUsuario = :user
+    ";
+
     $stmt = $this->conn->prepare($sql);
+    $stmt->bindParam(':user', $user, PDO::PARAM_STR);
 
-    $stmt->bindValue(':idVehiculo', $this->idVehiculo, PDO::PARAM_INT);
-    $stmt->bindValue(':idHotel', $this->idHotel, PDO::PARAM_INT);
-    $stmt->bindValue(':Precio', $this->precio, PDO::PARAM_STR);
-    $stmt->bindValue(':idPrecios', $this->idPrecios, PDO::PARAM_INT);
+    try {
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result; 
 
-    return $stmt->execute();
+    } catch (PDOException $e) {
+        throw new Exception("Error al obtener los precios: " . $e->getMessage());
     }
+    }
+
+
 
     public function delete()
     {

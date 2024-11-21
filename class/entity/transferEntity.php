@@ -271,11 +271,11 @@ class TransferEntity
 
 
     // DELETE
-    public function delete()
+    public function delete($idReserva)
     {
         $sql = "DELETE FROM transfer_reservas WHERE id_reserva = :idReserva";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':idReserva', $this->idReserva);
+        $stmt->bindParam(':idReserva', $idReserva);
 
         if ($stmt->execute()) {
             return true;

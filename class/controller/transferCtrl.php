@@ -70,12 +70,12 @@ class TransferCtrl extends controller
                         <th>Fecha vuelta</th>
                         <th>Hora ida</th>
                         <th>Hora vuelta</th>
-                        <th>Localizador reserva</th>
+                        <th>Localizador</th>
 
-                        <th>Acciones</th>
+                        
                     </tr>
                 </thead>
-                <tbody>';
+                <tbody>';                  
     
     
         foreach ($transfers as $index => $value) {
@@ -84,6 +84,18 @@ class TransferCtrl extends controller
             $fVueloEntrada = ($value['fecha_entrada']) ? DateTime::createFromFormat('Y-m-d', $value['fecha_entrada'])->format('d-m-Y') : null;
             $hora_entrada = ($value['hora_entrada']) ? htmlspecialchars($value['hora_entrada']) : null;
             $hora_salida = ($value['hora_vuelo_salida']) ? htmlspecialchars($value['hora_vuelo_salida']) : null;
+
+            switch ($_SESSION['rol']) {
+                case 1:
+                    $eliminarTransfer = '<button class="btn btn-sm btn-danger deleteTransferBtn" data-target="delete" data-id="'.$value['id_reserva'].'">Eliminar Transfer</button>';
+                    break;
+                case 2:
+                    $eliminarTransfer = '<button class="btn btn-sm btn-danger deleteTransferBtn" data-target="delete" data-id="'.$value['id_reserva'].'">Eliminar Transfer</button>';
+                    break;
+                case 3:
+                    $eliminarTransfer = '<button class="btn btn-sm btn-warning deleteTransferBtn" data-target="delete" data-id="'.$value['id_reserva'].'">Cancelar Transfer</button>';
+                    break;
+            }
 
             $out .= '<tr>
                         <td>' . ($index + 1) . '</td>
@@ -94,7 +106,8 @@ class TransferCtrl extends controller
                         <td>' . $hora_entrada . '</td>
                         <td>' . $hora_salida . '</td>
                         <td>' . htmlspecialchars($value['localizador']) . '</td>
-                        <td><button class="btn btn-sm btn-primary editTransferBtn" data-id="'.$value['id_reserva'].'">Editar</button></td>
+                        <td><button class="btn btn-sm btn-primary editTransferBtn" data-target="edit" data-id="'.$value['id_reserva'].'">Editar</button></td>
+                        <td>'.$eliminarTransfer.'</td>
                     </tr>';
         }
     
@@ -180,7 +193,6 @@ class TransferCtrl extends controller
                     <div class="p-1"><strong>Hora del vuelo:</strong> <input type="time" class="form-control horaVueloVuelta" value="'.$horaSalida.'"></div>
                 </div>
                 <div class="col-12 col-md-6">
-                    
                     <div class="p-1"><strong>Número vuelo vuelta:</strong> <input type="text" class="form-control numVueloVuelta" value="'.$transfer['numero_vuelo_vuelta'].'"></div>
                     <div class="p-1"><strong>Aeropuerto salida:</strong> <input type="text" class="form-control aeropuertoVuelta" value="'.$transfer['origen_vuelo_entrada'].'"></div>
                    </div>';
@@ -289,139 +301,221 @@ class TransferCtrl extends controller
 
         }
 
-            if($post['action']=="saveEditData")
-            {   
-                $result = new stdClass();
-                $result->error = false;
-                $result->message = null;
+        if($post['action']=="saveEditData")
+        {   
+            $result = new stdClass();
+            $result->error = false;
+            $result->message = null;
 
-                $data = json_decode($_POST['transfer'], true);
+            $data = json_decode($_POST['transfer'], true);
 
-                $idTransfer = $post['idTransfer'];
-                $fechaSQL = date('Y-m-d H:i:s');
+            $idTransfer = $post['idTransfer'];
+            $fechaSQL = date('Y-m-d H:i:s');
 
-                try
-                {
-                    switch ($data['tipoTrayecto']) {
-                        case 'ida':
-                            $idTipoReserva = 1; 
+            try
+            {
+                switch ($data['tipoTrayecto']) {
+                    case 'ida':
+                        $idTipoReserva = 1; 
 
-                            $fechaEntrada = $data['fechaEntrada'];
-                            $horaLlegada = $data['horaIda'];
-                            $numVueloIda = $data['numVueloEntr'];
-                            $aeropuertoIda = $data['aeropuertoIda'];
-                            $numViajeros = $data['numViajeros'];
-                            $fechaVuelta = null;
-                            $horaVueloVuelta = null;
-                            $horaRecogida = null;
-                            $numVueloVuelta = null;
-                            //$aeropuertoVuelta = $data['aeropuertoVuelta'];
+                        $fechaEntrada = $data['fechaEntrada'];
+                        $horaLlegada = $data['horaIda'];
+                        $numVueloIda = $data['numVueloEntr'];
+                        $aeropuertoIda = $data['aeropuertoIda'];
+                        $numViajeros = $data['numViajeros'];
+                        $fechaVuelta = null;
+                        $horaVueloVuelta = null;
+                        $horaRecogida = null;
+                        $numVueloVuelta = null;
+                        //$aeropuertoVuelta = $data['aeropuertoVuelta'];
 
-                            $numViajeros = $data['numViajeros'];
-                            
-                            $data = [
-                                'id_tipo_reserva' => $idTipoReserva,
-                
-                                'fecha_entrada' => $fechaEntrada,
-                                'hora_entrada' => $horaLlegada,
-                                'numero_vuelo_entrada' => $numVueloIda,
-                                'origen_vuelo_entrada' => $aeropuertoIda,
-                                'hora_vuelo_salida' => $horaVueloVuelta,
-                                'fecha_vuelo_salida' => $fechaVuelta,
-                                'num_viajeros' => $numViajeros,
-                                'numero_vuelo_vuelta' => $numVueloVuelta,
-                                'hora_recogida' => $horaRecogida,
-                                'fecha_modificacion' => $fechaSQL];
+                        $numViajeros = $data['numViajeros'];
+                        
+                        $data = [
+                            'id_tipo_reserva' => $idTipoReserva,
+            
+                            'fecha_entrada' => $fechaEntrada,
+                            'hora_entrada' => $horaLlegada,
+                            'numero_vuelo_entrada' => $numVueloIda,
+                            'origen_vuelo_entrada' => $aeropuertoIda,
+                            'hora_vuelo_salida' => $horaVueloVuelta,
+                            'fecha_vuelo_salida' => $fechaVuelta,
+                            'num_viajeros' => $numViajeros,
+                            'numero_vuelo_vuelta' => $numVueloVuelta,
+                            'hora_recogida' => $horaRecogida,
+                            'fecha_modificacion' => $fechaSQL];
 
-                            $transferEntity = new TransferEntity;
-                            $transferEntity->update($idTransfer, $data);
-
-                            break;
-                        case 'vuelta':
-                            $idTipoReserva = 2; 
-
-                            $fechaEntrada = null;
-                            $horaLlegada = null;
-                            $numVueloIda = null;
-                            $aeropuertoIda = null;
-                            $numViajeros = $data['numViajeros'];
-                            $fechaVuelta = $data['fechaVuelta'];
-                            $horaVueloVuelta = $data['horaVueloVuelta'];
-                            $horaRecogida = $data['horaRecogida'];
-                            $numVueloVuelta = $data['numVueloVuelta'];
-                            $aeropuertoVuelta = $data['aeropuertoVuelta'];
-
-                            $numViajeros = $data['numViajeros'];
-                            
-                            $data = [
-                                'id_tipo_reserva' => $idTipoReserva,
-                
-                                'fecha_entrada' => $fechaEntrada,
-                                'hora_entrada' => $horaLlegada,
-                                'numero_vuelo_entrada' => $numVueloIda,
-                                'origen_vuelo_entrada' => $aeropuertoVuelta,
-                                'hora_vuelo_salida' => $horaVueloVuelta,
-                                'fecha_vuelo_salida' => $fechaVuelta,
-                                'num_viajeros' => $numViajeros,
-                                'numero_vuelo_vuelta' => $numVueloVuelta,
-                                'hora_recogida' => $horaRecogida,
-                                'fecha_modificacion' => $fechaSQL];
-
-                            $transferEntity = new TransferEntity;
-                            $transferEntity->update($idTransfer, $data);
+                        $transferEntity = new TransferEntity;
+                        $transferEntity->update($idTransfer, $data);
 
                         break;
+                    case 'vuelta':
+                        $idTipoReserva = 2; 
 
-                        case 'ida_vuelta':
-                            $idTipoReserva = 3;
-                            
-                            $fechaEntrada = $data['fechaEntrada'];
-                            $horaLlegada = $data['horaIda'];
-                            $numVueloIda = $data['numVueloEntr'];
-                            $aeropuertoIda = $data['aeropuertoIda'];
-                            $numViajeros = $data['numViajeros'];
-                            $fechaVuelta = $data['fechaVuelta'];
-                            $horaVueloVuelta = $data['horaVueloVuelta'];
-                            $horaRecogida = $data['horaRecogida'];
-                            $numVueloVuelta = $data['numVueloVuelta'];
-                            $aeropuertoVuelta = $data['aeropuertoVuelta'];
+                        $fechaEntrada = null;
+                        $horaLlegada = null;
+                        $numVueloIda = null;
+                        $aeropuertoIda = null;
+                        $numViajeros = $data['numViajeros'];
+                        $fechaVuelta = $data['fechaVuelta'];
+                        $horaVueloVuelta = $data['horaVueloVuelta'];
+                        $horaRecogida = $data['horaRecogida'];
+                        $numVueloVuelta = $data['numVueloVuelta'];
+                        $aeropuertoVuelta = $data['aeropuertoVuelta'];
 
-                            $numViajeros = $data['numViajeros'];
-                            
-                            $data = [
-                                'id_tipo_reserva' => $idTipoReserva,
-                
-                                'fecha_entrada' => $fechaEntrada,
-                                'hora_entrada' => $horaLlegada,
-                                'numero_vuelo_entrada' => $numVueloIda,
-                                'origen_vuelo_entrada' => $aeropuertoIda,
-                                'hora_vuelo_salida' => $horaVueloVuelta,
-                                'fecha_vuelo_salida' => $fechaVuelta,
-                                'num_viajeros' => $numViajeros,
-                                'numero_vuelo_vuelta' => $numVueloVuelta,
-                                'hora_recogida' => $horaRecogida,
-                                'fecha_modificacion' => $fechaSQL];
+                        $numViajeros = $data['numViajeros'];
+                        
+                        $data = [
+                            'id_tipo_reserva' => $idTipoReserva,
+            
+                            'fecha_entrada' => $fechaEntrada,
+                            'hora_entrada' => $horaLlegada,
+                            'numero_vuelo_entrada' => $numVueloIda,
+                            'origen_vuelo_entrada' => $aeropuertoVuelta,
+                            'hora_vuelo_salida' => $horaVueloVuelta,
+                            'fecha_vuelo_salida' => $fechaVuelta,
+                            'num_viajeros' => $numViajeros,
+                            'numero_vuelo_vuelta' => $numVueloVuelta,
+                            'hora_recogida' => $horaRecogida,
+                            'fecha_modificacion' => $fechaSQL];
 
-                            $transferEntity = new TransferEntity;
-                            $transferEntity->update($idTransfer, $data);
+                        $transferEntity = new TransferEntity;
+                        $transferEntity->update($idTransfer, $data);
 
-                        break;
-                    }
+                    break;
 
+                    case 'ida_vuelta':
+                        $idTipoReserva = 3;
+                        
+                        $fechaEntrada = $data['fechaEntrada'];
+                        $horaLlegada = $data['horaIda'];
+                        $numVueloIda = $data['numVueloEntr'];
+                        $aeropuertoIda = $data['aeropuertoIda'];
+                        $numViajeros = $data['numViajeros'];
+                        $fechaVuelta = $data['fechaVuelta'];
+                        $horaVueloVuelta = $data['horaVueloVuelta'];
+                        $horaRecogida = $data['horaRecogida'];
+                        $numVueloVuelta = $data['numVueloVuelta'];
+                        $aeropuertoVuelta = $data['aeropuertoVuelta'];
 
-                    $result->message = ("Transfer modificado correctamente");
+                        $numViajeros = $data['numViajeros'];
+                        
+                        $data = [
+                            'id_tipo_reserva' => $idTipoReserva,
+            
+                            'fecha_entrada' => $fechaEntrada,
+                            'hora_entrada' => $horaLlegada,
+                            'numero_vuelo_entrada' => $numVueloIda,
+                            'origen_vuelo_entrada' => $aeropuertoIda,
+                            'hora_vuelo_salida' => $horaVueloVuelta,
+                            'fecha_vuelo_salida' => $fechaVuelta,
+                            'num_viajeros' => $numViajeros,
+                            'numero_vuelo_vuelta' => $numVueloVuelta,
+                            'hora_recogida' => $horaRecogida,
+                            'fecha_modificacion' => $fechaSQL];
 
+                        $transferEntity = new TransferEntity;
+                        $transferEntity->update($idTransfer, $data);
 
-                }catch(Exception $e)
-                {
-                    $result->error = true;
-                    $result->message = $e->getMessage();
+                    break;
                 }
 
-                echo json_encode($result);
-                exit();
+            $result->message = ("Transfer modificado correctamente");
+
+
+            }catch(Exception $e)
+            {
+                $result->error = true;
+                $result->message = $e->getMessage();
             }
 
+            echo json_encode($result);
+            exit();
+        }
+
+
+        if($post['action']=="deleteTransfer")
+        {
+
+            $result = new stdClass();
+            $result->error = false;
+            $result->message = null;
+            $result->out = null;
+
+            $idTransfer = $post['idTransfer'];
+
+            $diasRestantes = date('Y-m-d');
+            $horasRestantes = date('H:i:s');
+
+            $fechaHoraActual = strtotime("$diasRestantes $horasRestantes");
+            
+
+            try
+            {
+
+                switch($_SESSION['rol'])
+                {
+                    case 1:
+                        if(!$idTransfer or $idTransfer ==null)
+                            throw new Exception ("No ha sido posible encontrar la reserva asociada.");
+
+                        $transferEntity = new TransferEntity;
+                        $transferEntity->delete($idTransfer);
+
+                        $result->message =("Transfer eliminado correctamente. Se ha enviado un email al usuario.");
+
+                    break;
+
+                    case 2:
+                        if(!$idTransfer or $idTransfer ==null)
+                            throw new Exception ("No ha sido posible encontrar la reserva asociada.");    
+
+                        $transferEntity = new TransferEntity;
+                        $transferEntity->delete($idTransfer);
+
+                        $result->message =("Transfer eliminado correctamente. Se ha enviado un email al usuario.");
+                    break;
+
+                    case 3:
+                        if(!$idTransfer or $idTransfer ==null)
+                            throw new Exception ("No ha sido posible encontrar la reserva asociada.");
+
+                        //comprobamos que faltan más de 48h para la hora del transfer
+                        $transferEntity = new TransferEntity;
+                        $transfer = $transferEntity->getTransferEdit($idTransfer);
+
+                        $fechaHoraEntrada = strtotime($transfer['fecha_entrada'] . ' ' . $transfer['hora_entrada']);
+                        $fechaHoraSalida = strtotime($transfer['fecha_vuelo_salida'] . ' ' . $transfer['hora_recogida']);
+
+                        $horas48EnSegundos = 48 * 60 * 60;              
+
+                        if (
+                            ($transfer['id_tipo_reserva'] === 1 && $fechaHoraEntrada - $fechaHoraActual <= $horas48EnSegundos) ||
+                            ($transfer['id_tipo_reserva'] === 2 && $fechaHoraSalida - $fechaHoraActual <= $horas48EnSegundos) ||
+                            ($transfer['id_tipo_reserva'] === 3 && 
+                             (($fechaHoraEntrada - $fechaHoraActual <= $horas48EnSegundos) || 
+                              ($fechaHoraSalida - $fechaHoraActual <= $horas48EnSegundos)))
+                        ) {
+                            throw new Exception("No es posible cancelar este transfer. Está fuera de plazo.");
+                        }
+                        
+                        $transferEntity->delete($idTransfer);
+
+                        $result->message =("Has eliminado correctamente el transfer. Recibirás email de confirmación.");
+
+                    break;
+                }
+
+            }catch(Exception $e)
+            {
+                $result->error = true;
+                $result->message = $e->getMessage();
+            }
+
+            echo json_encode($result);
+            exit();
+                
+            }
 
             if($post['action']=="editTransfer")
             {
@@ -433,7 +527,6 @@ class TransferCtrl extends controller
                 $idTransfer = $post['idTransfer'];
                 try
                 {
-                  //  $idTransfer = 9;
 
                     if(!$idTransfer or $idTransfer ==null)
                         throw new Exception ("No ha sido posible encontrar la reserva asociada");
@@ -503,7 +596,8 @@ class TransferCtrl extends controller
                 $horaIdaFormat = $fechaSQL . ' ' . $horaIda;
                // $horaVueltaFormat = $fechaSQL . ' ' . $horaV;
 
-                
+               $precioIda = 100.00;
+               $precioVuelta = 100.00;
 
                 $localizador = $transferCtrl->generaLocalizadorReserva();
                 
@@ -525,6 +619,7 @@ class TransferCtrl extends controller
                         $idZona = 1;
                         $comision = 10;
                         $idHotel = $transferHotelEntity->insertHotel($idZona, $comision, $idCliente, $user, $direccionHotel, $hotel);
+                        
                         $idVehiculo = $transferCtrl->asignaVehiculo($idCliente);
 
                         if($tipoReserva=== 1)
@@ -533,6 +628,11 @@ class TransferCtrl extends controller
                             $horaRecogidaFormat="-";
                             $numeroVueloVuelta="-";
                             $horaVueloVueltaFormat="-";
+
+                            $transferPrecio = new TransferPreciosEntity;
+                            //Precio fijo para un transfer
+                            $precioTotal = $precioIda;
+                            $transferPrecio->insertPrecio($idHotel, $idVehiculo, $precioTotal);
 
                             $transfer = new TransferEntity;
                             $transfer->insertTransfer($idCliente, $emailCliente, $tipoReserva, $localizador, $fechaSQL, $fechaIda, $horaIdaFormat, $numeroVueloIda, $aeropuertoOrigen, $fechaVuelta, $horaVueloVueltaFormat, 
@@ -545,10 +645,21 @@ class TransferCtrl extends controller
                             $numeroVueloIda="-";
                             //$horaVueloVueltaFormat="-";
 
+                            $transferPrecio = new TransferPreciosEntity;
+                            //Precio fijo para un transfer
+                            $precioTotal = $precioVuelta;
+                            $transferPrecio->insertPrecio($idHotel, $idVehiculo, $precioTotal);
+
                             $transfer = new TransferEntity;
                             $transfer->insertTransfer($idCliente, $emailCliente, $tipoReserva, $localizador, $fechaSQL, $fechaIda, $horaIdaFormat, $numeroVueloIda, $aeropuertoOrigen, $fechaVuelta, $horaVueloVueltaFormat, 
                             $horaRecogidaFormat, $numeroViajeros, $idVehiculo, $numeroVueloVuelta, $idHotel,  $idZona);
+
                         }else{
+
+                            $transferPrecio = new TransferPreciosEntity;
+                            //Precio fijo para un transfer
+                            $precioTotal = $precioIda + $precioVuelta;
+                            $transferPrecio->insertPrecio($idHotel, $idVehiculo, $precioTotal);
 
                             $transfer = new TransferEntity;
                             $transfer->insertTransfer($idCliente, $emailCliente, $tipoReserva, $localizador, $fechaSQL, $fechaIda, $horaIdaFormat, $numeroVueloIda, $aeropuertoOrigen, $fechaVuelta, $horaVueloVueltaFormat, 
@@ -578,6 +689,16 @@ class TransferCtrl extends controller
                             $transfer->insertTransfer($idCliente, $emailCliente, $tipoReserva, $localizador, $fechaSQL, $fechaIda, $horaIdaFormat, $numeroVueloIda, $aeropuertoOrigen, $fechaVuelta, $horaVueloVueltaFormat, 
                             $horaRecogidaFormat, $numeroViajeros, $idVehiculo, $numeroVueloVuelta, $idHotel,  $idZona);
 
+                            $transferPrecio = new TransferPreciosEntity;
+                            //Precio fijo para un transfer
+                            $precioTotal = $precioIda;
+                            $transferPrecio->insertPrecio($idHotel, $idVehiculo, $precioTotal);
+
+                            $transfer = new TransferEntity;
+                            $transfer->insertTransfer($idCliente, $emailCliente, $tipoReserva, $localizador, $fechaSQL, $fechaIda, $horaIdaFormat, $numeroVueloIda, $aeropuertoOrigen, $fechaVuelta, $horaVueloVueltaFormat, 
+                            $horaRecogidaFormat, $numeroViajeros, $idVehiculo, $numeroVueloVuelta, $idHotel,  $idZona);
+
+
                         }else if ($tipoReserva=== 2){
 
                             $fechaIda=null;
@@ -588,7 +709,22 @@ class TransferCtrl extends controller
                             $transfer = new TransferEntity;
                             $transfer->insertTransfer($idCliente, $emailCliente, $tipoReserva, $localizador, $fechaSQL, $fechaIda, $horaIdaFormat, $numeroVueloIda, $aeropuertoOrigen, $fechaVuelta, $horaVueloVueltaFormat, 
                             $horaRecogidaFormat, $numeroViajeros, $idVehiculo, $numeroVueloVuelta, $idHotel,  $idZona);
+
+                            $transferPrecio = new TransferPreciosEntity;
+                            //Precio fijo para un transfer
+                            $precioTotal = $precioVuelta;
+                            $transferPrecio->insertPrecio($idHotel, $idVehiculo, $precioTotal);
+
+                            $transfer = new TransferEntity;
+                            $transfer->insertTransfer($idCliente, $emailCliente, $tipoReserva, $localizador, $fechaSQL, $fechaIda, $horaIdaFormat, $numeroVueloIda, $aeropuertoOrigen, $fechaVuelta, $horaVueloVueltaFormat, 
+                            $horaRecogidaFormat, $numeroViajeros, $idVehiculo, $numeroVueloVuelta, $idHotel,  $idZona);
+
                         }else{
+
+                            $transferPrecio = new TransferPreciosEntity;
+                            //Precio fijo para un transfer
+                            $precioTotal = $precioIda + $precioVuelta;
+                            $transferPrecio->insertPrecio($idHotel, $idVehiculo, $precioTotal);
 
                             $transfer = new TransferEntity;
                             $transfer->insertTransfer($idCliente, $emailCliente, $tipoReserva, $localizador, $fechaSQL, $fechaIda, $horaIdaFormat, $numeroVueloIda, $aeropuertoOrigen, $fechaVuelta, $horaVueloVueltaFormat, 
@@ -596,10 +732,10 @@ class TransferCtrl extends controller
 
                         }
 
-
                     }
                     $result->error = false;
                     $result->localizador = $localizador;
+                    $result->precio = $precioTotal;
                     $result->message = ("Se han enviado los detalles del transfer al email.");
 
                 }catch(Exception $e)

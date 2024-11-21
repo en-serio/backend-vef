@@ -93,3 +93,20 @@ main {
 
 .fw-semibold { font-weight: 600; }
 .lh-tight { line-height: 1.25; }
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #343a40;
+    color: #fff;
+    padding: 1rem;
+    transition: transform 0.3s ease;  /* Solo animar el transform */
+    z-index: 1000;
+}
+
+.sidebar.hidden {
+  transform: translateX(-100%); /* Mueve el sidebar fuera de la vista */
+}

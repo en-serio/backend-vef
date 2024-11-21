@@ -6,12 +6,17 @@ class Dashboard
     }
 }
 
-    function toggleSidebar() {
-        const sidebar = document.querySelector('.sidebar');
-        if (sidebar) {
-            sidebar.classList.toggle('hidden');
-        }
-    }
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const mainContent = document.querySelector('.main-content');
+
+    // Alternar la clase que mueve el sidebar fuera de la vista
+    sidebar.classList.toggle('hidden');
+
+    // Alternar el padding-left del main-content para moverlo
+    mainContent.classList.toggle('sidebar-collapsed');
+}
+
 
     let currentStep = 1;
 
@@ -94,6 +99,44 @@ class Dashboard
                 }
             });
 
+            const fechaEntradaInput = document.getElementById('fechaIda');
+            if (fechaEntradaInput) {
+                const errorMessage = fechaEntradaInput.parentNode.querySelector('.error-message');
+                if (errorMessage) errorMessage.remove(); 
+                
+                const fechaEntrada = new Date(fechaEntradaInput.value); 
+                const hoy = new Date(); 
+                
+                hoy.setHours(0, 0, 0, 0);
+                
+                if (fechaEntrada < hoy) {
+                    valid = false;
+                    fechaEntradaInput.classList.add('is-invalid');
+                    this.showError(fechaEntradaInput, "La fecha no puede ser anterior a hoy.");
+                    console.warn("La fecha no puede ser anterior a hoy.");
+                }
+            }
+
+            const fechaVueltaInput = document.getElementById('fechaVuelta');
+            if (fechaVueltaInput) {
+                const errorMessage = fechaVueltaInput.parentNode.querySelector('.error-message');
+                if (errorMessage) errorMessage.remove(); 
+                
+                const fechaSalida = new Date(fechaVueltaInput.value); 
+                const hoy = new Date(); 
+                
+                hoy.setHours(0, 0, 0, 0);
+                
+                if (fechaSalida < hoy) {
+                    valid = false;
+                    fechaVueltaInput.classList.add('is-invalid');
+                    this.showError(fechaVueltaInput, "La fecha no puede ser anterior a hoy.");
+                    console.warn("La fecha no puede ser anterior a hoy.");
+                }
+            }
+
+            validateTransferDates()
+
             const trayecto = document.querySelector('input[name="trayecto"]:checked')?.value;
             if (trayecto === 'idaVuelta' || trayecto === 'vuelta') {
                 const vueltaFields = [
@@ -135,7 +178,7 @@ class Dashboard
                     this.showError(input, field.message);
                 }                     
                 
-            });
+        });
         
             // Validación de correo electrónico
             const emailInput = document.getElementById('emailCliente');
@@ -165,7 +208,57 @@ class Dashboard
                     console.warn("Validación fallida: el teléfono no es válido.");
                 }
             }
+
         }
+
+
+        return valid;
+    }
+
+    function validateTransferDates() {
+        const horaVueloVueltaInput = document.getElementById('horaVueloVuelta');
+        const horaRecogidaInput = document.getElementById('horaRecogida');
+        let valid = true;
+    
+        // Eliminar mensajes de error previos
+        const errorVueloMessage = horaVueloVueltaInput.parentNode.querySelector('.error-message');
+        if (errorVueloMessage) errorVueloMessage.remove();
+        
+        const errorRecogidaMessage = horaRecogidaInput.parentNode.querySelector('.error-message');
+        if (errorRecogidaMessage) errorRecogidaMessage.remove();
+    
+        // Verificamos si ambos campos tienen valor
+        if (horaVueloVueltaInput.value && horaRecogidaInput.value) {
+            // Convertir las horas a objetos Date para comparación
+            const fechaActual = new Date();
+            const horaVuelo = new Date(fechaActual.toDateString() + ' ' + horaVueloVueltaInput.value);
+            const horaRecogida = new Date(fechaActual.toDateString() + ' ' + horaRecogidaInput.value);
+    
+
+            if (horaRecogida >= horaVuelo) {
+                valid = false;
+                horaRecogidaInput.classList.add('is-invalid');
+                this.showError(horaRecogidaInput, "La hora de recogida no puede ser igual a la del vuelo.");
+            }    
+            
+            const tresHorasEnMilisegundos = 3 * 60 * 60 * 1000; // 3 horas en milisegundos
+            if (horaRecogida - horaVuelo > tresHorasEnMilisegundos) {
+                valid = false;
+                horaRecogidaInput.classList.add('is-invalid');
+                this.showError(horaRecogidaInput, "La hora de recogida debe ser al menos 3 horas anterior a la del vuelo.");
+            }
+        } else {
+            valid = false;
+            if (!horaVueloVueltaInput.value) {
+                horaVueloVueltaInput.classList.add('is-invalid');
+                this.showError(horaVueloVueltaInput, "Selecciona la hora del vuelo.");
+            }
+            if (!horaRecogidaInput.value) {
+                horaRecogidaInput.classList.add('is-invalid');
+                this.showError(horaRecogidaInput, "Selecciona la hora de recogida.");
+            }
+        }
+    
         return valid;
     }
 
@@ -271,17 +364,14 @@ class Dashboard
                     Swal.fire({
                         icon: 'success',
                         title: '¡Éxito!',
-                        text: d.message +"Localizador de la reserva:"+ d.localizador,
+                        text: d.message +"Localizador de la reserva: "+ d.localizador +". "
+                        + "PRECIO: "+ d.precio,
                         didClose: () => {
 
                             $('#addReservaModal').modal('hide');
                             $('.modal-backdrop').remove();
                             resetStepper();
 
-                            /*const modalElement = document.getElementById('addReservaModal'); // ID de tu modal
-                            const modalInstance = bootstrap.Modal.getInstance(modalElement);
-                            // Elimina el overlay (en algunos casos puede que no se elimine automáticamente)
-                            document.querySelector('.swal2-container').classList.add('hidden'); // Oculta el contenedor de SweetAlert2*/
                         }
                     });
                     
@@ -424,19 +514,27 @@ class Dashboard
         $("#dynamicContent .editTransferBtn").off().click(function () {
 
             const idTransfer = $(this).attr('data-id');
-            gestionTransfer(idTransfer);
+            const type = $(this).attr('data-target');
+            gestionTransfer(idTransfer, type);
+
         });
+
+        $("#dynamicContent .deleteTransferBtn").off().click(function () {
+
+            const idTransfer = $(this).attr('data-id');
+            const type = $(this).attr('data-target');
+            deleteTransfer(idTransfer, type);
+        });
+        
 
     }
 
     function callbackSaveData()
     {
-        console.log($("#modalEditBody .saveEditBtn").length);
         $("#modalEditBody .saveEditBtn").off().click(function () {
 
             const idTransfer = $(this).attr('data-id');
             saveEditData(idTransfer);
-            console.log($("Botón pulsado" .idTransfer));
         });
         
     }
@@ -468,9 +566,6 @@ class Dashboard
 
         $.post("../class/controller/transferCtrl.php", {controller: "transferCtrl", action: "saveEditData",transfer:transfer, idTransfer:idTransfer}, function (data) {
             try {
-
-                console.log(data); 
-
                 var d= JSON.parse(data);
 
                 if (!d.error) {
@@ -509,8 +604,7 @@ class Dashboard
 
                 $.post("../class/controller/loginCtrl.php", {controller: "loginCtrl", action: "logout"}, function (data) {
                     try {
-    
-                        console.log(data);
+ 
                         var d= JSON.parse(data);
         
                         if (!d.error) {
@@ -571,17 +665,19 @@ class Dashboard
             }); 
     }
 
-    function gestionTransfer(idTransfer){            
+    function deleteTransfer(idTransfer, type){            
 
-        $.post("../class/controller/transferCtrl.php", {controller: "transferCtrl", action: "editTransfer", idTransfer:idTransfer}, function (data) {
+        $.post("../class/controller/transferCtrl.php", {controller: "transferCtrl", action: "deleteTransfer", idTransfer:idTransfer, type:type}, function (data) {
             try {
     
                 var d= JSON.parse(data);  
                 if (!d.error) {      
-                    
-                    $('#modalEditBody').html(d.out);
-                    $('#editTransferModal').modal('show');
-                    callbackSaveData();
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Éxito!',
+                        text: d.message,
+                    });
+                    $('[data-id="' + idTransfer + '"]').closest('tr').remove();
 
                 } else {
                     
@@ -589,10 +685,7 @@ class Dashboard
                     icon: 'error',
                     title: 'Error',
                     text: d.message, 
-
-                    
                 });
-                console.log(d);
                 }
             } catch (e) {
                 
@@ -603,7 +696,40 @@ class Dashboard
                     });
             }
         }); 
-}
+    }
+
+    function gestionTransfer(idTransfer, type){     
+
+
+        $.post("../class/controller/transferCtrl.php", {controller: "transferCtrl", action: "editTransfer", idTransfer:idTransfer, type:type}, function (data) {
+            try {
+    
+                var d= JSON.parse(data);  
+                if (!d.error) {      
+                    
+                    $('#modalEditBody').html(d.out);
+                    $('#editTransferModal').modal('show');
+                    callbackSaveData();
+                    
+
+                } else {
+                    
+                    Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: d.message,    
+                });
+                }
+            } catch (e) {
+                
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: e.message,
+                    });
+            }
+        }); 
+    }
     
 
     function initializeCalendar() {
@@ -645,71 +771,19 @@ class Dashboard
         }
     }
 
-
         // Añade un listener para el enlace de "Panel de vistas"
         document.addEventListener('DOMContentLoaded', function () {
             const vistaPanelLink = document.getElementById('vistaPanelLink');
             if (vistaPanelLink) {
                 vistaPanelLink.addEventListener('click', function (e) {
-                    e.preventDefault(); // Previene el recargo de página
-                    loadView('views.php'); // Carga views.php en #dynamicContent
+                    loadView('views.php'); 
                 });
             }
+            
         });
-
-
-       /* document.addEventListener('DOMContentLoaded', function () {
-            const gestionTransferPanelLink = document.getElementById('gestionTransferPanelLink');
-            if (gestionTransferPanelLink) {
-                gestionTransferPanelLink.addEventListener('click', function (e) {
-                    e.preventDefault(); // Previene el recargo de página
-                    loadView('gestionTransfers.php');
-                });
-            }
-        });*/
-
-
-        /*document.addEventListener('DOMContentLoaded', function () {
-            const vistaPanelLink = document.getElementById('vistaPanelLink');
-            const dynamicContent = document.getElementById('dynamicContent');
-
-            // Función para cargar contenido dinámico en dynamicContent
-            function loadView(viewUrl) {
-                fetch(viewUrl)
-                    .then(response => response.text())
-                    .then(html => {
-                        dynamicContent.innerHTML = html;
-                        initializeCalendar(); // Inicializar el calendario después de cargar la vista
-                    })
-                    .catch(error => console.error('Error al cargar el contenido:', error));
-            }
-
-            // Evento para cargar views.php al hacer clic en "Panel de vistas"
-            if (vistaPanelLink) {
-                vistaPanelLink.addEventListener('click', function (e) {
-                    e.preventDefault(); // Evita que se recargue la página
-                    loadView('views.php'); // Ruta relativa al archivo views.php
-                });
-            }
-        });*/
-
 
         $(document).ready(function () {
             $(".gestionTransferBtn").click(function () {
-                //e.preventDefault();
                 loadTransfers();
             })
-
-
-           
-
-            /*$(document).on('click', '.editTransferBtn', function(e) {  
-                e.preventDefault(); 
-                gestionTransfer();
-            })*/
-
-           /* $(document).on("click", ".submitBtn", function (e) {
-                e.preventDefault();
-                submitTransfer();
-            });*/
         });
