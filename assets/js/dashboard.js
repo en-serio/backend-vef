@@ -1,3 +1,4 @@
+
 class Dashboard 
 {
     constructor()
@@ -158,7 +159,6 @@ function toggleSidebar() {
             const requiredFields = [
                 { id: 'hotelDestino', message: "Campo obligatorio." },
                 { id: 'numeroViajeros', message: "Campo obligatorio." },
-                { id: 'direccionHotel', message: "Campo obligatorio." },
                 { id: 'nombreCliente', message: "Campo obligatorio." },
                 { id: 'apellido1', message: "Campo obligatorio." },
                 { id: 'apellido2', message: "Campo obligatorio." },
@@ -330,6 +330,7 @@ function toggleSidebar() {
 
 
     function submitTransfer() {        
+
         var transferData = {
             trayecto: $('#summaryTrayecto').text(),
             fechaIda: $('#summaryFechaIda').text(),
@@ -441,7 +442,7 @@ function toggleSidebar() {
         } else if (trayecto == 'idaVuelta') {
 
             vueltaSection.style.display = 'block'; 
-        }direccionHotel
+        }
 
         const fieldsToFill = [
             { id: 'fechaIda', summaryId: 'summaryFechaIda' },
@@ -494,6 +495,7 @@ function toggleSidebar() {
                 return response.text();
             })
             .then(html => {
+                
                 document.getElementById('dynamicContent').innerHTML = html;
                 initializeCalendar();
             })
@@ -730,12 +732,34 @@ function toggleSidebar() {
             }
         }); 
     }
+            
+    async function fetchActiveTransfers() {
+        try {
+            const response = await fetch('http://localhost/backend-vef/class/controller/otroTransfer.php', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
     
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+            } else {
+                console.error('Error en la solicitud:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Hubo un problema con la solicitud:', error);
+        }
+    }
 
-    function initializeCalendar() {
-        var calendarEl = document.getElementById('calendar');
+    async function initializeCalendar() {
+        
+        let calendarEl = document.getElementById('calendar');
+        let transfers = await fetchActiveTransfers();
+        console.log(transfers);
         if (calendarEl) {
-            var calendar = new FullCalendar.Calendar(calendarEl, {
+            let calendar = new FullCalendar.Calendar(calendarEl, {
                 locale: 'es',
                 initialView: 'timeGridWeek', 
                 height: '100%', 
@@ -744,8 +768,8 @@ function toggleSidebar() {
                 selectable: true,
                 headerToolbar: {
                     left: 'prev,next today',
-                    center: 'title', // Título del mes o semana
-                    right: 'dayGridMonth,timeGridWeek'
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,listWeek'
                 },
                 buttonText: {
                     today: 'Hoy',
@@ -754,24 +778,12 @@ function toggleSidebar() {
                     day: 'Día',
                     list: 'Agenda'
                 },
-                events: [
-                    {
-                        title: 'Transfer 1',
-                        start: '2024-12-15T08:00:00',
-                        end: '2024-11-15T10:00:00'
-                    },
-                    {
-                        title: 'Transfer 2',
-                        start: '2024-10-20T12:00:00',
-                        end: '2024-10-20T14:00:00'
-                    }
-                ]
+                events: transfers,
             });
             calendar.render();
         }
     }
 
-        // Añade un listener para el enlace de "Panel de vistas"
         document.addEventListener('DOMContentLoaded', function () {
             const vistaPanelLink = document.getElementById('vistaPanelLink');
             if (vistaPanelLink) {

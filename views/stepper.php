@@ -131,15 +131,43 @@
                                     <div class="row mb-3">
                                         <div class="col-6">
                                             <label for="hotelDestino" class="form-label">Hotel de destino/recogida</label>
-                                            <input type="text" class="form-control" id="hotelDestino" placeholder="Nombre del hotel">
+                                            <select class="form-select" id="hotelDestino">
+                                            <?php
+                                                function getHoteles() {
+                                                    $url = 'http://localhost/backend-vef/class/controller/otroTransfer.php?action=getHoteles';
+                                                
+                                                    $ch = curl_init();
+                                                
+                                                    curl_setopt($ch, CURLOPT_URL, $url);
+                                                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                                                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+                                                
+                                                    $response = curl_exec($ch);
+                                                
+                                                    if (curl_errno($ch)) {
+                                                        echo "Error al obtener las zonas: " . curl_error($ch);
+                                                        curl_close($ch);
+                                                        return;
+                                                    }
+                                                
+                                                    curl_close($ch);
+                                                
+                                                    $hoteles = json_decode($response, true);
+                                                
+                                                    return $hoteles;
+                                                
+                                                }
+                                                
+                                                $hoteles = getHoteles();
+                                                foreach ($hoteles as $hotel) {
+                                                    echo '<option value="'. htmlspecialchars($hotel['id_hotel']) .'">'. htmlspecialchars($hotel['nombre_hotel']) .'</option>';
+                                                }
+                                            ?>
+                                            </select>
                                         </div>
                                         <div class="col-6">
                                             <label for="numeroViajeros" class="form-label">Número de viajeros</label>
                                             <input type="number" class="form-control" id="numeroViajeros" placeholder="Número de personas">
-                                        </div>
-                                        <div class="col-12 mt-2">
-                                            <label for="direccionHotel" class="form-label">Dirección del hotel</label>
-                                            <input type="text" class="form-control" id="direccionHotel" placeholder="Nombre del hotel">
                                         </div>
                                     </div>
                                 </div>

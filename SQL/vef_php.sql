@@ -17,6 +17,18 @@
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
+
+-- ----------------------------
+-- Table structure for transfer_zona
+-- ----------------------------
+DROP TABLE IF EXISTS `transfer_zona`;
+CREATE TABLE `transfer_zona`  (
+  `id_zona` int(11) NOT NULL AUTO_INCREMENT,
+  `descripcion` varchar(11) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  PRIMARY KEY (`id_zona`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
+
+
 -- ----------------------------
 -- Table structure for cliente
 -- ----------------------------
@@ -51,7 +63,7 @@ CREATE TABLE `tranfer_hotel`  (
   `id_zona` int(11) NULL DEFAULT NULL,
   `Comision` int(11) NULL DEFAULT NULL,
   `usuario` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
-  `idCliente` int(100) NOT NULL,
+  `idCliente` int(11) NOT NULL,
   `nombre_hotel` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `direccion_hotel` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT 'nom',
   PRIMARY KEY (`id_hotel`) USING BTREE,
@@ -60,6 +72,19 @@ CREATE TABLE `tranfer_hotel`  (
   CONSTRAINT `FK_cliente` FOREIGN KEY (`idCliente`) REFERENCES `cliente` (`idCliente`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `tranfer_hotel_ibfk_1` FOREIGN KEY (`id_zona`) REFERENCES `transfer_zona` (`id_zona`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 63 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for transfer_vehiculo
+-- ----------------------------
+DROP TABLE IF EXISTS `transfer_vehiculo`;
+CREATE TABLE `transfer_vehiculo`  (
+  `id_vehiculo` int(11) NOT NULL AUTO_INCREMENT,
+  `descripcion` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `idCliente` int(100) NOT NULL,
+  PRIMARY KEY (`id_vehiculo`) USING BTREE,
+  INDEX `FK_idCliente_Vehiculo`(`idCliente` ASC) USING BTREE,
+  CONSTRAINT `FK_idCliente_Vehiculo` FOREIGN KEY (`idCliente`) REFERENCES `cliente` (`idCliente`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 51 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for transfer_precios
@@ -76,6 +101,17 @@ CREATE TABLE `transfer_precios`  (
   CONSTRAINT `transfer_precios_ibfk_1` FOREIGN KEY (`id_hotel`) REFERENCES `tranfer_hotel` (`id_hotel`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `transfer_precios_ibfk_2` FOREIGN KEY (`id_vehiculo`) REFERENCES `transfer_vehiculo` (`id_vehiculo`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for transfer_tipo_reserva
+-- ----------------------------
+DROP TABLE IF EXISTS `transfer_tipo_reserva`;
+CREATE TABLE `transfer_tipo_reserva`  (
+  `id_tipo_reserva` int(11) NOT NULL AUTO_INCREMENT,
+  `Descripción` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  PRIMARY KEY (`id_tipo_reserva`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
+
 
 -- ----------------------------
 -- Table structure for transfer_reservas
@@ -112,29 +148,6 @@ CREATE TABLE `transfer_reservas`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Table structure for transfer_tipo_reserva
--- ----------------------------
-DROP TABLE IF EXISTS `transfer_tipo_reserva`;
-CREATE TABLE `transfer_tipo_reserva`  (
-  `id_tipo_reserva` int(11) NOT NULL AUTO_INCREMENT,
-  `Descripción` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  PRIMARY KEY (`id_tipo_reserva`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Table structure for transfer_vehiculo
--- ----------------------------
-DROP TABLE IF EXISTS `transfer_vehiculo`;
-CREATE TABLE `transfer_vehiculo`  (
-  `id_vehiculo` int(11) NOT NULL AUTO_INCREMENT,
-  `descripcion` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  `idCliente` int(100) NOT NULL,
-  PRIMARY KEY (`id_vehiculo`) USING BTREE,
-  INDEX `FK_idCliente_Vehiculo`(`idCliente` ASC) USING BTREE,
-  CONSTRAINT `FK_idCliente_Vehiculo` FOREIGN KEY (`idCliente`) REFERENCES `cliente` (`idCliente`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 51 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
 -- Table structure for transfer_viajeros
 -- ----------------------------
 DROP TABLE IF EXISTS `transfer_viajeros`;
@@ -152,14 +165,6 @@ CREATE TABLE `transfer_viajeros`  (
   PRIMARY KEY (`id_viajero`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
 
--- ----------------------------
--- Table structure for transfer_zona
--- ----------------------------
-DROP TABLE IF EXISTS `transfer_zona`;
-CREATE TABLE `transfer_zona`  (
-  `id_zona` int(11) NOT NULL AUTO_INCREMENT,
-  `descripcion` varchar(11) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  PRIMARY KEY (`id_zona`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
+
 
 SET FOREIGN_KEY_CHECKS = 1;

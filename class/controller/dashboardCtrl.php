@@ -103,9 +103,8 @@ class dashboardCtrl extends controller
         return $out;
     }
 
-
     public static  function procesaPost()
-    { 
+    {
             $db = new Database();
             $db->getConnection();
             $post = self::cleanPost();

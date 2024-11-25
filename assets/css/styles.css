@@ -68,3 +68,6 @@ p {
     }
 }
 
+.hidden{
+    display: none;
+}

@@ -38,6 +38,11 @@
                         <i class="bi bi-cash pe-2"></i> <span class="ms-1 d-none d-sm-inline">Gestión precios</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link text-light" id="appConfig" onclick="loadView(\'appConfig.php\')">
+                        <i class="bi bi-tools pe-2"></i> <span class="ms-1 d-none d-sm-inline">Configuración</span>
+                    </a>
+                </li>
             </ul>';
             break;
             case 2: 
@@ -124,6 +129,11 @@
                         <i class="bi bi-cash"></i>
                     </a>
                 </li>
+                <li>
+                    <a href="#" class="nav-link py-3 border-bottom text-light" id="appConfig" data-bs-toggle="tooltip" title="Configuración" data-bs-placement="right"  onclick="loadView(\'appConfig.php\')">
+                        <i class="bi bi-tools"></i>
+                    </a>
+                </li>
             </ul>';
             break;
 
@@ -157,6 +167,11 @@
                         <li>
                             <a href="#" class="nav-link py-3 border-bottom text-light" id="preciosLink" data-bs-toggle="tooltip" data-bs-placement="right" title="Gestión de precios" onclick="loadView(\'conductor.php\')">
                                 <i class="bi bi-cash"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link py-3 border-bottom text-light" id="appConfig" data-bs-toggle="tooltip" data-bs-placement="right" title="Configuración" onclick="loadView(\'appConfig.php\')">
+                                <i class="bi bi-tools"></i>
                             </a>
                         </li>
                     </ul>';

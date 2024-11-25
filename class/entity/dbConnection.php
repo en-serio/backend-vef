@@ -3,10 +3,10 @@
 class Database
 {
 
-    private $host = 'localhost';
-    private $db_name = 'vef_php';
-    private $username = 'root';
-    private $password = 'AideaMariaDB..';
+    private $host = "localhost";
+    private $db_name = "backend_php";
+    private $username = "root";
+    private $password = "pruebaPdo1234";
     private $conn;
 
     public function getConnection()

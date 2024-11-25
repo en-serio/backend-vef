@@ -191,6 +191,8 @@ $rol = ($_SESSION['rol']);
     <script src="../assets/js/sidebars.js"></script>
     <script src="../assets/js/perfil.js"></script>
     <script src="../assets/js/precios.js"></script>
+    <script src="../assets/js/appConfig.js"></script>
+    <script src="../assets/js/hotel.js"></script>
     
 </body>
 </html>

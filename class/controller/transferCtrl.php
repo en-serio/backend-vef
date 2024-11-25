@@ -242,6 +242,40 @@ class TransferCtrl extends controller
         $db->getConnection();
         $post = self::cleanPost();
 
+        if($post['action']== "allTransfer")
+        {
+            $result = new stdClass();
+            $result->error = false;
+            $result->message = null;
+            $transferCtrl = new TransferCtrl;
+
+            try
+            {
+                switch($_SESSION['rol']) {
+                    case 1://rol administrador
+                        $user =   $_SESSION['user'];
+                        $transferEntity = new TransferEntity;
+                        $transfers = $transferEntity->getAllTransfersActivos();
+                        if (!$transfers || empty($transfers)) {
+                            $result->error = true;
+                            $result->message = "No se encontraron transferencias activas.";
+                            $result->data = [];
+                        } else {
+                            $result->data = $transfers;
+                        } 
+                    break;
+                    default:
+                        break;
+                }
+            }catch(Exception $e)
+            {
+                $result->error = true;
+                $result->message = $e->getMessage();
+
+            }
+            echo json_encode($result);
+            exit();
+        }
 
         if($post['action']== "loadTransfer")
         {
@@ -553,6 +587,7 @@ class TransferCtrl extends controller
 
             if($post["action"]=="createTransfer")
             {
+
                 $result = new stdClass();
                 $result->error = false;
                 $result->message = null;
@@ -594,13 +629,36 @@ class TransferCtrl extends controller
                 $horaRecogidaFormat = $fechaSQL . ' ' . $horaRecogida;
                 $horaVueloVueltaFormat = $fechaSQL . ' ' . $horaVueloVuelta;
                 $horaIdaFormat = $fechaSQL . ' ' . $horaIda;
-               // $horaVueltaFormat = $fechaSQL . ' ' . $horaV;
+                // $horaVueltaFormat = $fechaSQL . ' ' . $horaV;
 
-               $precioIda = 100.00;
-               $precioVuelta = 100.00;
+                $precioIda = 100.00;
+                $precioVuelta = 100.00;
 
                 $localizador = $transferCtrl->generaLocalizadorReserva();
-                
+                $url = 'http://localhost/backend-vef/class/controller/otroTransfer.php?action=getZonaXHotel&id_hotel='.$hotel;
+                    
+                $ch = curl_init();
+            
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+            
+                $response = curl_exec($ch);
+            
+                if (curl_errno($ch)) {
+                    echo "Error al obtener las zonas: " . curl_error($ch);
+                    curl_close($ch);
+                    return;
+                }
+                curl_close($ch);
+            
+                $salidaZona = json_decode($response, true);
+                if (isset($salidaZona['data']['id'])) {
+                    $idZona = $salidaZona['data']['id'];
+                    
+                } else {
+                    die('Error: id_zona no encontrado en la respuesta.');
+                }
                 try
                 {
                     $cliente = new clienteEntity();
@@ -615,13 +673,13 @@ class TransferCtrl extends controller
                         $idCliente = $cliente->insertUser($user, $nombreCliente, $apellido1, $apellido2, $rol, $emailCliente, $telefonoCliente, $fechaSQL, $pass, $dniCliente);
                        
                         //falta hacer coger el idHotel o crearlo si no existe, luego el id destino el id vehículo también
-                        $transferHotelEntity = new TransferHotelEntity;
-                        $idZona = 1;
-                        $comision = 10;
-                        $idHotel = $transferHotelEntity->insertHotel($idZona, $comision, $idCliente, $user, $direccionHotel, $hotel);
+                        //$transferHotelEntity = new TransferHotelEntity;
+                        //$idZona = 1;
+                        //$comision = 10;
+                        //$idHotel = $transferHotelEntity->insertHotel($idZona, $comision, $idCliente, $user, $direccionHotel, $hotel);
                         
                         $idVehiculo = $transferCtrl->asignaVehiculo($idCliente);
-
+                            
                         if($tipoReserva=== 1)
                         {
                             $fechaVuelta="-";
@@ -632,11 +690,11 @@ class TransferCtrl extends controller
                             $transferPrecio = new TransferPreciosEntity;
                             //Precio fijo para un transfer
                             $precioTotal = $precioIda;
-                            $transferPrecio->insertPrecio($idHotel, $idVehiculo, $precioTotal);
+                            $transferPrecio->insertPrecio($hotel, $idVehiculo, $precioTotal);
 
                             $transfer = new TransferEntity;
                             $transfer->insertTransfer($idCliente, $emailCliente, $tipoReserva, $localizador, $fechaSQL, $fechaIda, $horaIdaFormat, $numeroVueloIda, $aeropuertoOrigen, $fechaVuelta, $horaVueloVueltaFormat, 
-                            $horaRecogidaFormat, $numeroViajeros, $idVehiculo, $numeroVueloVuelta, $idHotel,  $idZona);
+                            $horaRecogidaFormat, $numeroViajeros, $idVehiculo, $numeroVueloVuelta, $hotel, $idZona);
 
                         }else if ($tipoReserva=== 2){
 
@@ -648,22 +706,22 @@ class TransferCtrl extends controller
                             $transferPrecio = new TransferPreciosEntity;
                             //Precio fijo para un transfer
                             $precioTotal = $precioVuelta;
-                            $transferPrecio->insertPrecio($idHotel, $idVehiculo, $precioTotal);
+                            $transferPrecio->insertPrecio($hotel, $idVehiculo, $precioTotal);
 
                             $transfer = new TransferEntity;
                             $transfer->insertTransfer($idCliente, $emailCliente, $tipoReserva, $localizador, $fechaSQL, $fechaIda, $horaIdaFormat, $numeroVueloIda, $aeropuertoOrigen, $fechaVuelta, $horaVueloVueltaFormat, 
-                            $horaRecogidaFormat, $numeroViajeros, $idVehiculo, $numeroVueloVuelta, $idHotel,  $idZona);
+                            $horaRecogidaFormat, $numeroViajeros, $idVehiculo, $numeroVueloVuelta, $hotel,  $idZona);
 
                         }else{
 
                             $transferPrecio = new TransferPreciosEntity;
                             //Precio fijo para un transfer
                             $precioTotal = $precioIda + $precioVuelta;
-                            $transferPrecio->insertPrecio($idHotel, $idVehiculo, $precioTotal);
+                            $transferPrecio->insertPrecio($hotel, $idVehiculo, $precioTotal);
 
                             $transfer = new TransferEntity;
                             $transfer->insertTransfer($idCliente, $emailCliente, $tipoReserva, $localizador, $fechaSQL, $fechaIda, $horaIdaFormat, $numeroVueloIda, $aeropuertoOrigen, $fechaVuelta, $horaVueloVueltaFormat, 
-                            $horaRecogidaFormat, $numeroViajeros, $idVehiculo, $numeroVueloVuelta, $idHotel,  $idZona);
+                            $horaRecogidaFormat, $numeroViajeros, $idVehiculo, $numeroVueloVuelta, $hotel,  $idZona);
 
                         }
 
@@ -672,10 +730,7 @@ class TransferCtrl extends controller
                         $idCliente = $row['idCliente'];
 
                         $transferHotelEntity = new TransferHotelEntity;
-                        $idZona = 1;
-                        $comision = 10;
                         $user = $cliente->getNombreUsuario();
-                        $idHotel = $transferHotelEntity->insertHotel($idZona, $comision, $idCliente, $user, $hotel, $direccionHotel);
                         $idVehiculo = $transferCtrl->asignaVehiculo($idCliente);
 
                         if($tipoReserva=== 1)
@@ -687,16 +742,15 @@ class TransferCtrl extends controller
 
                             $transfer = new TransferEntity;
                             $transfer->insertTransfer($idCliente, $emailCliente, $tipoReserva, $localizador, $fechaSQL, $fechaIda, $horaIdaFormat, $numeroVueloIda, $aeropuertoOrigen, $fechaVuelta, $horaVueloVueltaFormat, 
-                            $horaRecogidaFormat, $numeroViajeros, $idVehiculo, $numeroVueloVuelta, $idHotel,  $idZona);
-
+                            $horaRecogidaFormat, $numeroViajeros, $idVehiculo, $numeroVueloVuelta, $hotel,  $idZona);
                             $transferPrecio = new TransferPreciosEntity;
                             //Precio fijo para un transfer
                             $precioTotal = $precioIda;
-                            $transferPrecio->insertPrecio($idHotel, $idVehiculo, $precioTotal);
+                            $transferPrecio->insertPrecio($hotel, $idVehiculo, $precioTotal);
 
                             $transfer = new TransferEntity;
                             $transfer->insertTransfer($idCliente, $emailCliente, $tipoReserva, $localizador, $fechaSQL, $fechaIda, $horaIdaFormat, $numeroVueloIda, $aeropuertoOrigen, $fechaVuelta, $horaVueloVueltaFormat, 
-                            $horaRecogidaFormat, $numeroViajeros, $idVehiculo, $numeroVueloVuelta, $idHotel,  $idZona);
+                            $horaRecogidaFormat, $numeroViajeros, $idVehiculo, $numeroVueloVuelta, $hotel,  $idZona);
 
 
                         }else if ($tipoReserva=== 2){
@@ -708,27 +762,27 @@ class TransferCtrl extends controller
 
                             $transfer = new TransferEntity;
                             $transfer->insertTransfer($idCliente, $emailCliente, $tipoReserva, $localizador, $fechaSQL, $fechaIda, $horaIdaFormat, $numeroVueloIda, $aeropuertoOrigen, $fechaVuelta, $horaVueloVueltaFormat, 
-                            $horaRecogidaFormat, $numeroViajeros, $idVehiculo, $numeroVueloVuelta, $idHotel,  $idZona);
+                            $horaRecogidaFormat, $numeroViajeros, $idVehiculo, $numeroVueloVuelta, $hotel,  $idZona);
 
                             $transferPrecio = new TransferPreciosEntity;
                             //Precio fijo para un transfer
                             $precioTotal = $precioVuelta;
-                            $transferPrecio->insertPrecio($idHotel, $idVehiculo, $precioTotal);
+                            $transferPrecio->insertPrecio($hotel, $idVehiculo, $precioTotal);
 
                             $transfer = new TransferEntity;
                             $transfer->insertTransfer($idCliente, $emailCliente, $tipoReserva, $localizador, $fechaSQL, $fechaIda, $horaIdaFormat, $numeroVueloIda, $aeropuertoOrigen, $fechaVuelta, $horaVueloVueltaFormat, 
-                            $horaRecogidaFormat, $numeroViajeros, $idVehiculo, $numeroVueloVuelta, $idHotel,  $idZona);
+                            $horaRecogidaFormat, $numeroViajeros, $idVehiculo, $numeroVueloVuelta, $hotel,  $idZona);
 
                         }else{
 
                             $transferPrecio = new TransferPreciosEntity;
                             //Precio fijo para un transfer
                             $precioTotal = $precioIda + $precioVuelta;
-                            $transferPrecio->insertPrecio($idHotel, $idVehiculo, $precioTotal);
+                            $transferPrecio->insertPrecio($hotel, $idVehiculo, $precioTotal);
 
                             $transfer = new TransferEntity;
                             $transfer->insertTransfer($idCliente, $emailCliente, $tipoReserva, $localizador, $fechaSQL, $fechaIda, $horaIdaFormat, $numeroVueloIda, $aeropuertoOrigen, $fechaVuelta, $horaVueloVueltaFormat, 
-                            $horaRecogidaFormat, $numeroViajeros, $idVehiculo, $numeroVueloVuelta, $idHotel,  $idZona);
+                            $horaRecogidaFormat, $numeroViajeros, $idVehiculo, $numeroVueloVuelta, $hotel,  $idZona);
 
                         }
 
