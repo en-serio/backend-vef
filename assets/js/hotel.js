@@ -15,7 +15,7 @@ function addHotel(id, descripcion, comi, user, nombre, direc) {
 
     const hotelInfo = [
         { text: id, width: '4rem' },
-        { text: nombre, width: '8rem', paddingLeft: '1rem' },
+        { text: nombre, width: '10rem', paddingLeft: '1rem' },
         { text: descripcion, width: '6rem', paddingLeft: '1rem' },
         { text: comi, width: '6rem', paddingLeft: '1rem' },
         { text: user, width: '10rem', paddingLeft: '1rem' },

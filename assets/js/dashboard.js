@@ -487,6 +487,7 @@ function toggleSidebar() {
     }
 
     function loadView(viewUrl) {
+        console.log(viewUrl);
         fetch(viewUrl)
             .then(response => {
                 if (!response.ok) {
@@ -495,7 +496,6 @@ function toggleSidebar() {
                 return response.text();
             })
             .then(html => {
-                
                 document.getElementById('dynamicContent').innerHTML = html;
                 initializeCalendar();
             })
@@ -735,7 +735,7 @@ function toggleSidebar() {
             
     async function fetchActiveTransfers() {
         try {
-            const response = await fetch('http://localhost/backend-vef/class/controller/otroTransfer.php', {
+            const response = await fetch('http://localhost/backend-vef/class/controller/otroTransfer.php?action=getTransfers', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -744,7 +744,23 @@ function toggleSidebar() {
     
             if (response.ok) {
                 const data = await response.json();
-                console.log(data);
+                if(data.error) {
+                    console.error(data.message);
+                    return [];
+                }
+                console.log(data)
+                return data.map(transfer => {
+                    const startDateTime = new Date(`${transfer.fecha_entrada}T${transfer.hora_entrada}`);
+                    const endDateTime = new Date(startDateTime);
+                    endDateTime.setHours(startDateTime.getHours() + 1);
+                    return {
+                        title: `Reserva #${transfer.localizador}`,
+                        start: startDateTime.toISOString(),
+                        end: endDateTime.toISOString(),
+                        description: `Cliente: ${transfer.email_cliente}, Num. viajeros: ${transfer.num_viajeros}`,
+                        location: `Hotel ID: ${transfer.id_hotel}, Destino: ${transfer.id_destino}`,
+                    };
+                });
             } else {
                 console.error('Error en la solicitud:', response.statusText);
             }

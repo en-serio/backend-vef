@@ -43,7 +43,7 @@ if (!isset($_SESSION['user'])) {
                 </a>
     </div>
     </nav>
-    <main class="vh-100 mt-5">
+    <main class="vh-100 mt-5" style="box-sizing: border-box;">
 
 <?php require_once '../views/sidebar.php';?>
     <!-- Container principal para Sidebar y Main Content -->

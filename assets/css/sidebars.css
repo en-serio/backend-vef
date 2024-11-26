@@ -20,6 +20,7 @@ main {
   max-height: auto;
   overflow-x: auto;
   overflow-y: auto;
+  box-sizing: border-box;
 }
 
 

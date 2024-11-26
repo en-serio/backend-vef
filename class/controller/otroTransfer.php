@@ -396,24 +396,11 @@ class otroTransfer {
     }
 
     public function getActiveTransfers() {
+        header('Content-Type: application/json');
         $transfers = $this->getAllTransfersActivos();
-
-        if (!empty($transfers)) {
-            return json_encode([
-                'error' => false,
-                'message' => 'Transferencias activas encontradas.',
-                'data' => $transfers
-            ]);
-        } else {
-            return json_encode([
-                'error' => true,
-                'message' => 'No se encontraron transferencias activas.',
-                'data' => []
-            ]);
-        }
     }
 
-    public function getAllTransfersActivos(): array {
+    public function getAllTransfersActivos() {
         $sql = "SELECT * FROM transfer_reservas WHERE fecha_entrada >= CURDATE() OR fecha_vuelo_salida >= CURDATE() ORDER BY email_cliente;";
 
         $result = $this->conn->query($sql);
@@ -425,7 +412,12 @@ class otroTransfer {
                 $transfers[] = $row;
             }
 
-            return $transfers;
+            echo json_encode($transfers);
+        }else{
+            echo json_encode([
+                'error' => true,
+                'message' => 'No hay transfers activos.'
+            ]);
         }
 
         return [];
@@ -439,7 +431,7 @@ class otroTransfer {
                         echo json_encode($this->getZonas()); 
                         break;
                     case 'getTransfers':
-                        echo json_encode($this->getActiveTransfers());
+                        $this->getActiveTransfers();
                         break;
                     case 'getTipos':
                         echo json_encode($this->getTipos());

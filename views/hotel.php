@@ -32,7 +32,7 @@ function mostrarHoteles(){
             echo '<div style="display: flex; flex: 1; justify-content: flex-start;" id="hotel-'. htmlspecialchars($hotel['id_hotel']) .'">';
             echo '<span style="width: 4rem; text-align: left;">' . htmlspecialchars($hotel['id_hotel']) . '</span>';
             echo '<span>|</span>';
-            echo '<span style="width: 8rem; text-align: left; padding-left: 1rem;">' . htmlspecialchars($hotel['nombre_hotel']) . '</span>';
+            echo '<span style="width: 10rem; text-align: left; padding-left: 1rem;">' . htmlspecialchars($hotel['nombre_hotel']) . '</span>';
             echo '<span>|</span>';
             echo '<span style="width: 6rem; text-align: left; padding-left: 1rem;">' . htmlspecialchars($hotel['id_zona']) . '</span>';
             echo '<span>|</span>';
@@ -95,7 +95,7 @@ function getZonas(){
                     <div style="display: flex; flex: 1; justify-content: flex-start;">
                         <span style="width: 4rem; text-align: left;">ID Hotel</span>
                         <span>|</span>
-                        <span style="width: 8rem; text-align: left; padding-left: 1rem;">Nombre hotel</span>
+                        <span style="width: 10rem; text-align: left; padding-left: 1rem;">Nombre hotel</span>
                         <span>|</span>
                         <span style="width: 6rem; text-align: left; padding-left: 1rem;">Zona</span>
                         <span>|</span>

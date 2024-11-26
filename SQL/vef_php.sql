@@ -68,8 +68,6 @@ CREATE TABLE `tranfer_hotel`  (
   `direccion_hotel` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT 'nom',
   PRIMARY KEY (`id_hotel`) USING BTREE,
   INDEX `FK_HOTEL_ZONA`(`id_zona` ASC) USING BTREE,
-  INDEX `FK_cliente`(`idCliente` ASC) USING BTREE,
-  CONSTRAINT `FK_cliente` FOREIGN KEY (`idCliente`) REFERENCES `cliente` (`idCliente`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `tranfer_hotel_ibfk_1` FOREIGN KEY (`id_zona`) REFERENCES `transfer_zona` (`id_zona`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 63 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
 
