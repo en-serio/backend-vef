@@ -123,7 +123,6 @@ function agregarZona(zona)
         <td>${zona.id_zona}</td>
         <td>${zona.descripcion}</td>
         <td>
-            <button class="btn btn-sm btn-primary" data-id="${zona.id_zona}" onclick="abrirModalUpdate()">Editar</button>
             <button class="btn btn-sm btn-danger borrarZonaBtn" data-id="${zona.id_zona}" onclick="borrarZona(${zona.id_zona})">Borrar</button>
         </td>
     </tr>
