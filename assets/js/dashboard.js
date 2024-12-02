@@ -518,14 +518,18 @@ class Dashboard
                 var d= JSON.parse(data);
 
                 if (!d.error) {
-                    
+
+                    loadTransfers();
+
                     Swal.fire({
                         icon: 'success',
                         title: '¡Éxito!',
                         text: d.message,
                     }).then(() => {
+                        
                         $('#editTransferModal').modal('hide');
                         $('.modal-backdrop').remove();
+                        
                     });
 
                 } else {
@@ -547,6 +551,7 @@ class Dashboard
             }
         }); 
     }
+
 
     function logout(){
 
@@ -667,6 +672,7 @@ class Dashboard
                     
                     $('#modalEditBody').html(d.out);
                     $('#editTransferModal').modal('show');
+                    actualizarVisibilidadTrayecto();
                     callbackSaveData();
                     
 
@@ -697,13 +703,12 @@ class Dashboard
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    controller: 'transferCtrl', // Controlador
-                    action: 'loadTransfer',    // Acción
+                    controller: 'transferCtrl',
+                    action: 'loadTransfer',    
                 }),
             });
 
-            const text = response.text(); // Leer el cuerpo como texto para inspección
-            console.log('Respuesta del servidor:', text);
+            const text = response.text();
     
             if (response.ok) {
                 const result = await response.json();
@@ -713,7 +718,6 @@ class Dashboard
                     return [];
                 }
     
-                console.log(result.data);
                 return result.data.map(transfer => {
                     const startDateTime = new Date(`${transfer.fecha_entrada}T${transfer.hora_entrada}`);
                     const endDateTime = new Date(startDateTime);
@@ -767,59 +771,71 @@ class Dashboard
     }
 
     async function initializeCalendar() 
+{
+    var calendarEl = document.getElementById('calendar');
+    if (calendarEl) 
     {
-        var calendarEl = document.getElementById('calendar');
-        if (calendarEl) 
-        {
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                locale: 'es',
-                initialView: 'dayGridMonth', 
-                height: '100%', 
-                contentHeight: 'auto', 
-                editable: false,
-                selectable: true,
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek'
-                },
-                buttonText: {
-                    today: 'Hoy',
-                    month: 'Mes',
-                    week: 'Semana',
-                    day: 'Día',
-                    list: 'Agenda'
-                },
-                events: [],
-                eventClick: function(info) {
-                    var event = info.event;
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            locale: 'es',
+            initialView: 'dayGridMonth', 
+            height: '100%', 
+            contentHeight: 'auto', 
+            editable: false,
+            selectable: true,
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek'
+            },
+            buttonText: {
+                today: 'Hoy',
+                month: 'Mes',
+                week: 'Semana',
+                day: 'Día',
+                list: 'Agenda'
+            },
+            events: [],
+            eventClick: function(info) {
+                var event = info.event;
                 showEventDetails(event);
-                }
-            });
-            
+            }
+        });
 
-            try {
-                const transfers = await loadTransfersCalendar(); 
-                transfers.forEach(transfer => {
-                    // Combina la fecha de entrada y la hora de entrada para formar la fecha completa
-                    const startDateTime = new Date(`${transfer.fecha_entrada}T${transfer.hora_entrada}`);
-                    
-                    // Establecemos el final del evento 1 hora después
-                    const endDateTime = new Date(startDateTime);
-                    endDateTime.setHours(startDateTime.getHours() + 1);  
-            
-                    // Agregamos el evento al calendario
+        try {
+            const transfers = await loadTransfersCalendar(); 
+            transfers.forEach(transfer => {
+
+                let startDateTime = null;
+                let endDateTime = null;
+
+                // Si tiene fecha y hora de entrada (trayecto de ida o ida y vuelta)
+                if (transfer.fecha_entrada && transfer.hora_entrada) {
+                    startDateTime = new Date(`${transfer.fecha_entrada}T${transfer.hora_entrada}`);
+                    endDateTime = new Date(startDateTime);
+                    endDateTime.setHours(startDateTime.getHours() + 1); // Duración de 1 hora
+                } 
+                // Si tiene fecha y hora de recogida (trayecto de vuelta o ida y vuelta)
+                else if (transfer.fecha_vuelo_salida && transfer.hora_recogida) {
+                    startDateTime = new Date(`${transfer.fecha_vuelo_salida}T${transfer.hora_recogida}`);
+                    endDateTime = new Date(startDateTime);
+                    endDateTime.setHours(startDateTime.getHours() + 1); // Duración de 1 hora
+                } else {
+                    console.warn(`Evento omitido por falta de información de fecha/hora válida: ${transfer.localizador}`);
+                    return; // Omitir eventos sin información suficiente
+                }
+
+                if (!isNaN(startDateTime.getTime()) && !isNaN(endDateTime.getTime())) {
                     calendar.addEvent({
                         title: `${transfer.localizador}`,
                         start: startDateTime.toISOString(),
                         end: endDateTime.toISOString(),
                         description: `Cliente: ${transfer.email_cliente}, Num. viajeros: ${transfer.num_viajeros}`,
-                        location: transfer.descripcion_hotel || 'Ubicación no disponible', // Mostrar la descripción del hotel o un mensaje por defecto
+                        location: transfer.descripcion_hotel || 'Ubicación no disponible',
                         extendedProps: {
                             email_cliente: transfer.email_cliente,
                             num_viajeros: transfer.num_viajeros,
                             id_hotel: transfer.id_hotel,
-                            id_destino: transfer.id_destino, // Dejarlo como está para poder acceder a él en el modal
+                            id_destino: transfer.id_destino,
                             fecha_entrada: transfer.fecha_entrada,
                             hora_entrada: transfer.hora_entrada,
                             hora_recogida: transfer.hora_recogida,
@@ -833,14 +849,17 @@ class Dashboard
                             nombre_hotel: transfer.nombre_hotel
                         }
                     });
-                });
-                console.log(transfers);
-                calendar.render();
-            } catch (error) {
-                console.error('Hubo un problema al cargar los transfers:', error);
-            }
+                } else {
+                    console.warn(`Evento con datos inválidos omitido: ${transfer.localizador}`);
+                }
+            });
+            calendar.render();
+        } catch (error) {
+            console.error('Hubo un problema al cargar los transfers:', error);
         }
     }
+}
+
 
     function showEventDetails(event) {
         let reservaInfo = '';
@@ -848,27 +867,29 @@ class Dashboard
         // Mostrar solo la información relevante dependiendo del tipo de reserva
         if (event.extendedProps.id_tipo_reserva === 'Ida') {
             reservaInfo = `
-                <p><strong>Fecha Entrada:</strong> ${event.extendedProps.fecha_entrada}</p>
+                <p><strong>Fecha entrada:</strong> ${event.extendedProps.fecha_entrada}</p>
                 <p><strong>Llegada:</strong> ${event.extendedProps.hora_entrada}</p>
-                <p><strong>Número de Vuelo Entrada:</strong> ${event.extendedProps.numero_vuelo_entrada}</p>
-                <p><strong>Origen Vuelo Entrada:</strong> ${event.extendedProps.origen_vuelo_entrada}</p>
+                <p><strong>Número de vuelo entrada:</strong> ${event.extendedProps.numero_vuelo_entrada}</p>
+                <p><strong>Origen vuelo entrada:</strong> ${event.extendedProps.origen_vuelo_entrada}</p>
             `;
         } else if (event.extendedProps.id_tipo_reserva === 'Vuelta') {
             reservaInfo = `
-                <p><strong>Fecha Vuelta:</strong> ${event.extendedProps.fecha_vuelo_salida}</p>
-                <p><strong>Hora Vuelta:</strong> ${event.extendedProps.hora_vuelo_salida}</p>
+                <p><strong>Fecha vuelta:</strong> ${event.extendedProps.fecha_vuelo_salida}</p>
+                <p><strong>Hora recogida:</strong> ${event.extendedProps.hora_recogida}</p>
+                <p><strong>Hora vuelo:</strong> ${event.extendedProps.hora_vuelo_salida}</p>
                 <p><strong>Vuelo vuelta:</strong> ${event.extendedProps.numero_vuelo_vuelta}</p>
             `;
         } else if (event.extendedProps.id_tipo_reserva === 'Ida y Vuelta') {
             reservaInfo = `
-                <p><strong>Fecha Entrada:</strong> ${event.extendedProps.fecha_entrada}</p>
+                <p><strong>Fecha entrada:</strong> ${event.extendedProps.fecha_entrada}</p>
                 <p><strong>Llegada:</strong> ${event.extendedProps.hora_entrada}</p>
                 <p><strong>Recogida:</strong> ${event.extendedProps.hora_recogida || 'No disponible'}</p>
-                <p><strong>Vuelo Entrada:</strong> ${event.extendedProps.numero_vuelo_entrada}</p>
-                <p><strong>Origen Vuelo Entrada:</strong> ${event.extendedProps.origen_vuelo_entrada}</p>
-                <p><strong>Fecha Vuelta:</strong> ${event.extendedProps.fecha_vuelo_salida}</p>
-                <p><strong>Hora Vuelta:</strong> ${event.extendedProps.hora_vuelo_salida}</p>
-                <p><strong>Número de Vuelo Vuelta:</strong> ${event.extendedProps.numero_vuelo_vuelta}</p>
+                <p><strong>Vuelo entrada:</strong> ${event.extendedProps.numero_vuelo_entrada}</p>
+                <p><strong>Origen vuelo entrada:</strong> ${event.extendedProps.origen_vuelo_entrada}</p>
+                <p><strong>Fecha vuelta:</strong> ${event.extendedProps.fecha_vuelo_salida}</p>
+                <p><strong>Hora recogida:</strong> ${event.extendedProps.hora_recogida}</p>
+                <p><strong>Hora vuelo:</strong> ${event.extendedProps.hora_vuelo_salida}</p>
+                <p><strong>Número de vuelo vuelta:</strong> ${event.extendedProps.numero_vuelo_vuelta}</p>
             `;
         }
     
@@ -934,4 +955,38 @@ class Dashboard
         })
     });
 
+    function actualizarVisibilidadTrayecto() {
+        const tipoTrayectoSelect = document.querySelector('.tipoTrayecto');
+    
+        if (tipoTrayectoSelect) {
 
+            function updateTrayectoVisibility() {
+                const tipoTrayecto = tipoTrayectoSelect.value;
+    
+
+                const datosIda = document.getElementById('datosIda');
+                const datosVuelta = document.getElementById('datosVuelta');
+    
+                if (datosIda && datosVuelta) {
+                    if (tipoTrayecto === 'ida') {
+                        datosIda.style.display = 'block';
+                        datosVuelta.style.display = 'none';
+                    } else if (tipoTrayecto === 'vuelta') {
+                        datosIda.style.display = 'none';
+                        datosVuelta.style.display = 'block';
+                    } else if (tipoTrayecto === 'ida_vuelta') {
+                        datosIda.style.display = 'block';
+                        datosVuelta.style.display = 'block';
+                    }
+                } else {
+                    console.error("Los elementos 'datosIda' y/o 'datosVuelta' no existen en el DOM.");
+                }
+            }
+
+            updateTrayectoVisibility();
+    
+            tipoTrayectoSelect.addEventListener('change', updateTrayectoVisibility);
+        } else {
+            console.error("El select 'tipoTrayecto' no se encuentra en el DOM.");
+        }
+    }

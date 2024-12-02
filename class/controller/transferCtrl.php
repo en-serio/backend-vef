@@ -130,7 +130,7 @@ class TransferCtrl extends controller
                 <div class ="row">
                     <div class="col-6">
                         <label for="nombreCliente" class="form-label">Nombre </label>
-                        <input type="text" class="form-control" id="nombreCliente" value="Nombre">
+                        <input type="text" class="form-control" id="nombreCliente" placeholder="Nombre">
                     </div>
                     <div class="col-6">
                         <label for="nombreCliente" class="form-label">Apellido 1</label>
@@ -248,7 +248,7 @@ class TransferCtrl extends controller
             $fechaEntrada = ($transfer['fecha_entrada']) ? date('Y-m-d', strtotime($transfer['fecha_entrada'])) : null;
             $horaRecogida = ($transfer['hora_recogida']) ? date('h:i:s', strtotime( $transfer['hora_recogida'])) : null;
             $fechaSalida = ($transfer['fecha_vuelo_salida']) ? date('Y-m-d', strtotime($transfer['fecha_vuelo_salida'])) : null;
-            $horaSalida = ($transfer['hora_recogida']) ? date('h:i:s', strtotime( $transfer['hora_recogida'])) : null;
+            $horaSalida = ($transfer['hora_vuelo_salida']) ? date('h:i:s', strtotime( $transfer['hora_vuelo_salida'])) : null;
             $horaEntrada = ($transfer['hora_entrada']) ? date('h:i:s',  strtotime($transfer['hora_entrada'])) : null;
             
 
@@ -283,27 +283,35 @@ class TransferCtrl extends controller
         $ini = '<div class="row">';
         $end = '</div>';
 
-        $ida = '<h4>Datos de la ida</h4>
-                <div class="col-12 col-md-6">
-                    <div class="p-1"><strong>Fecha ida:</strong> <input type="date" class="form-control fechaEntrada" value="'.$fechaEntrada.'"></div>
-                    <div class="p-1"><strong>Hora transfer ida:</strong> <input type="time" class="form-control horaIda"value="'.$horaEntrada.'"></div>
-                </div>
-                <div class="col-12 col-md-6">
-                    <div class="p-1"><strong>Número de vuelo:</strong> <input type="text" class="form-control numVueloEntr" value="'.$transfer['numero_vuelo_entrada'].'"></div>
-                    <div class="p-1"><strong>Aeropuerto llegada:</strong> <input type="text" class="form-control aeropuertoIda" value="'.$transfer['origen_vuelo_entrada'].'"></div>
-                </div>
-                <hr class="border border-light mb-3">';
+        $ida = '<div class="row" id="datosIda">
+                    <div class="row">
+                        <h4>Datos de la ida</h4>
+                        <div class="col-12 col-md-6">
+                            <div class="p-1"><strong>Fecha ida:</strong> <input type="date" class="form-control fechaEntrada" value="'.$fechaEntrada.'"></div>
+                            <div class="p-1"><strong>Hora transfer ida:</strong> <input type="time" class="form-control horaIda" value="'.$horaEntrada.'"></div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="p-1"><strong>Número de vuelo:</strong> <input type="text" class="form-control numVueloEntr" value="'.$transfer['numero_vuelo_entrada'].'"></div>
+                            <div class="p-1"><strong>Aeropuerto llegada:</strong> <input type="text" class="form-control aeropuertoIda" value="'.$transfer['origen_vuelo_entrada'].'"></div>
+                        </div>
+                    </div>
+                    <hr class="border border-light mb-3">
+                </div>';
 
-        $vuelta = '<h4>Datos de la vuelta</h4>
-                <div class="col-12 col-md-6">
-                    <div class="p-1"><strong>Fecha vuelta:</strong> <input type="date" class="form-control fechaVuelta" value="'.$fechaSalida.'"></div>
-                    <div class="p-1"><strong>Hora recogida:</strong> <input type="time" class="form-control horaRecogida" value="'.$horaRecogida.'"></div>
-                    <div class="p-1"><strong>Hora del vuelo:</strong> <input type="time" class="form-control horaVueloVuelta" value="'.$horaSalida.'"></div>
-                </div>
-                <div class="col-12 col-md-6">
-                    <div class="p-1"><strong>Número vuelo vuelta:</strong> <input type="text" class="form-control numVueloVuelta" value="'.$transfer['numero_vuelo_vuelta'].'"></div>
-                    <div class="p-1"><strong>Aeropuerto salida:</strong> <input type="text" class="form-control aeropuertoVuelta" value="'.$transfer['origen_vuelo_entrada'].'"></div>
-                   </div>';
+
+        $vuelta = '<div class="row" id="datosVuelta">
+                        <div class="row">
+                            <h4>Datos de la vuelta</h4>
+                            <div class="col-12 col-md-6">
+                                <div class="p-1"><strong>Fecha vuelta:</strong> <input type="date" class="form-control fechaVuelta" value="'.$fechaSalida.'"></div>
+                                <div class="p-1"><strong>Hora recogida:</strong> <input type="time" class="form-control horaRecogida" value="'.$horaRecogida.'"></div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="p-1"><strong>Número vuelo vuelta:</strong> <input type="text" class="form-control numVueloVuelta" value="'.$transfer['numero_vuelo_vuelta'].'"></div>
+                                <div class="p-1"><strong>Hora del vuelo:</strong> <input type="time" class="form-control horaVueloVuelta" value="'.$horaSalida.'"></div>
+                            </div>
+                        </div>
+                    </div>';
 
         $hotel = '<hr class="border border-light mt-3">
                 <div class="row">
@@ -322,22 +330,22 @@ class TransferCtrl extends controller
         $body = "";
 
 
-        switch ($transfer['id_tipo_reserva']) {
+        /*switch ($transfer['id_tipo_reserva']) {
             case 1:
-                $body .= $ida;
+                $body .= $ida.$vuelta;
                 break;
             case 2:
-                $body .= $vuelta;
+                $body .= $ida.$vuelta;
                 break;
             case 3:
                 $body .= $ida.$vuelta;
                 break;
-        }
+        }*/
 
 
         $body .= $hotel;
 
-        $out = $datosPersonales.$ini.$body.$end . $footer;
+        $out = $datosPersonales.$ini.$body.$ida.$vuelta.$end . $footer;
 
         return $out;
     }
@@ -595,10 +603,19 @@ class TransferCtrl extends controller
                         //$aeropuertoVuelta = $data['aeropuertoVuelta'];
 
                         $numViajeros = $data['numViajeros'];
+
+
+                        $fechaActual = date('Y-m-d');
+                        $horaActual = date('H:i:s');
+
+                        $fechaLimite = date('Y-m-d', strtotime('+48 hours', strtotime($fechaActual)));
+
+                        if ($fechaEntrada < $fechaLimite || ($fechaEntrada == $fechaLimite && $horaLlegada <= $horaActual)) {
+                            throw new Exception("Deben haber al menos 48h de antelación a la fecha del vuelo.");
+                        }
                         
                         $data = [
                             'id_tipo_reserva' => $idTipoReserva,
-            
                             'fecha_entrada' => $fechaEntrada,
                             'hora_entrada' => $horaLlegada,
                             'numero_vuelo_entrada' => $numVueloIda,
@@ -614,6 +631,7 @@ class TransferCtrl extends controller
                         $transferEntity->update($idTransfer, $data);
 
                         break;
+
                     case 'vuelta':
                         $idTipoReserva = 2; 
 
@@ -626,23 +644,44 @@ class TransferCtrl extends controller
                         $horaVueloVuelta = $data['horaVueloVuelta'];
                         $horaRecogida = $data['horaRecogida'];
                         $numVueloVuelta = $data['numVueloVuelta'];
-                        $aeropuertoVuelta = $data['aeropuertoVuelta'];
+                        //$aeropuertoVuelta = $data['aeropuertoVuelta'];
 
                         $numViajeros = $data['numViajeros'];
                         
+                        $fechaActual = date('Y-m-d');
+                        $horaActual = date('H:i:s');
+
+                        $fechaLimite = date('Y-m-d', strtotime('+48 hours', strtotime($fechaActual)));
+
+                        if ($fechaVuelta < $fechaLimite || ($fechaVuelta == $fechaLimite && $horaVueloVuelta <= $horaActual)) {
+                            throw new Exception("Deben haber al menos 48h de antelación a la fecha del vuelo.");
+                        }
+
+                        $horaVueloVueltaTimestamp = strtotime($fechaVuelta . ' ' . $horaVueloVuelta);
+                        $horaRecogidaTimestamp = strtotime($horaRecogida);
+
+                        if ($horaVueloVueltaTimestamp <= $horaRecogidaTimestamp) {
+                            $horaVueloVueltaTimestamp += 86400; // Sumamos 24 horas
+                        }
+
+                        if (($horaVueloVueltaTimestamp - $horaRecogidaTimestamp) < 3 * 60 * 60) {
+                            throw new Exception("La hora del vuelo de vuelta no puede ser menor que la hora de recogida, debe haber al menos 3 horas de antelación.");
+                        }
+
+
                         $data = [
                             'id_tipo_reserva' => $idTipoReserva,
-            
                             'fecha_entrada' => $fechaEntrada,
                             'hora_entrada' => $horaLlegada,
                             'numero_vuelo_entrada' => $numVueloIda,
-                            'origen_vuelo_entrada' => $aeropuertoVuelta,
+                            //'origen_vuelo_entrada' => $aeropuertoVuelta,
                             'hora_vuelo_salida' => $horaVueloVuelta,
                             'fecha_vuelo_salida' => $fechaVuelta,
                             'num_viajeros' => $numViajeros,
                             'numero_vuelo_vuelta' => $numVueloVuelta,
                             'hora_recogida' => $horaRecogida,
-                            'fecha_modificacion' => $fechaSQL];
+                            'fecha_modificacion' => $fechaSQL
+                        ];
 
                         $transferEntity = new TransferEntity;
                         $transferEntity->update($idTransfer, $data);
@@ -664,7 +703,27 @@ class TransferCtrl extends controller
                         $aeropuertoVuelta = $data['aeropuertoVuelta'];
 
                         $numViajeros = $data['numViajeros'];
-                        
+
+                        $fechaActual = date('Y-m-d');
+                        $horaActual = date('H:i:s');
+
+                        $fechaLimite = date('Y-m-d', strtotime('+48 hours', strtotime($fechaActual)));
+
+                        if ($fechaVuelta < $fechaLimite || ($fechaVuelta == $fechaLimite && $horaVueloVuelta <= $horaActual)) {
+                            throw new Exception("Deben haber al menos 48h de antelación a la fecha del vuelo.");
+                        }
+
+                        $horaVueloVueltaTimestamp = strtotime($fechaVuelta . ' ' . $horaVueloVuelta);
+                        $horaRecogidaTimestamp = strtotime($horaRecogida);
+
+                        if ($horaVueloVueltaTimestamp <= $horaRecogidaTimestamp) {
+                            $horaVueloVueltaTimestamp += 86400; // Sumamos 24 horas
+                        }
+
+                        if (($horaVueloVueltaTimestamp - $horaRecogidaTimestamp) < 3 * 60 * 60) {
+                            throw new Exception("La hora del vuelo de vuelta no puede ser menor que la hora de recogida, debe haber al menos 3 horas de antelación.");
+                        }
+
                         $data = [
                             'id_tipo_reserva' => $idTipoReserva,
             
@@ -891,10 +950,10 @@ class TransferCtrl extends controller
 
                         if($tipoReserva=== 1)
                         {
-                            $fechaVuelta="-";
-                            $horaRecogidaFormat="-";
-                            $numeroVueloVuelta="-";
-                            $horaVueloVueltaFormat="-";
+                            $fechaVuelta=null;
+                            $horaRecogidaFormat=null;
+                            $numeroVueloVuelta=null;
+                            $horaVueloVueltaFormat=null;
 
                             $transferPrecio = new TransferPreciosEntity;
                             //Precio fijo para un transfer
@@ -907,10 +966,11 @@ class TransferCtrl extends controller
 
                         }else if ($tipoReserva=== 2){
 
-                            $fechaIda="-";
-                            $horaIdaFormat="-";
-                            $numeroVueloIda="-";
-                            //$horaVueloVueltaFormat="-";
+                            $fechaIda=null;
+                            $horaIdaFormat=null;
+                            $numeroVueloIda=null;
+                            //$horaVueloVueltaFormat=null;
+
 
                             $transferPrecio = new TransferPreciosEntity;
                             //Precio fijo para un transfer
@@ -942,7 +1002,16 @@ class TransferCtrl extends controller
                         $idZona = 1;//asignar una zona por defecto se debe cambiar?
                         $comision = 10;
                         $user = $cliente->getNombreUsuario();
-                        //aquí debemos cambiar la lógica, no debe ser un insert, debe ser un update para asignar el cliente con el hotel no?
+
+                        $cliente->setIdCliente($idCliente);
+                        $cliente->setNombre($nombreCliente);
+                        $cliente->setApellido1($apellido1);
+                        $cliente->setApellido2($apellido2);
+                        $cliente->setDNI($dniCliente);
+                        $cliente->setTelefono($telefonoCliente);
+                        $cliente->updateCliente();
+
+                      
                         $idHotel = $transferHotelEntity->insertHotel($idZona, $comision, $idCliente, $user, $hotel, $direccionHotel);
                         $idVehiculo = $transferCtrl->asignaVehiculo($idCliente);
 
@@ -952,10 +1021,6 @@ class TransferCtrl extends controller
                             $horaRecogidaFormat=null;
                             $numeroVueloVuelta=null;
                             $horaVueloVueltaFormat=null;
-
-                            $transfer = new TransferEntity;
-                            $transfer->insertTransfer($idCliente, $emailCliente, $tipoReserva, $localizador, $fechaSQL, $fechaIda, $horaIdaFormat, $numeroVueloIda, $aeropuertoOrigen, $fechaVuelta, $horaVueloVueltaFormat, 
-                            $horaRecogidaFormat, $numeroViajeros, $idVehiculo, $numeroVueloVuelta, $idHotel,  $idZona);
 
                             $transferPrecio = new TransferPreciosEntity;
                             //Precio fijo para un transfer
@@ -974,9 +1039,6 @@ class TransferCtrl extends controller
                             $numeroVueloIda=null;
                             //$horaVueloVueltaFormat=null;
 
-                            $transfer = new TransferEntity;
-                            $transfer->insertTransfer($idCliente, $emailCliente, $tipoReserva, $localizador, $fechaSQL, $fechaIda, $horaIdaFormat, $numeroVueloIda, $aeropuertoOrigen, $fechaVuelta, $horaVueloVueltaFormat, 
-                            $horaRecogidaFormat, $numeroViajeros, $idVehiculo, $numeroVueloVuelta, $idHotel,  $idZona);
 
                             $transferPrecio = new TransferPreciosEntity;
                             //Precio fijo para un transfer

@@ -11,7 +11,7 @@
  Target Server Version : 101108 (10.11.8-MariaDB-0ubuntu0.24.04.1)
  File Encoding         : 65001
 
- Date: 01/12/2024 18:04:25
+ Date: 02/12/2024 12:51:11
 */
 
 SET NAMES utf8mb4;
@@ -40,12 +40,12 @@ CREATE TABLE `cliente`  (
   INDEX `nombreComplet`(`nombre` ASC) USING BTREE,
   INDEX `nomUsuario`(`nombreUsuario` ASC) USING BTREE,
   INDEX `email`(`email` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 46 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 50 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of cliente
 -- ----------------------------
-INSERT INTO `cliente` VALUES (21, 'Victor', 'Requena', 'Gallego', 689240824, 'victor_rg33@hotmail.com', '2024-11-14 19:34:06', '2024-12-01 16:36:42', 'victor', '$2y$10$p0GQE//ughuf7qfNph5OBul.5EkfEgGDgsAZCP/k8Q5BfhN4rI1QO', 1, '48015426M');
+INSERT INTO `cliente` VALUES (21, 'Victor', 'Requena', 'Gallego', 633854647, 'victor_rg33@hotmail.com', '2024-11-14 19:34:06', '2024-12-02 09:14:59', 'victor', '$2y$10$p0GQE//ughuf7qfNph5OBul.5EkfEgGDgsAZCP/k8Q5BfhN4rI1QO', 1, '48015426M');
 INSERT INTO `cliente` VALUES (24, 'Elena', 'L&oacute;pez', 'Estremera', 6666666, 'uwu@gmail.com', '2024-11-15 18:36:09', '2024-11-15 18:36:09', 'uwu', '$2y$10$egqKJ93F3qjYGiz1JQWvWO85gn9wJN5IjS.2v4ojM8nwL/gy1QSe.', 1, '');
 INSERT INTO `cliente` VALUES (27, 'Victor', 'Requena', 'Gallego', 689240824, 'a@a.com', '2024-11-16 13:58:01', '2024-11-16 13:58:01', 'a@a.com', 'o2hGLSwj', 1, '');
 INSERT INTO `cliente` VALUES (28, 'Victor', 'Requena', 'Gallego', 689240824, 'a@aaaaa.com', '2024-11-16 14:07:02', '2024-11-16 14:07:02', 'a@aaaaa.com', 'nxx81oaY', 1, '');
@@ -64,6 +64,10 @@ INSERT INTO `cliente` VALUES (42, '5243', '2453', '25345', 977123456, '554@kk.uk
 INSERT INTO `cliente` VALUES (43, 'usuaUno', 'apeuno', 'apedos', 685920013, 'fcalper@gmail.com', '2024-11-25 20:39:00', '2024-11-25 20:39:00', 'usuaUno', '$2y$10$EzrZ1SGLJP6/R9rkFcskgOTrtXvPemUsqqLCdrsLUzyT7nKB.peTK', 3, '-');
 INSERT INTO `cliente` VALUES (44, 'UsauUno', 'apeuno', 'apedos', 685928232, 'fcalper@uoc.edu', '2024-11-25 00:00:00', '2024-11-25 00:00:00', 'fcalper@uoc.edu', 'DEmh#T!u', 3, '49823118P');
 INSERT INTO `cliente` VALUES (45, 'Andrea', 'Sua', 'Merced', 684891192, 'AsuaMer@gmail.com', '2024-11-30 00:00:00', '2024-11-30 00:00:00', 'AsuaMer@gmail.com', 'ythQmPfZ', 3, '48912309G');
+INSERT INTO `cliente` VALUES (46, 'Albertito', 'Ruiz', 'Gilberto', 689240824, 'alberto@aidea.cat', '2024-12-01 19:01:33', '2024-12-01 20:03:02', 'Albertin2', '$2y$10$3yNQrGWDo.euApk9vF4wneImrVJBtICrMsJz1lg3QqoyZL9GCA4a2', 1, '-');
+INSERT INTO `cliente` VALUES (47, 'Alberto', 'Gil', 'Rubio', 688785641, 'albertogil@gmail.com', '2024-12-01 00:00:00', '2024-12-01 00:00:00', 'albertogil@gmail.com', 'GfGmtPiU', 3, '32295847B');
+INSERT INTO `cliente` VALUES (48, 'Ferran', 'Ant&eacute;s', 'Per&oacute;n', 694312902, 'ferran.asp@gmail.com', '2024-12-02 09:15:06', '2024-12-02 09:15:06', 'Ferran Ant&eacute;s', '$2y$10$CrSgnzWeVVHyOVoBiTaWWO1forjdqhF/ALdlarNHH2PxZEw5q068a', 3, '-');
+INSERT INTO `cliente` VALUES (49, 'Jose', 'Contoso', 'Rodríguez', 677665542, 'j.contoso@gmail.com', '2024-12-02 00:00:00', '2024-12-02 00:00:00', 'j.contoso@gmail.com', 'o#L2mMiG', 3, '5469569M');
 
 -- ----------------------------
 -- Table structure for tranfer_hotel
@@ -82,7 +86,7 @@ CREATE TABLE `tranfer_hotel`  (
   INDEX `FK_cliente`(`idCliente` ASC) USING BTREE,
   CONSTRAINT `FK_cliente` FOREIGN KEY (`idCliente`) REFERENCES `cliente` (`idCliente`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `tranfer_hotel_ibfk_1` FOREIGN KEY (`id_zona`) REFERENCES `transfer_zona` (`id_zona`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 89 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 96 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tranfer_hotel
@@ -147,6 +151,13 @@ INSERT INTO `tranfer_hotel` VALUES (85, 2, 11, 'victor', NULL, 'Hotel C&aacute;c
 INSERT INTO `tranfer_hotel` VALUES (86, 3, 22, 'victor', NULL, 'Hotel miguelin', 'C/ alberto 55');
 INSERT INTO `tranfer_hotel` VALUES (87, 1, 112, 'victor', NULL, 'Hotel C&aacute;ceres', 'C/ Castellana 542');
 INSERT INTO `tranfer_hotel` VALUES (88, 1, 10, NULL, 21, 'Hotel Belvedere', 'C/ Madrid 15');
+INSERT INTO `tranfer_hotel` VALUES (89, 1, 10, NULL, 21, 'Hotel Sagasti', 'C/ Donosti 99');
+INSERT INTO `tranfer_hotel` VALUES (90, 1, 10, 'albertogil@gmail.com', 47, 'C/ de los póstulos, 230 S/N', 'Hotel Familia');
+INSERT INTO `tranfer_hotel` VALUES (91, 1, 10, NULL, 47, 'Hotel Familia', 'C/ de los póstulos, 230 S/N');
+INSERT INTO `tranfer_hotel` VALUES (92, 1, 10, NULL, 21, 'Hotal dumpbass', 'Calle diagonal');
+INSERT INTO `tranfer_hotel` VALUES (93, 1, 10, NULL, 21, 'Hotel hemeroteca', 'Avenida diagonal 544');
+INSERT INTO `tranfer_hotel` VALUES (94, 1, 10, NULL, 21, 'Hotel Balearia', 'C/ francisco miguel guti 15');
+INSERT INTO `tranfer_hotel` VALUES (95, 1, 10, 'j.contoso@gmail.com', 49, 'Calle lujúria', 'Hotel Madagascar');
 
 -- ----------------------------
 -- Table structure for transfer_precios
@@ -162,7 +173,7 @@ CREATE TABLE `transfer_precios`  (
   INDEX `FK_PRECIOS_VEHICULO`(`id_vehiculo` ASC) USING BTREE,
   CONSTRAINT `transfer_precios_ibfk_1` FOREIGN KEY (`id_hotel`) REFERENCES `tranfer_hotel` (`id_hotel`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `transfer_precios_ibfk_2` FOREIGN KEY (`id_vehiculo`) REFERENCES `transfer_vehiculo` (`id_vehiculo`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of transfer_precios
@@ -185,6 +196,13 @@ INSERT INTO `transfer_precios` VALUES (19, 63, 75, 200);
 INSERT INTO `transfer_precios` VALUES (20, 64, 76, 200);
 INSERT INTO `transfer_precios` VALUES (21, 65, 77, 100);
 INSERT INTO `transfer_precios` VALUES (22, 66, 88, 200);
+INSERT INTO `transfer_precios` VALUES (23, 67, 89, 100);
+INSERT INTO `transfer_precios` VALUES (24, 68, 90, 100);
+INSERT INTO `transfer_precios` VALUES (25, 69, 91, 100);
+INSERT INTO `transfer_precios` VALUES (26, 70, 92, 100);
+INSERT INTO `transfer_precios` VALUES (27, 71, 93, 100);
+INSERT INTO `transfer_precios` VALUES (28, 72, 94, 100);
+INSERT INTO `transfer_precios` VALUES (29, 73, 95, 100);
 
 -- ----------------------------
 -- Table structure for transfer_reservas
@@ -218,12 +236,18 @@ CREATE TABLE `transfer_reservas`  (
   CONSTRAINT `transfer_reservas_ibfk_2` FOREIGN KEY (`id_hotel`) REFERENCES `tranfer_hotel` (`id_hotel`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `transfer_reservas_ibfk_3` FOREIGN KEY (`id_tipo_reserva`) REFERENCES `transfer_tipo_reserva` (`id_tipo_reserva`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `transfer_reservas_ibfk_4` FOREIGN KEY (`id_vehiculo`) REFERENCES `transfer_vehiculo` (`id_vehiculo`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 43 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 52 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of transfer_reservas
 -- ----------------------------
-INSERT INTO `transfer_reservas` VALUES (42, 'EIDXG', 88, 3, 'victor_rg33@hotmail.com', '2024-12-01 00:00:00', '2024-12-01 00:00:00', 1, '2024-12-20', '12:30:00', 'FL7654', 'Barcelona', '15:00:00', '2024-12-24', 5, 66, 'FL854', '11:00:00');
+INSERT INTO `transfer_reservas` VALUES (43, 'OZiI8', 89, 1, 'victor_rg33@hotmail.com', '2024-12-01 00:00:00', '2024-12-02 11:34:06', 1, '2025-01-16', '10:48:00', 'FR55', 'Madrid', NULL, NULL, 3, 67, NULL, NULL);
+INSERT INTO `transfer_reservas` VALUES (45, 'HZG8Z', 91, 3, 'albertogil@gmail.com', '2024-12-01 00:00:00', '2024-12-02 11:43:35', 1, '2024-12-24', '12:00:00', 'JR545', 'Mallorca', '18:50:00', '2024-12-26', 4, 69, 'TY6545', '15:00:00');
+INSERT INTO `transfer_reservas` VALUES (47, '3BafX', 92, 2, 'victor_rg33@hotmail.com', '2024-12-02 00:00:00', '2024-12-02 09:38:07', 1, NULL, NULL, NULL, 'N/A', '10:30:00', '2024-12-20', 5, 70, 'GT5443', '08:30:00');
+INSERT INTO `transfer_reservas` VALUES (48, '3BafX', 92, 2, 'victor_rg33@hotmail.com', '2024-12-02 00:00:00', '2024-12-02 00:00:00', 1, NULL, NULL, NULL, 'N/A', '12:30:00', '2024-12-20', 5, 70, 'GT5443', '10:30:00');
+INSERT INTO `transfer_reservas` VALUES (49, '5MTa6', 93, 2, 'victor_rg33@hotmail.com', '2024-12-02 00:00:00', '2024-12-02 00:00:00', 1, NULL, NULL, NULL, 'N/A', '12:00:00', '2024-12-20', 4, 71, 'FT5545', '10:00:00');
+INSERT INTO `transfer_reservas` VALUES (50, 'aXmBV', 94, 1, 'victor_rg33@hotmail.com', '2024-12-02 00:00:00', '2024-12-02 00:00:00', 1, '2024-12-20', '15:15:00', 'VS4343', 'Barcelona', NULL, NULL, 2, 72, NULL, NULL);
+INSERT INTO `transfer_reservas` VALUES (51, 'eVFB1', 95, 1, 'j.contoso@gmail.com', '2024-12-02 00:00:00', '2024-12-02 00:00:00', 1, '2024-12-26', '12:50:00', 'GR544', 'Barcelona', NULL, NULL, 8, 73, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for transfer_tipo_reserva
@@ -253,7 +277,7 @@ CREATE TABLE `transfer_vehiculo`  (
   PRIMARY KEY (`id_vehiculo`) USING BTREE,
   INDEX `FK_idCliente_Vehiculo`(`idCliente` ASC) USING BTREE,
   CONSTRAINT `FK_idCliente_Vehiculo` FOREIGN KEY (`idCliente`) REFERENCES `cliente` (`idCliente`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 67 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 74 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of transfer_vehiculo
@@ -324,6 +348,13 @@ INSERT INTO `transfer_vehiculo` VALUES (63, 'Transfer vendido', 21);
 INSERT INTO `transfer_vehiculo` VALUES (64, 'Transfer vendido', 21);
 INSERT INTO `transfer_vehiculo` VALUES (65, 'Transfer vendido', 21);
 INSERT INTO `transfer_vehiculo` VALUES (66, 'Transfer vendido', 21);
+INSERT INTO `transfer_vehiculo` VALUES (67, 'Transfer vendido', 21);
+INSERT INTO `transfer_vehiculo` VALUES (68, 'Transfer vendido', 47);
+INSERT INTO `transfer_vehiculo` VALUES (69, 'Transfer vendido', 47);
+INSERT INTO `transfer_vehiculo` VALUES (70, 'Transfer vendido', 21);
+INSERT INTO `transfer_vehiculo` VALUES (71, 'Transfer vendido', 21);
+INSERT INTO `transfer_vehiculo` VALUES (72, 'Transfer vendido', 21);
+INSERT INTO `transfer_vehiculo` VALUES (73, 'Transfer vendido', 49);
 
 -- ----------------------------
 -- Table structure for transfer_viajeros
@@ -355,15 +386,16 @@ CREATE TABLE `transfer_zona`  (
   `id_zona` int(11) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   PRIMARY KEY (`id_zona`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of transfer_zona
 -- ----------------------------
-INSERT INTO `transfer_zona` VALUES (1, 'Barcelona');
-INSERT INTO `transfer_zona` VALUES (2, 'Madrid');
-INSERT INTO `transfer_zona` VALUES (3, 'Valencia');
-INSERT INTO `transfer_zona` VALUES (7, 'Gijon');
-INSERT INTO `transfer_zona` VALUES (16, 'Baleares');
+INSERT INTO `transfer_zona` VALUES (1, 'Palma');
+INSERT INTO `transfer_zona` VALUES (2, 'Tramuntana');
+INSERT INTO `transfer_zona` VALUES (3, 'Nord');
+INSERT INTO `transfer_zona` VALUES (16, 'Llevant');
+INSERT INTO `transfer_zona` VALUES (19, 'Migjorn');
+INSERT INTO `transfer_zona` VALUES (20, 'Pla');
 
 SET FOREIGN_KEY_CHECKS = 1;
