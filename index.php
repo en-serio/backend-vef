@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!-- <?php if (!function_exists('mysqli_init') && !extension_loaded('mysqli')) { echo 'No tengo mysqli'; } else { echo 'Prueba tengo mysqli'; } ?> -->
 
 <?php
@@ -22,3 +23,15 @@ if (class_exists($claseControlador)) {
   echo "Ha sucedido un error.";
 }
 ?>
+=======
+  <?php
+  include_once '../backend-vef/views/login.php';
+
+session_start();
+if (!isset($_SESSION['user'])) {
+    header("Location: views/login.php");
+    exit;
+}
+
+  ?>
+>>>>>>> 861861b (modificaciones adicionales hotel, inicializar zonas y error bugs)
