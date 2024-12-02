@@ -1,11 +1,3 @@
-<?php
-$error = isset($_GET['error']) ? $_GET['error'] : null;
-
-if ($error) {
-    echo '<div class="alert alert-danger" role="alert">Usuario o contraseña incorrectos</div>';
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,8 +7,9 @@ if ($error) {
     
     <!-- Vincular Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="../node_modules/sweetalert2/dist/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="../node_modules/sweetalert2/dist/sweetalert2.min.css">
 </head>
 <body class="bg-light">
 
@@ -26,10 +19,10 @@ if ($error) {
                 <div class="card shadow-lg p-4">
                     <div class="card-body">
                         <div class="text-center mb-4">
-                            <img src="/assets/media/Bootstrap-logo.png" class="rounded-circle" alt="Logo" style="width: 80px;">
+                            <img src="../assets/media/Bootstrap-logo.png" class="rounded-circle" alt="Logo" style="width: 80px;">
                         </div>
                         <h4 class="text-center mb-4">Inicia sesión</h4>
-                        <form id="loginForm" action="index.php?c=LoginController&a=iniciarSesion" method="POST">
+                        <form id="loginForm" method="post">
                             <div class="mb-3">
                                 <label for="userName" class="form-label">Nombre de usuario</label>
                                 <input type="text" class="form-control form-control-lg" id="userName" name="userName" placeholder="Introduce nombre de usuario" required>
@@ -41,12 +34,13 @@ if ($error) {
                             </div>
 
                             <div class="row">
-                                <div class="col-8">
-                                    <button type="submit" class="btn btn-primary btn-lg loginBtn w-100">Login</button>
-                                </div>
-                                <div class="col-4">
-                                    <button type="button" onclick="window.location.href='index.php?c=loginController&a=mostrarRegistro'" class="btn btn-secondary btn-lg registerBt nw-100">Registrarse</button>
-                                </div>
+                            <div class="col-12 col-md-8">
+                                <button type="submit" class="btn btn-primary btn-lg loginBtn mt-2 w-100">Login</button>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <button type="button" class="btn btn-secondary btn-lg registerBtn mt-2 w-100" onclick="window.location.href='../views/register.php'">Registrarse</button>
+                            </div>
+
                             </div>
                         </form>
                     </div>
@@ -55,8 +49,9 @@ if ($error) {
         </div>
     </div>
 
-    <!-- Vincular Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../assets/js/login.js"></script>
 
 </body>
 </html>
