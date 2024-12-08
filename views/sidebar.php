@@ -1,10 +1,8 @@
 <!-- Sidebar para escritorio -->
 <div class="d-none d-md-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
     <?php
-    // Asumiendo que tienes el rol guardado en la sesión
-    $rol = $_SESSION['rol']; // Obtener el rol del usuario
+    $rol = $_SESSION['rol']; 
 
-    // Opciones del Sidebar para el Rol 1 (Administrador)
     switch ($rol) {
         case 1: // Rol de Administrador
             echo '<ul class="nav nav-pills flex-column mb-auto ">
@@ -19,7 +17,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link text-light" id="vistaPanelLink">
+                    <a href="#" class="nav-link text-light" id="vistaPanelLink2" data-bs-toggle="tooltip">
                         <i class="bi bi-person-lines-fill pe-2"></i> <span class="ms-1 d-none d-sm-inline">Calendario</span>
                     </a>
                 </li>
@@ -34,8 +32,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link text-light" id="preciosLink" >
-                        <i class="bi bi-cash pe-2"></i> <span class="ms-1 d-none d-sm-inline">Gestión precios</span>
+                    <a href="#" class="nav-link text-light preciosBtn">
+                        <i class="bi bi-cash pe-2"></i> <span class="ms-1 d-none d-sm-inline">Estadísticas</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -59,7 +57,12 @@
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link text-light" id="vistaPanelLink" onclick="loadView(\'precios.php\')">
-                                <i class="bi bi-person-lines-fill pe-2"></i> <span class="ms-1 d-none d-sm-inline">Vistas</span>
+                                <i class="bi bi-person-lines-fill pe-2"></i> <span class="ms-1 d-none d-sm-inline">Calendario</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link text-light preciosBtn">
+                                <i class="bi bi-cash pe-2"></i> <span class="ms-1 d-none d-sm-inline">Estadísticas</span>
                             </a>
                         </li>
                     </ul>';
@@ -83,7 +86,7 @@
     ?>
     <hr>
     <div>
-        <a href="#" class="nav-link text-light" id="perfilPanel">
+        <a href="#" class="nav-link text-light perfilPanel">
             <i class="bi bi-person-circle pe-2"></i> <span class="ms-1 d-none d-sm-inline">Perfil</span>
         </a>
         <a role="button" class="nav-link text-light closeSessionBtn" id="closeSessionBtn" onclick="logout()">
@@ -98,7 +101,7 @@
     switch ($rol) 
     {
         case 1: // Rol de Administrador
-            echo '<ul class="nav nav-pills nav-flush flex-column mb-auto mt-5 pt-5 text-center">
+            echo '<ul class="nav nav-pills nav-flush flex-column mb-auto pt-5 text-center">
                 <li class="nav-item">
                     <a href="#" class="nav-link py-3 border-bottom text-light" data-bs-toggle="modal" data-bs-target="#addReservaModal" onclick="resetStepper()">
                         <i class="bi bi-pencil-square"></i>
@@ -125,12 +128,12 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-link py-3 border-bottom text-light" id="preciosLink" data-bs-toggle="tooltip" data-bs-placement="right" title="Gestión de precios" onclick="loadView(\'conductor.php\')">
+                    <a href="#" class="nav-link py-3 border-bottom text-light preciosBtn"  data-bs-toggle="tooltip" data-bs-placement="right" title="Estadísticas" >
                         <i class="bi bi-cash"></i>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-link py-3 border-bottom text-light" id="settingsLink" data-bs-toggle="tooltip" data-bs-placement="right" title="Gestión de precios" onclick="loadView(\'settings.php\')">
+                    <a href="#" class="nav-link py-3 border-bottom text-light" id="settingsLink" data-bs-toggle="tooltip" data-bs-placement="right" title="Preferencias" onclick="loadView(\'settings.php\')">
                         <i class="bi bi-gear"></i>
                     </a>
                 </li>
@@ -138,42 +141,32 @@
             break;
 
             case 2: 
-                echo '<ul class="nav nav-pills nav-flush flex-column mb-auto mt-5 pt-5 text-center">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link py-3 border-bottom text-light" data-bs-toggle="modal" data-bs-target="#addReservaModal" onclick="resetStepper()">
-                                <i class="bi bi-pencil-square"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="nav-link py-3 border-bottom text-light gestionTransferBtn" data-bs-toggle="tooltip" data-bs-placement="right" title="Gestionar Reservas">
-                                <i class="bi bi-book"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="nav-link py-3 border-bottom text-light" id="vistaPanelLink" data-bs-toggle="tooltip" data-bs-placement="right" title="Calendario">
-                                <i class="bi bi-person-lines-fill"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="nav-link py-3 border-bottom text-light" id="crearConductorLink" data-bs-toggle="tooltip" data-bs-placement="right" title="Gestión conductor" onclick="loadView(\'conductor.php\')">
-                                <i class="bi bi-person-plus"></i>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link py-3 border-bottom text-light" id="hotelView" data-bs-toggle="tooltip" data-bs-placement="right" title="Gestión hotel" onclick="loadView(\'hotel.php\')">
-                                <i class="bi bi-door-open pe-2"></i> <span class="ms-1 d-none d-sm-inline">Gestión hotel</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="nav-link py-3 border-bottom text-light" id="preciosLink" data-bs-toggle="tooltip" data-bs-placement="right" title="Gestión de precios" onclick="loadView(\'conductor.php\')">
-                                <i class="bi bi-cash"></i>
-                            </a>
-                        </li>
-                    </ul>';
+                    echo '<ul class="nav nav-pills nav-flush flex-column mb-auto pt-5 text-center">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link py-3 border-bottom text-light" data-bs-toggle="modal" data-bs-target="#addReservaModal" onclick="resetStepper()">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link py-3 border-bottom text-light gestionTransferBtn" data-bs-toggle="tooltip" data-bs-placement="right" title="Gestionar Reservas">
+                            <i class="bi bi-book"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link py-3 border-bottom text-light" id="vistaPanelLink2" data-bs-toggle="tooltip" data-bs-placement="right" title="Calendario">
+                            <i class="bi bi-person-lines-fill"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link py-3 border-bottom text-light preciosBtn"  data-bs-toggle="tooltip" data-bs-placement="right" title="Estadísticas" >
+                            <i class="bi bi-cash"></i>
+                        </a>
+                    </li>
+                </ul>';
             break;
 
             case 3: // Rol cliente
-                echo '<ul class="nav nav-pills nav-flush flex-column mb-auto mt-5 pt-2 text-center">
+                echo '<ul class="nav nav-pills nav-flush flex-column mb-auto pt-2 text-center">
                         <li class="nav-item">
                             <a href="#" class="nav-link py-3 border-bottom text-light" data-bs-toggle="modal" data-bs-target="#addReservaModal" onclick="resetStepper()">
                                 <i class="bi bi-pencil-square"></i>
@@ -198,7 +191,7 @@
         </a>
 
         <ul class="dropdown-menu text-small shadow bg-dark text-light" aria-labelledby="dropdownUser">
-            <li><a href="#" class="dropdown-item text-light" id="perfilPanel">Perfil</a></li>
+            <li><a href="#" class="dropdown-item text-light perfilPanel">Perfil</a></li>
             <li><hr class="dropdown-divider bg-light"></li>
             <li><a class="dropdown-item text-light closeSessionBtn" id="closeSessionBtn" onclick="logout()">Cerrar Sesión</a></li>
         </ul>

@@ -187,6 +187,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/backend-vef/class/controller/transfer
                                         <div><strong>Hotel:</strong> <span id="summaryHotelDestino"></span></div>
                                         <div><strong>Dirección:</strong> <span id="summaryDireccionHotel"></span></div>
                                         <div><strong>Número de viajeros:</strong> <span id="summaryNumeroViajeros"></span></div>
+                                        <input type="hidden" id="summaryHotelId" name="summaryHotelId" value="">
                                     </div>
                                 </div>
                             </div>

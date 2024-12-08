@@ -151,6 +151,19 @@ Class clienteEntity
             
             return null;
         }
+
+        public function getClientesByRol($rol) :array
+        {
+            $sql = 'SELECT * FROM cliente WHERE rol = :rol'; 
+            $stmt = $this->conn->prepare($sql);
+            
+            $stmt->bindParam(':rol', $rol, PDO::PARAM_INT); 
+            $stmt->execute();
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+            return $rows;
+    
+        }
         
 
 

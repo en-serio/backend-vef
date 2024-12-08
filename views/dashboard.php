@@ -15,6 +15,8 @@ if (!isset($_SESSION['user'])) {
 
     <!-- Vincular Bootstrap 5 CSS y otros recursos -->
     <link rel="stylesheet" href="../vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <link rel="stylesheet" href="../assets/css/styles.css">
     <link rel="stylesheet" href="../assets/css/sidebars.css">
     
@@ -58,7 +60,6 @@ $rol = ($_SESSION['rol']);
     switch($rol)
     {
         case 1:
-            
             echo '<div class="row mb-3 pt-4 pt-md-0">
                     <div class="col-md-4">
                         <div class="card mb-4 shadow-sm">
@@ -103,8 +104,8 @@ $rol = ($_SESSION['rol']);
                 <div class="col-md-4">
                     <div class="card mb-4 shadow-sm">
                         <div class="card-body preciosBtn" style="cursor: pointer;">
-                            <h5 class="card-title">Precios</h5>
-                            <p class="card-text">Crea y gestiona los hoteles</p>
+                            <h5 class="card-title">Estadísticas</h5>
+                            <p class="card-text">Consulta los transfers y comisiones filtradas</p>
                         </div>
                     </div>  
                 </div>
@@ -121,7 +122,7 @@ $rol = ($_SESSION['rol']);
             break;
 
             case 2:
-                    echo '<div class="row mb-3 mt-5 pt-4 pt-md-0">
+                    echo '<div class="row mb-3 pt-4 pt-md-0">
                     <div class="col-md-4">
                         <div class="card mb-4 shadow-sm">
                             <div class="card-body" data-bs-toggle="modal" data-bs-target="#addReservaModal" style="cursor: pointer;">
@@ -141,8 +142,16 @@ $rol = ($_SESSION['rol']);
                 <div class="col-md-4">
                     <div class="card mb-4 shadow-sm">
                         <div class="card-body" style="cursor: pointer;" onclick="loadView(\'views.php\')">
-                            <h5 class="card-title">Panel de vistas</h5>
+                            <h5 class="card-title">Panel de calendario</h5>
                             <p class="card-text">Consulta el calendario de los transfers</p>
+                        </div>
+                    </div>  
+                </div>
+                <div class="col-md-4">
+                     <div class="card mb-4 shadow-sm">
+                        <div class="card-body preciosBtn" style="cursor: pointer;">
+                            <h5 class="card-title">Estadísticas</h5>
+                            <p class="card-text">Consulta los transfers y comisiones filtradas</p>
                         </div>
                     </div>  
                 </div>
@@ -152,7 +161,7 @@ $rol = ($_SESSION['rol']);
 
             case 3:
 
-                echo '<div class="row mb-3 mt-5 pt-4 pt-md-0">
+                echo '<div class="row mb-3 pt-4 pt-md-0">
                 <div class="col-md-6">
                     <div class="card mb-4 shadow-sm">
                         <div class="card-body" data-bs-toggle="modal" data-bs-target="#addReservaModal" style="cursor: pointer;">
@@ -178,7 +187,8 @@ $rol = ($_SESSION['rol']);
                 ?>
                 <!-- Contenido dinámico -->
                 <div class="row row mb-5 pb-4" id="dynamicContent">
-                    <!-- Aquí se cargará el contenido dinámico como el calendario -->
+                    <!-- Aquí se cargará el contenido dinámico como el calendario, opciones, vistas, etc -->
+                
                      
                     
                 </div>
@@ -193,6 +203,9 @@ $rol = ($_SESSION['rol']);
     <!-- Bootstrap JS -->
     <script src="../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <script src="../assets/js/dashboard.js"></script>
     <script src="../assets/js/sidebars.js"></script>
     <script src="../assets/js/perfil.js"></script>

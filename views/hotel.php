@@ -27,6 +27,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/backend-vef/class/controller/settings
                   $settings->mostrarHoteles(); ?>
             </ul>
         </div>
+        
     </div>
 </div>
 
@@ -49,22 +50,34 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/backend-vef/class/controller/settings
                 <input type="text" class="form-control" id="direccion-hotel" placeholder="Dirección" required>
             </div>
         </div>
-        <div class ="row">
-          <div class="col-6 mb-3">
-            <label for="zona-hotel" class="form-label">Zona:</label>
-            <select class="form-select" id="zona-hotel" required>
-              <option value="" disabled selected>Selecciona una zona</option>
-              <?php 
-                $settings = new SettingsCtrl;
-                $settings->getZonas(); 
-              ?>
-            </select>
+        <div class="row">
+            <div class="col-6 mb-3">
+              <label for="zona-hotel" class="form-label">Zona:</label>
+              <select class="form-select" id="zona-hotel" required>
+                <option value="" disabled selected>Selecciona una zona</option>
+                <?php 
+                  $settings = new SettingsCtrl;
+                  $settings->getZonas(); 
+                ?>
+              </select>
+            </div>
+            <div class="col-6 mb-3">
+              <label for="comision-hotel" class="form-label">Comisión:</label>
+              <input type="number" class="form-control" id="comision-hotel" placeholder="10.5" step="0.01" lang="en" required>
+            </div>
           </div>
-          <div class="col-6 mb-3">
-            <label for="comision-hotel" class="form-label">Comisión:</label>
-            <input type="number" class="form-control" id="comision-hotel" placeholder="10.5" step="0.1" required>
+          <div class="row">
+            <div class="col-12 mb-3">
+              <label for="usuariosCorporativos" class="form-label">Usuario:</label>
+              <select class="form-select" id="usuariosCorporativos" required>
+                <option value="" disabled selected>Asigna el hotel un usuario</option>
+                <?php 
+                  $settings = new SettingsCtrl;
+                  $settings->getUsuarios(); 
+                ?>
+              </select>
+            </div>
           </div>
-        </div>
         </form>
       </div>
       <div class="modal-footer">

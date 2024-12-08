@@ -11,7 +11,7 @@
  Target Server Version : 101108 (10.11.8-MariaDB-0ubuntu0.24.04.1)
  File Encoding         : 65001
 
- Date: 02/12/2024 23:03:29
+ Date: 08/12/2024 18:24:07
 */
 
 SET NAMES utf8mb4;
@@ -40,26 +40,26 @@ CREATE TABLE `cliente`  (
   INDEX `nombreComplet`(`nombre` ASC) USING BTREE,
   INDEX `nomUsuario`(`nombreUsuario` ASC) USING BTREE,
   INDEX `email`(`email` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 57 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 62 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of cliente
 -- ----------------------------
-INSERT INTO `cliente` VALUES (21, 'V&iacute;ctor', 'Requena', 'Gallego', 689240824, 'victor_rg33@hotmail.com', '2024-11-14 19:34:06', '2024-12-02 17:53:16', 'victor', '$2y$10$J/fHgklW0RP0nbFu.1QWBeKuWXhMKRiZpE5Etzbsp0erWKxRw6Lp2', 1, '48015426M');
-INSERT INTO `cliente` VALUES (24, 'Elena', 'L&oacute;pez', 'Estremera', 6666666, 'uwu@gmail.com', '2024-11-15 18:36:09', '2024-11-15 18:36:09', 'uwu', '$2y$10$egqKJ93F3qjYGiz1JQWvWO85gn9wJN5IjS.2v4ojM8nwL/gy1QSe.', 1, '');
-INSERT INTO `cliente` VALUES (27, 'Victor', 'Requena', 'Gallego', 689240824, 'a@a.com', '2024-11-16 13:58:01', '2024-11-16 13:58:01', 'a@a.com', 'o2hGLSwj', 1, '');
-INSERT INTO `cliente` VALUES (28, 'Victor', 'Requena', 'Gallego', 689240824, 'a@aaaaa.com', '2024-11-16 14:07:02', '2024-11-16 14:07:02', 'a@aaaaa.com', 'nxx81oaY', 1, '');
-INSERT INTO `cliente` VALUES (29, 'Victor', 'Requena', 'Gallego', 689240824, 'asdasda@aaaaa.com', '2024-11-16 14:12:20', '2024-11-16 14:12:20', 'asdasda@aaaaa.com', 'CB52mqXG', 3, '');
-INSERT INTO `cliente` VALUES (32, 'Víctor', 'Requena', 'Gallego', 689240824, 'victor@testfinal.com', '2024-11-16 00:00:00', '2024-11-21 22:18:12', 'victor@aidea.cat', '6GXghbC6', 3, '');
+INSERT INTO `cliente` VALUES (21, 'Victor', 'Requena', 'Gallego', 689240824, 'victor_rg33@hotmail.com', '2024-11-14 19:34:06', '2024-12-07 14:47:49', 'victor', '$2y$10$J/fHgklW0RP0nbFu.1QWBeKuWXhMKRiZpE5Etzbsp0erWKxRw6Lp2', 1, '48015426m');
+INSERT INTO `cliente` VALUES (24, 'Elena', 'Lopez', 'Estremera', 6666666, 'uwu@gmail.com', '2024-11-15 18:36:09', '2024-12-08 17:50:10', 'uwu', '$2y$10$egqKJ93F3qjYGiz1JQWvWO85gn9wJN5IjS.2v4ojM8nwL/gy1QSe.', 2, '');
+INSERT INTO `cliente` VALUES (27, '123123', '123123', '1231231', 123123123, 'a@a.com', '2024-11-16 13:58:01', '2024-12-07 13:15:13', 'a@a.com', 'o2hGLSwj', 2, '123123123');
+INSERT INTO `cliente` VALUES (28, 'Gilberto', 'López', 'Guzmán', 68854521, 'info@hoteltest.com', '2024-11-16 14:07:02', '2024-12-08 17:50:59', 'a@aaaaa.com', 'nxx81oaY', 2, '');
+INSERT INTO `cliente` VALUES (29, 'sadfasdf', 'asdfasdf', 'adsfasdf', 123123123, 'asdasda@aaaaa.com', '2024-11-16 14:12:20', '2024-12-05 13:22:10', 'asdasda@aaaaa.com', 'CB52mqXG', 3, '123123123');
+INSERT INTO `cliente` VALUES (32, 'José', 'Contoso', 'Sanz', 622121212, 'info@hotelmajestic.com', '2024-11-16 00:00:00', '2024-12-08 17:57:39', 'majestic', '$10$J/fHgklW0RP0nbFu.1QWBeKuWXhMKRiZpE5Etzbsp0erWKxRw6Lp2', 2, '');
 INSERT INTO `cliente` VALUES (33, 'Albertin', 'Gjsjf', 'Djfjg', 689240824, 'vic@cvif.com', '2024-11-16 19:16:24', '2024-11-16 19:16:24', 'Gjfkg', '$2y$10$AzDTotir3ey6bJntg/r.puwjHOMAJwtJKrMynM3i7Ykceil6R12na', 1, '-');
 INSERT INTO `cliente` VALUES (34, 'ferran', 'calpe', 'romero', 658893677, 'ferran.calpe@gmail.com', '2024-11-16 19:22:07', '2024-11-16 19:22:07', 'ferran90', '$2y$10$Bj8YvBUDjylsZNgEaHUu6ebaBumTA95Mm8A9hv2FclRHT/1lITPAO', 1, '-');
 INSERT INTO `cliente` VALUES (35, 'ferran', 'cliente', 'clientote', 685939822, 'ferran.cliente@gmail.com', '2024-11-16 00:00:00', '2024-11-16 00:00:00', 'ferran.cliente@gmail.com', 'mBNPJMuh', 3, '47398201g');
-INSERT INTO `cliente` VALUES (36, 'Ckfkv', 'Dnfmvl', 'Ckfkeme', 658956832, 'vincifo@vjdnr.com', '2024-11-17 00:00:00', '2024-11-17 00:00:00', 'vincifo@vjdnr.com', 'd^fwJA29', 3, 'Fketoro');
+INSERT INTO `cliente` VALUES (36, 'Ckfkv', 'Dnfmvl', 'Ckfkeme', 658956832, 'vincifo@vjdnr.com', '2024-11-17 00:00:00', '2024-12-07 13:15:30', 'vincifo@vjdnr.com', 'd^fwJA29', 2, 'Fketoro');
 INSERT INTO `cliente` VALUES (37, 'Iris', 'Rodriguez', 'Ortiz', 618412258, 'iris__08@hotmail.com', '2024-11-17 13:28:36', '2024-11-17 13:28:36', 'iris9923', '$2y$10$Qy5ZQIXH8TbsVaOMhb6INeXrRj5jEWZtJTBSx8QTgGKoaQqIJWipG', 3, '-');
 INSERT INTO `cliente` VALUES (38, 'gus', 'Gustin', 'Gustirrin&iacute;n', 655456455, 'gustic@gmail.com', '2024-11-20 13:24:44', '2024-11-20 13:24:44', 'gustik', '$2y$10$S3.xkAJ6R9CETJRIppljnOT.xF66tAbs6m5yFKlVcZyPWAUvM.fqW', 3, '-');
-INSERT INTO `cliente` VALUES (39, 'Alfonsin', 'alfonsito', 'algon', 655454545, 'alfonso@gmail.com', '2024-11-20 13:25:41', '2024-11-20 13:25:41', 'alfonsin', '$2y$10$f3wFMVbOPQj5OmGR3bHeYePGXKvnxWCW/JVDryggdeTAZEW8Mz/L6', 3, '-');
+INSERT INTO `cliente` VALUES (39, 'Alfonsin', 'alfonsito', 'algon', 655454545, 'alfonso@gmail.com', '2024-11-20 13:25:41', '2024-12-07 13:15:35', 'alfonsin', '$2y$10$f3wFMVbOPQj5OmGR3bHeYePGXKvnxWCW/JVDryggdeTAZEW8Mz/L6', 2, '-');
 INSERT INTO `cliente` VALUES (40, 'alberto', 'ruiz', 'gallardon', 65544542, 'hola@hotmail.com', '2024-11-20 18:09:35', '2024-11-20 18:09:35', 'hola', '$2y$10$lx.j6lvnLanmnpd8NUnNl.NkRi.BCPpgFZxHEKyn0BaXt1FNZVhu6', 3, '-');
-INSERT INTO `cliente` VALUES (41, 'Marta', 'Garrido', 'Vidal', 686808713, 'martaa.gv@hotmail.com', '2024-11-21 22:18:41', '2024-11-21 22:18:41', 'Martagarridov', '$2y$10$71u9V9y.T3uO5Wwa3J0uIO/IMKgPU24ieB8SVOKmG92UVx631j.em', 3, '-');
+INSERT INTO `cliente` VALUES (41, 'Marta', 'Garrido', 'Vidal', 686808713, 'martaa.gv@hotmail.com', '2024-11-21 22:18:41', '2024-12-07 17:47:41', 'Martagarridov', '$2y$10$mv8o9rNEzMzv9jAkMJkGsOnQ/A1GuccRQRvEkBqih627w3Yk6OlK.', 2, '74565485');
 INSERT INTO `cliente` VALUES (42, '5243', '2453', '25345', 977123456, '554@kk.uk', '2024-11-22 00:00:00', '2024-11-22 00:00:00', '554@kk.uk', 'JDe7(1TN', 3, '53425');
 INSERT INTO `cliente` VALUES (43, 'usuaUno', 'apeuno', 'apedos', 685920013, 'fcalper@gmail.com', '2024-11-25 20:39:00', '2024-11-25 20:39:00', 'usuaUno', '$2y$10$EzrZ1SGLJP6/R9rkFcskgOTrtXvPemUsqqLCdrsLUzyT7nKB.peTK', 3, '-');
 INSERT INTO `cliente` VALUES (44, 'UsauUno', 'apeuno', 'apedos', 685928232, 'fcalper@uoc.edu', '2024-11-25 00:00:00', '2024-11-25 00:00:00', 'fcalper@uoc.edu', 'DEmh#T!u', 3, '49823118P');
@@ -75,106 +75,82 @@ INSERT INTO `cliente` VALUES (53, 'Miranda', 'Sousa', 'Castillos', 691029309, 'M
 INSERT INTO `cliente` VALUES (54, 'Borja', 'Mulleras', 'Vinzia', 666555444, 'bmulleras@uoc.edu', '2024-12-02 20:57:15', '2024-12-02 20:57:15', 'bmulleras', '$2y$10$nazWMIDVqG7oz7evdzY9.etuxxdbf21vWjZHVJ/f4cH22oeeHovXC', 1, '-');
 INSERT INTO `cliente` VALUES (55, 'Andr&eacute;s', 'Martinez', 'S&aacute;nchez', 693920019, 'andres.mart@gmail.com', '2024-12-02 21:03:54', '2024-12-02 21:03:54', 'AMart', '$2y$10$.innInvc5G6QH8dNVPMqS.2Ci5LDIjiSzH6su6uOBhPvnJUhPcR2a', 3, '-');
 INSERT INTO `cliente` VALUES (56, 'Josema', 'Yuste', 'Yustin', 685454532, 'josemayuste@hotmail.com', '2024-12-02 21:19:49', '2024-12-02 21:22:07', 'josemi', '$2y$10$OZnyrZLrMoH/4MtJU6kkB./TPsrf2ehX24ITHuDrI8iLpgjfQiN/.', 3, '55545658W');
+INSERT INTO `cliente` VALUES (57, '123123', '123123', '123123', 123123123, '123123@a.com', '2024-12-05 00:00:00', '2024-12-05 00:00:00', '123123@a.com', '%2(yUS*d', 3, '123123');
+INSERT INTO `cliente` VALUES (58, 'Cliente', 'Test', 'Test', 666554477, 'clientetest@cliente.com', '2024-12-05 14:42:46', '2024-12-07 18:31:58', 'clientetest', '$2y$10$TRewLbLdsElGKtee65NfS.YHWAUyqhyzMUFo377GGhjKa9yUjljT6', 3, '8846548');
+INSERT INTO `cliente` VALUES (59, 'Jose', 'Contoso', 'Mijoso', 654454545, 'jose.contoso@gmail.com', '2024-12-07 00:00:00', '2024-12-07 17:49:17', 'jose.contoso@gmail.com', '6L5WxEn$', 3, '42215426B');
+INSERT INTO `cliente` VALUES (60, 'Alberto', 'Rollo', 'Hernandez', 658585858, 'a.rollo@hotmail.com', '2024-12-07 00:00:00', '2024-12-07 17:51:29', 'a.rollo@hotmail.com', 'QPVK0(Gx', 3, '456789MG');
+INSERT INTO `cliente` VALUES (61, 'Juan', 'Ruiz', 'Ruiz', 654221252, 'info@hoteltavascan.com', '2024-12-08 16:52:45', '2024-12-08 16:52:45', 'Tavascan', '$2y$10$Is0pP39n7dYBb/50WcCt3eFBSFTP4XFjLxvsd1/Fuj1vEQphVpc4m', 2, '-');
+
+-- ----------------------------
+-- Table structure for hoteles
+-- ----------------------------
+DROP TABLE IF EXISTS `hoteles`;
+CREATE TABLE `hoteles`  (
+  `id_hotel` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre_hotel` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `direccion_hotel` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id_zona` int(11) NULL DEFAULT NULL,
+  `comision` decimal(10, 2) NOT NULL,
+  `idCliente` int(11) NOT NULL,
+  PRIMARY KEY (`id_hotel`) USING BTREE,
+  INDEX `id_zona`(`id_zona` ASC) USING BTREE,
+  INDEX `id_cliente`(`idCliente` ASC) USING BTREE,
+  CONSTRAINT `hoteles_ibfk_1` FOREIGN KEY (`id_zona`) REFERENCES `transfer_zona` (`id_zona`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `hoteles_ibfk_2` FOREIGN KEY (`idCliente`) REFERENCES `cliente` (`idCliente`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of hoteles
+-- ----------------------------
+INSERT INTO `hoteles` VALUES (1, 'Hotel Tavascan', 'C/ de los pollos 54', 1, 12.00, 61);
+INSERT INTO `hoteles` VALUES (4, 'Hotel Luxury', 'C/ Apostol 56', 2, 15.00, 21);
+INSERT INTO `hoteles` VALUES (5, 'Hotel Best', 'Avenida Paraiso 156', 1, 12.00, 21);
+INSERT INTO `hoteles` VALUES (6, 'Hotel Hilton', 'Avenida Madagascar 154', 16, 15.00, 41);
+INSERT INTO `hoteles` VALUES (7, 'Hotel Luxury', 'C/ Tramuntana 1', 1, 20.00, 41);
+INSERT INTO `hoteles` VALUES (8, 'Hotel Majestic', 'C/ Llevant del nord 87', 20, 30.00, 32);
+INSERT INTO `hoteles` VALUES (9, 'Hotel Imperial', 'C/ Barlovento', 20, 30.00, 39);
+INSERT INTO `hoteles` VALUES (15, 'Hotel Misco', 'Cojones n&uacute;mero 3', 19, 500.00, 24);
+INSERT INTO `hoteles` VALUES (16, 'Hotel Luxury', 'C/ de los pollos 54', 16, 12.00, 39);
 
 -- ----------------------------
 -- Table structure for tranfer_hotel
 -- ----------------------------
 DROP TABLE IF EXISTS `tranfer_hotel`;
 CREATE TABLE `tranfer_hotel`  (
-  `id_hotel` int(11) NOT NULL AUTO_INCREMENT,
+  `id_tranfer_hotel` int(11) NOT NULL AUTO_INCREMENT,
+  `id_hotel` int(11) NOT NULL,
   `id_zona` int(11) NULL DEFAULT NULL,
   `Comision` int(11) NULL DEFAULT NULL,
   `usuario` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
   `idCliente` int(100) NULL DEFAULT NULL,
   `nombre_hotel` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `direccion_hotel` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT 'nom',
-  PRIMARY KEY (`id_hotel`) USING BTREE,
+  PRIMARY KEY (`id_tranfer_hotel`) USING BTREE,
   INDEX `FK_HOTEL_ZONA`(`id_zona` ASC) USING BTREE,
   INDEX `FK_cliente`(`idCliente` ASC) USING BTREE,
+  INDEX `usuario`(`usuario` ASC) USING BTREE,
+  INDEX `nombre_hotel`(`nombre_hotel` ASC) USING BTREE,
+  INDEX `id_hotel`(`id_hotel` ASC) USING BTREE,
   CONSTRAINT `FK_cliente` FOREIGN KEY (`idCliente`) REFERENCES `cliente` (`idCliente`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `tranfer_hotel_ibfk_1` FOREIGN KEY (`id_zona`) REFERENCES `transfer_zona` (`id_zona`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 106 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 202 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tranfer_hotel
 -- ----------------------------
-INSERT INTO `tranfer_hotel` VALUES (29, 1, 10, NULL, 27, 'Hotel Belvedere', 'C/ Madrid 15');
-INSERT INTO `tranfer_hotel` VALUES (30, 1, 10, NULL, 27, 'Hotel Balearia', 'C/ francisco miguel guti 15');
-INSERT INTO `tranfer_hotel` VALUES (31, 1, 10, NULL, 27, 'Hotel Luxury Balear', 'C/ Roberto de Hasta 22');
-INSERT INTO `tranfer_hotel` VALUES (32, 1, 10, 'victor@aidea.cat', 32, 'Hotel Moada', 'C/ Leonel Messi 5');
-INSERT INTO `tranfer_hotel` VALUES (33, 1, 10, NULL, 27, 'Hotel Best cadency', 'C/ Diagonal 23');
-INSERT INTO `tranfer_hotel` VALUES (34, 1, 10, NULL, 27, 'Hotel Sagasti', 'C/ Donosti 99');
-INSERT INTO `tranfer_hotel` VALUES (35, 1, 10, NULL, 27, 'Hotel hemeroteca', 'Avenida diagonal 544');
-INSERT INTO `tranfer_hotel` VALUES (36, 1, 10, NULL, 27, 'Hotel Hysperia', 'Avenida principe de asturias 66');
-INSERT INTO `tranfer_hotel` VALUES (37, 1, 10, NULL, 27, 'Hotel Regente Aragón', 'C/ de les Coques 5');
-INSERT INTO `tranfer_hotel` VALUES (38, 1, 10, NULL, 27, 'Hotel Hysperia', 'Avenida principe de asturias 66');
-INSERT INTO `tranfer_hotel` VALUES (39, 1, 10, NULL, 27, 'Hotel Hysperia', 'Avenida principe de asturias 66');
-INSERT INTO `tranfer_hotel` VALUES (40, 1, 10, NULL, 27, 'Hotel Hysperia', 'Avenida principe de asturias 66');
-INSERT INTO `tranfer_hotel` VALUES (41, 1, 10, NULL, 27, 'Hotel Hysperia', 'Avenida principe de asturias 66');
-INSERT INTO `tranfer_hotel` VALUES (42, 1, 10, 'ferran.cliente@gmail.com', 35, 'Hotel Hysperia', 'Avenida principe de asturias 66');
-INSERT INTO `tranfer_hotel` VALUES (43, 1, 10, NULL, 21, 'Hotel Hysperia', 'Avenida principe de asturias 66');
-INSERT INTO `tranfer_hotel` VALUES (44, 1, 10, 'vincifo@vjdnr.com', 36, 'Hotel Hysperia', 'Avenida principe de asturias 66');
-INSERT INTO `tranfer_hotel` VALUES (45, 1, 10, NULL, 27, 'Hotel Hysperia', 'Avenida principe de asturias 66');
-INSERT INTO `tranfer_hotel` VALUES (46, 1, 10, NULL, 21, 'Hotel Hysperia', 'Avenida principe de asturias 66');
-INSERT INTO `tranfer_hotel` VALUES (47, 1, 10, NULL, 21, 'Hotel Hysperia', 'Avenida principe de asturias 66');
-INSERT INTO `tranfer_hotel` VALUES (48, 1, 10, NULL, 21, 'Hotel Cesar', 'Boulevard 505');
-INSERT INTO `tranfer_hotel` VALUES (49, 1, 10, NULL, 21, 'Hotel Cesar', 'Boulevard 505');
-INSERT INTO `tranfer_hotel` VALUES (50, 1, 10, NULL, 21, 'Hotel Hysperia', 'Avenida principe de asturias 66');
-INSERT INTO `tranfer_hotel` VALUES (51, 1, 10, NULL, 21, 'Hotel Hysperia', 'Avenida principe de asturias 66');
-INSERT INTO `tranfer_hotel` VALUES (52, 1, 10, NULL, 21, 'Luxor', 'Calle amargura');
-INSERT INTO `tranfer_hotel` VALUES (53, 1, 10, NULL, 21, 'Hotel Minguito', 'Charlie');
-INSERT INTO `tranfer_hotel` VALUES (54, 1, 10, NULL, 21, 'Hotel Madagascar', 'Calle lujúria');
-INSERT INTO `tranfer_hotel` VALUES (55, 1, 10, NULL, 21, 'Hotel Madagascar', 'Calle lujúria');
-INSERT INTO `tranfer_hotel` VALUES (56, 1, 10, NULL, 21, 'Hotel Madagascar', 'Calle lujúria');
-INSERT INTO `tranfer_hotel` VALUES (57, 1, 10, NULL, 21, 'Hotel Madagascar', 'Calle lujúria');
-INSERT INTO `tranfer_hotel` VALUES (58, 1, 10, NULL, 21, 'Hotel Madagascar', 'Calle lujúria');
-INSERT INTO `tranfer_hotel` VALUES (59, 1, 10, NULL, 21, 'Hotel Madagascar', 'Calle lujúria');
-INSERT INTO `tranfer_hotel` VALUES (60, 1, 10, NULL, 21, 'Hotel Madagascar', 'Calle lujúria');
-INSERT INTO `tranfer_hotel` VALUES (61, 1, 10, NULL, 21, 'Hotel Madagascar', 'Calle lujúria');
-INSERT INTO `tranfer_hotel` VALUES (62, 1, 10, NULL, 21, 'Hotel Madagascar', 'Calle lujúria');
-INSERT INTO `tranfer_hotel` VALUES (63, 1, 10, NULL, 21, 'Hotal dumpbass', 'Calle diagonal');
-INSERT INTO `tranfer_hotel` VALUES (64, 1, 10, '554@kk.uk', 42, 'Hotel Hysperia', 'Avenida principe de asturias 66');
-INSERT INTO `tranfer_hotel` VALUES (65, 1, 10, NULL, 42, 'Hotel Hysperia', 'Avenida principe de asturias 66');
-INSERT INTO `tranfer_hotel` VALUES (66, 1, 10, NULL, 21, 'Monterrey', 'Calle espigón');
-INSERT INTO `tranfer_hotel` VALUES (67, 1, 10, 'fcalper@uoc.edu', 44, 'Hotel Familia', 'C/ de los póstulos, 230 S/N');
-INSERT INTO `tranfer_hotel` VALUES (68, 1, 10, NULL, 44, 'Hotel Familia', 'C/ de los póstulos, 230 S/N');
-INSERT INTO `tranfer_hotel` VALUES (69, 1, 10, NULL, 44, 'Hotel Familia', 'C/ de los póstulos, 230 S/N');
-INSERT INTO `tranfer_hotel` VALUES (70, 1, 10, 'AsuaMer@gmail.com', 45, 'Hotel Familia', 'C/ de los póstulos, 230 S/N');
-INSERT INTO `tranfer_hotel` VALUES (71, 1, 10, NULL, 45, 'Hotel Familia', 'C/ de los póstulos, 230 S/N');
-INSERT INTO `tranfer_hotel` VALUES (72, 1, 10, NULL, 44, 'Hotel Familia', 'C/ de los póstulos, 230 S/N');
-INSERT INTO `tranfer_hotel` VALUES (73, 1, 10, NULL, 21, 'Hotel Drogba', 'Ulritch direction');
-INSERT INTO `tranfer_hotel` VALUES (74, 1, 10, NULL, 21, 'Hotel Familia', 'C/ de los póstulos, 230 S/N');
-INSERT INTO `tranfer_hotel` VALUES (75, 1, 10, NULL, 21, 'Hotel Familia', 'C/ de los póstulos, 230 S/N');
-INSERT INTO `tranfer_hotel` VALUES (76, 1, 10, NULL, 21, 'Hotel Familia', 'C/ de los póstulos, 230 S/N');
-INSERT INTO `tranfer_hotel` VALUES (77, 1, 10, NULL, 21, 'Hotel Familia', 'C/ de los póstulos, 230 S/N');
-INSERT INTO `tranfer_hotel` VALUES (78, 2, 111, 'victor', NULL, 'fasdfasdf', '234234');
-INSERT INTO `tranfer_hotel` VALUES (79, 2, 111, 'victor', NULL, 'fasdfasdf', '234234');
-INSERT INTO `tranfer_hotel` VALUES (80, 2, 111, 'victor', NULL, 'fasdfasdf', '234234');
-INSERT INTO `tranfer_hotel` VALUES (81, 2, 11, 'victor', NULL, 'Hotel C&aacute;ceres', 'C/ Castellana 542');
-INSERT INTO `tranfer_hotel` VALUES (82, 2, 11, 'victor', NULL, 'Hotel C&aacute;ceres', 'C/ Castellana 542');
-INSERT INTO `tranfer_hotel` VALUES (83, 16, 11, 'victor', NULL, '12312', '1231233');
-INSERT INTO `tranfer_hotel` VALUES (84, 2, 11, 'victor', NULL, 'Hotel C&aacute;ceres', 'C/ diagonal 544');
-INSERT INTO `tranfer_hotel` VALUES (85, 2, 11, 'victor', NULL, 'Hotel C&aacute;ceres', 'C/ diagonal 544');
-INSERT INTO `tranfer_hotel` VALUES (86, 3, 22, 'victor', NULL, 'Hotel miguelin', 'C/ alberto 55');
-INSERT INTO `tranfer_hotel` VALUES (87, 1, 112, 'victor', NULL, 'Hotel C&aacute;ceres', 'C/ Castellana 542');
-INSERT INTO `tranfer_hotel` VALUES (88, 1, 10, NULL, 21, 'Hotel Belvedere', 'C/ Madrid 15');
-INSERT INTO `tranfer_hotel` VALUES (89, 1, 10, NULL, 21, 'Hotel Sagasti', 'C/ Donosti 99');
-INSERT INTO `tranfer_hotel` VALUES (90, 1, 10, 'albertogil@gmail.com', 47, 'C/ de los póstulos, 230 S/N', 'Hotel Familia');
-INSERT INTO `tranfer_hotel` VALUES (91, 1, 10, NULL, 47, 'Hotel Familia', 'C/ de los póstulos, 230 S/N');
-INSERT INTO `tranfer_hotel` VALUES (92, 1, 10, NULL, 21, 'Hotal dumpbass', 'Calle diagonal');
-INSERT INTO `tranfer_hotel` VALUES (93, 1, 10, NULL, 21, 'Hotel hemeroteca', 'Avenida diagonal 544');
-INSERT INTO `tranfer_hotel` VALUES (94, 1, 10, NULL, 21, 'Hotel Balearia', 'C/ francisco miguel guti 15');
-INSERT INTO `tranfer_hotel` VALUES (95, 1, 10, 'j.contoso@gmail.com', 49, 'Calle lujúria', 'Hotel Madagascar');
-INSERT INTO `tranfer_hotel` VALUES (96, 1, 10, NULL, 50, 'Hotel Belvedere', 'C/ Madrid 15');
-INSERT INTO `tranfer_hotel` VALUES (97, 1, 10, NULL, 50, 'Hotel Hysperia', 'Avenida principe de asturias 66');
-INSERT INTO `tranfer_hotel` VALUES (98, 1, 10, NULL, 50, 'Hotel hemeroteca', 'Avenida diagonal 544');
-INSERT INTO `tranfer_hotel` VALUES (99, 1, 10, NULL, 50, 'Hotel Familia', 'C/ de los póstulos, 230 S/N');
-INSERT INTO `tranfer_hotel` VALUES (100, 1, 10, 'AndreaQuiTa@yahoo.es', 51, 'C/ Roberto de Hasta 22', 'Hotel Luxury Balear');
-INSERT INTO `tranfer_hotel` VALUES (101, 1, 10, 'Sergito101@hotmail.com', 52, 'Calle diagonal', 'Hotal dumpbass');
-INSERT INTO `tranfer_hotel` VALUES (102, 1, 10, NULL, 21, 'Hotel miguelin', 'C/ alberto 55');
-INSERT INTO `tranfer_hotel` VALUES (103, 1, 10, 'Miranda.Sousa@gmail.com', 53, 'C/ francisco miguel guti 15', 'Hotel Balearia');
-INSERT INTO `tranfer_hotel` VALUES (104, 1, 10, NULL, 50, 'Hotel Balearia', 'C/ francisco miguel guti 15');
-INSERT INTO `tranfer_hotel` VALUES (105, 1, 10, NULL, 56, 'Monterrey', 'Calle espigón');
+INSERT INTO `tranfer_hotel` VALUES (189, 1, 1, 12, NULL, 27, 'Hotel Tavascan', 'C/ de los pollos 54');
+INSERT INTO `tranfer_hotel` VALUES (190, 1, 1, 12, NULL, 27, 'Hotel Tavascan', 'C/ de los pollos 54');
+INSERT INTO `tranfer_hotel` VALUES (191, 1, 1, 12, NULL, 27, 'Hotel Tavascan', 'C/ de los pollos 54');
+INSERT INTO `tranfer_hotel` VALUES (192, 1, 1, 12, NULL, 27, 'Hotel Tavascan', 'C/ de los pollos 54');
+INSERT INTO `tranfer_hotel` VALUES (193, 7, 1, 20, NULL, 21, 'Hotel Luxury', 'C/ Tramuntana 1');
+INSERT INTO `tranfer_hotel` VALUES (194, 9, 20, 30, NULL, 58, 'Hotel Imperial', 'C/ Barlovento');
+INSERT INTO `tranfer_hotel` VALUES (195, 5, 1, 12, NULL, 21, 'Hotel Best', 'Avenida Paraiso 156');
+INSERT INTO `tranfer_hotel` VALUES (196, 1, 1, 12, NULL, 58, 'Hotel Tavascan', 'C/ de los pollos 54');
+INSERT INTO `tranfer_hotel` VALUES (197, 5, NULL, 12, 'jose.contoso@gmail.com', 59, 'Hotel Best', 'Avenida Paraiso 156');
+INSERT INTO `tranfer_hotel` VALUES (198, 5, 1, 12, NULL, 59, 'Hotel Best', 'Avenida Paraiso 156');
+INSERT INTO `tranfer_hotel` VALUES (199, 5, NULL, 12, 'a.rollo@hotmail.com', 60, 'Hotel Best', 'Avenida Paraiso 156');
+INSERT INTO `tranfer_hotel` VALUES (200, 5, 1, 12, NULL, 60, 'Hotel Best', 'Avenida Paraiso 156');
+INSERT INTO `tranfer_hotel` VALUES (201, 8, 20, 30, NULL, 58, 'Hotel Majestic', 'C/ Llevant del nord 87');
 
 -- ----------------------------
 -- Table structure for transfer_precios
@@ -188,48 +164,23 @@ CREATE TABLE `transfer_precios`  (
   PRIMARY KEY (`id_precios`) USING BTREE,
   INDEX `FK_PRECIOS_HOTEL`(`id_hotel` ASC) USING BTREE,
   INDEX `FK_PRECIOS_VEHICULO`(`id_vehiculo` ASC) USING BTREE,
-  CONSTRAINT `transfer_precios_ibfk_1` FOREIGN KEY (`id_hotel`) REFERENCES `tranfer_hotel` (`id_hotel`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `transfer_precios_ibfk_1` FOREIGN KEY (`id_hotel`) REFERENCES `hoteles` (`id_hotel`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `transfer_precios_ibfk_2` FOREIGN KEY (`id_vehiculo`) REFERENCES `transfer_vehiculo` (`id_vehiculo`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 40 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 52 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of transfer_precios
 -- ----------------------------
-INSERT INTO `transfer_precios` VALUES (1, 1, 30, 50);
-INSERT INTO `transfer_precios` VALUES (6, 50, 62, 200);
-INSERT INTO `transfer_precios` VALUES (7, 51, 63, 100);
-INSERT INTO `transfer_precios` VALUES (8, 52, 64, 100);
-INSERT INTO `transfer_precios` VALUES (9, 53, 65, 100);
-INSERT INTO `transfer_precios` VALUES (10, 54, 66, 100);
-INSERT INTO `transfer_precios` VALUES (11, 55, 67, 100);
-INSERT INTO `transfer_precios` VALUES (12, 56, 68, 100);
-INSERT INTO `transfer_precios` VALUES (13, 57, 69, 100);
-INSERT INTO `transfer_precios` VALUES (14, 58, 70, 100);
-INSERT INTO `transfer_precios` VALUES (15, 59, 71, 100);
-INSERT INTO `transfer_precios` VALUES (16, 60, 72, 200);
-INSERT INTO `transfer_precios` VALUES (17, 61, 73, 100);
-INSERT INTO `transfer_precios` VALUES (18, 62, 74, 200);
-INSERT INTO `transfer_precios` VALUES (19, 63, 75, 200);
-INSERT INTO `transfer_precios` VALUES (20, 64, 76, 200);
-INSERT INTO `transfer_precios` VALUES (21, 65, 77, 100);
-INSERT INTO `transfer_precios` VALUES (22, 66, 88, 200);
-INSERT INTO `transfer_precios` VALUES (23, 67, 89, 100);
-INSERT INTO `transfer_precios` VALUES (24, 68, 90, 100);
-INSERT INTO `transfer_precios` VALUES (25, 69, 91, 100);
-INSERT INTO `transfer_precios` VALUES (26, 70, 92, 100);
-INSERT INTO `transfer_precios` VALUES (27, 71, 93, 100);
-INSERT INTO `transfer_precios` VALUES (28, 72, 94, 100);
-INSERT INTO `transfer_precios` VALUES (29, 73, 95, 100);
-INSERT INTO `transfer_precios` VALUES (30, 74, 96, 100);
-INSERT INTO `transfer_precios` VALUES (31, 75, 97, 100);
-INSERT INTO `transfer_precios` VALUES (32, 76, 98, 200);
-INSERT INTO `transfer_precios` VALUES (33, 77, 99, 200);
-INSERT INTO `transfer_precios` VALUES (34, 78, 100, 100);
-INSERT INTO `transfer_precios` VALUES (35, 79, 101, 200);
-INSERT INTO `transfer_precios` VALUES (36, 80, 102, 200);
-INSERT INTO `transfer_precios` VALUES (37, 81, 103, 100);
-INSERT INTO `transfer_precios` VALUES (38, 82, 104, 100);
-INSERT INTO `transfer_precios` VALUES (39, 83, 105, 100);
+INSERT INTO `transfer_precios` VALUES (42, 88, 1, 100);
+INSERT INTO `transfer_precios` VALUES (43, 89, 7, 200);
+INSERT INTO `transfer_precios` VALUES (44, 90, 9, 100);
+INSERT INTO `transfer_precios` VALUES (45, 91, 5, 100);
+INSERT INTO `transfer_precios` VALUES (46, 92, 1, 200);
+INSERT INTO `transfer_precios` VALUES (47, 93, 5, 100);
+INSERT INTO `transfer_precios` VALUES (48, 94, 5, 100);
+INSERT INTO `transfer_precios` VALUES (49, 95, 5, 100);
+INSERT INTO `transfer_precios` VALUES (50, 96, 5, 100);
+INSERT INTO `transfer_precios` VALUES (51, 97, 8, 100);
 
 -- ----------------------------
 -- Table structure for transfer_reservas
@@ -260,28 +211,22 @@ CREATE TABLE `transfer_reservas`  (
   INDEX `FK_RESERVAS_TIPO`(`id_tipo_reserva` ASC) USING BTREE,
   INDEX `FK_RESERVAS_VEHICULO`(`id_vehiculo` ASC) USING BTREE,
   CONSTRAINT `transfer_reservas_ibfk_1` FOREIGN KEY (`id_destino`) REFERENCES `tranfer_hotel` (`id_zona`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT `transfer_reservas_ibfk_2` FOREIGN KEY (`id_hotel`) REFERENCES `tranfer_hotel` (`id_hotel`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `transfer_reservas_ibfk_2` FOREIGN KEY (`id_hotel`) REFERENCES `tranfer_hotel` (`id_hotel`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `transfer_reservas_ibfk_3` FOREIGN KEY (`id_tipo_reserva`) REFERENCES `transfer_tipo_reserva` (`id_tipo_reserva`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `transfer_reservas_ibfk_4` FOREIGN KEY (`id_vehiculo`) REFERENCES `transfer_vehiculo` (`id_vehiculo`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 62 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 71 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of transfer_reservas
 -- ----------------------------
-INSERT INTO `transfer_reservas` VALUES (43, 'OZiI8', 89, 1, 'victor_rg33@hotmail.com', '2024-12-01 00:00:00', '2024-12-02 11:34:06', 1, '2025-01-16', '10:48:00', 'FR55', 'Madrid', NULL, NULL, 3, 67, NULL, NULL);
-INSERT INTO `transfer_reservas` VALUES (45, 'HZG8Z', 91, 3, 'albertogil@gmail.com', '2024-12-01 00:00:00', '2024-12-02 11:43:35', 1, '2024-12-24', '12:00:00', 'JR545', 'Mallorca', '18:50:00', '2024-12-26', 4, 69, 'TY6545', '15:00:00');
-INSERT INTO `transfer_reservas` VALUES (47, '3BafX', 92, 2, 'victor_rg33@hotmail.com', '2024-12-02 00:00:00', '2024-12-02 09:38:07', 1, NULL, NULL, NULL, 'N/A', '10:30:00', '2024-12-20', 5, 70, 'GT5443', '08:30:00');
-INSERT INTO `transfer_reservas` VALUES (48, '3BafX', 92, 2, 'victor_rg33@hotmail.com', '2024-12-02 00:00:00', '2024-12-02 00:00:00', 1, NULL, NULL, NULL, 'N/A', '12:30:00', '2024-12-20', 5, 70, 'GT5443', '10:30:00');
-INSERT INTO `transfer_reservas` VALUES (49, '5MTa6', 93, 2, 'victor_rg33@hotmail.com', '2024-12-02 00:00:00', '2024-12-02 00:00:00', 1, NULL, NULL, NULL, 'N/A', '12:00:00', '2024-12-20', 4, 71, 'FT5545', '10:00:00');
-INSERT INTO `transfer_reservas` VALUES (50, 'aXmBV', 94, 1, 'victor_rg33@hotmail.com', '2024-12-02 00:00:00', '2024-12-02 00:00:00', 1, '2024-12-20', '15:15:00', 'VS4343', 'Barcelona', NULL, NULL, 2, 72, NULL, NULL);
-INSERT INTO `transfer_reservas` VALUES (51, 'eVFB1', 95, 1, 'j.contoso@gmail.com', '2024-12-02 00:00:00', '2024-12-02 00:00:00', 1, '2024-12-26', '12:50:00', 'GR544', 'Barcelona', NULL, NULL, 8, 73, NULL, NULL);
-INSERT INTO `transfer_reservas` VALUES (53, 'BvmpG', 97, 2, 'JuanSO@gmail.com', '2024-12-02 00:00:00', '2024-12-02 00:00:00', 1, NULL, NULL, NULL, 'N/A', '10:00:00', '2024-12-10', 2, 75, 'GH0897', '07:30:00');
-INSERT INTO `transfer_reservas` VALUES (56, 'o3Nef', 100, 1, 'AndreaQuiTa@yahoo.es', '2024-12-02 00:00:00', '2024-12-02 00:00:00', 1, '2024-12-16', '10:20:00', 'AE01326', 'Madrid-Barajas', NULL, NULL, 1, 78, NULL, NULL);
-INSERT INTO `transfer_reservas` VALUES (57, 'auZsh', 101, 3, 'Sergito101@hotmail.com', '2024-12-02 00:00:00', '2024-12-02 00:00:00', 1, '2024-12-09', '10:00:00', 'AG2039', 'Valencia-Manises', '19:20:00', '2024-12-16', 3, 79, 'AG2109', '16:20:00');
-INSERT INTO `transfer_reservas` VALUES (58, '1sPo0', 102, 3, 'victor_rg33@hotmail.com', '2024-12-02 00:00:00', '2024-12-02 00:00:00', 1, '2024-12-31', '15:30:00', 'GR332', 'Madrid', '15:23:00', '2024-12-10', 15, 80, 'FLYRI', '10:23:00');
-INSERT INTO `transfer_reservas` VALUES (59, '6AnNx', 103, 2, 'Miranda.Sousa@gmail.com', '2024-12-02 00:00:00', '2024-12-02 00:00:00', 1, NULL, NULL, NULL, 'N/A', '20:30:00', '2024-12-03', 4, 81, 'RA9879', '17:30:00');
-INSERT INTO `transfer_reservas` VALUES (60, 'fZNit', 104, 1, 'JuanSO@gmail.com', '2024-12-02 00:00:00', '2024-12-02 00:00:00', 1, '2024-12-03', '11:11:00', 'AE01326', 'Barcelona-el Prat', NULL, NULL, 1, 82, NULL, NULL);
-INSERT INTO `transfer_reservas` VALUES (61, 'iCTT8', 105, 1, 'josemayuste@hotmail.com', '2024-12-02 00:00:00', '2024-12-02 00:00:00', 1, '2024-12-23', '12:50:00', 'FLY54', 'Barcelona', NULL, NULL, 1, 83, NULL, NULL);
+INSERT INTO `transfer_reservas` VALUES (63, 'wj7ZP', 1, 1, 'a@a.com', '2024-12-05 00:00:00', '2024-12-05 00:00:00', 1, '2024-12-22', '12:12:00', '123123', '123123', NULL, NULL, 2, 88, NULL, NULL);
+INSERT INTO `transfer_reservas` VALUES (64, 'JkxAb', 1, 3, 'victor_rg33@hotmail.com', '2024-12-05 00:00:00', '2024-12-05 14:39:44', 1, '2024-12-20', '10:00:00', 'FLY765', 'Barcelona', '04:00:00', '2025-01-05', 5, 89, 'FLY943', '12:00:00');
+INSERT INTO `transfer_reservas` VALUES (65, 'Qbm7B', 1, 1, 'clientetest@cliente.com', '2024-12-05 00:00:00', '2024-12-07 18:32:23', 20, '2025-05-16', '07:00:00', 'FLY5544', 'Madrid', NULL, NULL, 1, 90, NULL, NULL);
+INSERT INTO `transfer_reservas` VALUES (66, 'RzJX3', 5, 2, 'victor_rg33@hotmail.com', '2024-12-07 00:00:00', '2024-12-07 00:00:00', 1, NULL, NULL, NULL, 'N/A', '15:00:00', '2024-12-15', 5, 91, 'AG5449', '19:00:00');
+INSERT INTO `transfer_reservas` VALUES (67, 'KZJkB', 1, 3, 'clientetest@cliente.com', '2024-12-07 00:00:00', '2024-12-07 00:00:00', 1, '2025-01-15', '11:00:00', 'YT653', 'Lanzarote', '16:00:00', '2025-01-22', 5, 92, 'T534', '11:00:00');
+INSERT INTO `transfer_reservas` VALUES (68, 'xMSRX', 5, 2, 'jose.contoso@gmail.com', '2024-12-07 00:00:00', '2024-12-07 00:00:00', 1, NULL, NULL, NULL, 'N/A', '21:00:00', '2024-12-12', 10, 94, 'BGR43', '16:00:00');
+INSERT INTO `transfer_reservas` VALUES (69, 'rnzn2', 5, 2, 'a.rollo@hotmail.com', '2024-12-07 00:00:00', '2024-12-07 00:00:00', 1, NULL, NULL, NULL, 'N/A', '16:00:00', '2024-12-16', 1, 96, 'TIEI43', '11:00:00');
+INSERT INTO `transfer_reservas` VALUES (70, 'HPcJz', 8, 1, 'clientetest@cliente.com', '2024-12-07 00:00:00', '2024-12-07 00:00:00', 20, '2024-12-30', '12:00:00', 'asdfasdf', 'ertesdf', NULL, NULL, 50, 97, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for transfer_tipo_reserva
@@ -311,7 +256,7 @@ CREATE TABLE `transfer_vehiculo`  (
   PRIMARY KEY (`id_vehiculo`) USING BTREE,
   INDEX `FK_idCliente_Vehiculo`(`idCliente` ASC) USING BTREE,
   CONSTRAINT `FK_idCliente_Vehiculo` FOREIGN KEY (`idCliente`) REFERENCES `cliente` (`idCliente`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 84 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 98 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of transfer_vehiculo
@@ -399,6 +344,20 @@ INSERT INTO `transfer_vehiculo` VALUES (80, 'Transfer vendido', 21);
 INSERT INTO `transfer_vehiculo` VALUES (81, 'Transfer vendido', 53);
 INSERT INTO `transfer_vehiculo` VALUES (82, 'Transfer vendido', 50);
 INSERT INTO `transfer_vehiculo` VALUES (83, 'Transfer vendido', 56);
+INSERT INTO `transfer_vehiculo` VALUES (84, 'Transfer vendido', 29);
+INSERT INTO `transfer_vehiculo` VALUES (85, 'Transfer vendido', 57);
+INSERT INTO `transfer_vehiculo` VALUES (86, 'Transfer vendido', 27);
+INSERT INTO `transfer_vehiculo` VALUES (87, 'Transfer vendido', 27);
+INSERT INTO `transfer_vehiculo` VALUES (88, 'Transfer vendido', 27);
+INSERT INTO `transfer_vehiculo` VALUES (89, 'Transfer vendido', 21);
+INSERT INTO `transfer_vehiculo` VALUES (90, 'Transfer vendido', 58);
+INSERT INTO `transfer_vehiculo` VALUES (91, 'Transfer vendido', 21);
+INSERT INTO `transfer_vehiculo` VALUES (92, 'Transfer vendido', 58);
+INSERT INTO `transfer_vehiculo` VALUES (93, 'Transfer vendido', 59);
+INSERT INTO `transfer_vehiculo` VALUES (94, 'Transfer vendido', 59);
+INSERT INTO `transfer_vehiculo` VALUES (95, 'Transfer vendido', 60);
+INSERT INTO `transfer_vehiculo` VALUES (96, 'Transfer vendido', 60);
+INSERT INTO `transfer_vehiculo` VALUES (97, 'Transfer vendido', 58);
 
 -- ----------------------------
 -- Table structure for transfer_viajeros
@@ -430,7 +389,7 @@ CREATE TABLE `transfer_zona`  (
   `id_zona` int(11) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(191) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   PRIMARY KEY (`id_zona`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of transfer_zona

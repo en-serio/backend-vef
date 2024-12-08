@@ -123,7 +123,7 @@ function savePerfil() {
 
 $(document).ready(function () {
     // Asignar evento al botón perfil (cuando se hace clic en cargar perfil)
-    $("#perfilPanel").on("click", function (e) {
+    $(".perfilPanel").on("click", function (e) {
         loadPerfil();
     });
 

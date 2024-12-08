@@ -297,7 +297,8 @@ class Dashboard
             fechaVuelta: $('#summaryFechaVuelta').text(),
             horaVueloVuelta: $('#summaryHoraVueloVuelta').text(),
             horaRecogida: $('#summaryHoraRecogida').text(),
-            numeroVueloVuelta: $('#summaryNumeroVueloVuelta').text()
+            numeroVueloVuelta: $('#summaryNumeroVueloVuelta').text(),
+            idHotel: $('#summaryHotelId').val() 
             
         };
         var transfer = JSON.stringify(transferData)
@@ -465,6 +466,14 @@ class Dashboard
             const idTransfer = $(this).attr('data-id');
             const type = $(this).attr('data-target');
             gestionTransfer(idTransfer, type);
+
+        });
+
+        $("#dynamicContent .viewTransferBtn").off().click(function () {
+
+            const idTransfer = $(this).attr('data-id');
+            const type = $(this).attr('data-target');
+            gestionViewTransfer(idTransfer, type);
 
         });
 
@@ -694,6 +703,37 @@ class Dashboard
             }
         }); 
     }
+
+    function gestionViewTransfer(idTransfer, type){     
+
+
+        $.post("../class/controller/transferCtrl.php", {controller: "transferCtrl", action: "viewTransfer", idTransfer:idTransfer, type:type}, function (data) {
+            try {
+    
+                var d= JSON.parse(data);  
+                if (!d.error) {      
+                    
+                    $('#modalEditBody').html(d.out);
+                    $('#editTransferModal').modal('show');
+                   
+                } else {
+                    
+                    Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: d.message,    
+                });
+                }
+            } catch (e) {
+                
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: e.message,
+                    });
+            }
+        }); 
+    }
     
    async function fetchActiveTransfers() {
         try {
@@ -770,95 +810,119 @@ class Dashboard
             }
     }
 
-    async function initializeCalendar() 
-{
-    var calendarEl = document.getElementById('calendar');
-    if (calendarEl) 
-    {
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            locale: 'es',
-            initialView: 'dayGridMonth', 
-            height: '100%', 
-            contentHeight: 'auto', 
-            editable: false,
-            selectable: true,
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek'
-            },
-            buttonText: {
-                today: 'Hoy',
-                month: 'Mes',
-                week: 'Semana',
-                day: 'Día',
-                list: 'Agenda'
-            },
-            events: [],
-            eventClick: function(info) {
-                var event = info.event;
-                showEventDetails(event);
-            }
-        });
-
-        try {
-            const transfers = await loadTransfersCalendar(); 
-            transfers.forEach(transfer => {
-
-                let startDateTime = null;
-                let endDateTime = null;
-
-                // Si tiene fecha y hora de entrada (trayecto de ida o ida y vuelta)
-                if (transfer.fecha_entrada && transfer.hora_entrada) {
-                    startDateTime = new Date(`${transfer.fecha_entrada}T${transfer.hora_entrada}`);
-                    endDateTime = new Date(startDateTime);
-                    endDateTime.setHours(startDateTime.getHours() + 1); // Duración de 1 hora
-                } 
-                // Si tiene fecha y hora de recogida (trayecto de vuelta o ida y vuelta)
-                else if (transfer.fecha_vuelo_salida && transfer.hora_recogida) {
-                    startDateTime = new Date(`${transfer.fecha_vuelo_salida}T${transfer.hora_recogida}`);
-                    endDateTime = new Date(startDateTime);
-                    endDateTime.setHours(startDateTime.getHours() + 1); // Duración de 1 hora
-                } else {
-                    console.warn(`Evento omitido por falta de información de fecha/hora válida: ${transfer.localizador}`);
-                    return; // Omitir eventos sin información suficiente
-                }
-
-                if (!isNaN(startDateTime.getTime()) && !isNaN(endDateTime.getTime())) {
-                    calendar.addEvent({
-                        title: `${transfer.localizador}`,
-                        start: startDateTime.toISOString(),
-                        end: endDateTime.toISOString(),
-                        description: `Cliente: ${transfer.email_cliente}, Num. viajeros: ${transfer.num_viajeros}`,
-                        location: transfer.descripcion_hotel || 'Ubicación no disponible',
-                        extendedProps: {
-                            email_cliente: transfer.email_cliente,
-                            num_viajeros: transfer.num_viajeros,
-                            id_hotel: transfer.id_hotel,
-                            id_destino: transfer.id_destino,
-                            fecha_entrada: transfer.fecha_entrada,
-                            hora_entrada: transfer.hora_entrada,
-                            hora_recogida: transfer.hora_recogida,
-                            numero_vuelo_entrada: transfer.numero_vuelo_entrada,
-                            origen_vuelo_entrada: transfer.origen_vuelo_entrada,
-                            fecha_vuelo_salida: transfer.fecha_vuelo_salida,
-                            hora_vuelo_salida: transfer.hora_vuelo_salida,
-                            numero_vuelo_vuelta: transfer.numero_vuelo_vuelta,
-                            id_tipo_reserva: transfer.id_tipo_reserva,
-                            descripcion_hotel: transfer.descripcion_hotel,
-                            nombre_hotel: transfer.nombre_hotel
-                        }
-                    });
-                } else {
-                    console.warn(`Evento con datos inválidos omitido: ${transfer.localizador}`);
+    async function initializeCalendar() {
+        var calendarEl = document.getElementById('calendar');
+        if (calendarEl) {
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                locale: 'es',
+                initialView: 'dayGridMonth',
+                height: '100%',
+                contentHeight: 'auto',
+                editable: false,
+                selectable: true,
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek'
+                },
+                buttonText: {
+                    today: 'Hoy',
+                    month: 'Mes',
+                    week: 'Semana',
+                    day: 'Día',
+                    list: 'Agenda'
+                },
+                events: [],
+                eventClick: function(info) {
+                    var event = info.event;
+                    showEventDetails(event);
                 }
             });
-            calendar.render();
-        } catch (error) {
-            console.error('Hubo un problema al cargar los transfers:', error);
+    
+            try {
+                const transfers = await loadTransfersCalendar();
+                transfers.forEach(transfer => {
+                    let startDateTime = null;
+                    let endDateTime = null;
+    
+                    // Verifica el trayecto de ida
+                    if (transfer.fecha_entrada && transfer.hora_entrada) {
+                        startDateTime = new Date(`${transfer.fecha_entrada}T${transfer.hora_entrada}`);
+                        endDateTime = new Date(startDateTime);
+                        endDateTime.setHours(startDateTime.getHours() + 1); // Duración de 1 hora
+    
+                        if (!isNaN(startDateTime.getTime()) && !isNaN(endDateTime.getTime())) {
+                            calendar.addEvent({
+                                title: `${transfer.localizador} - Ida`,
+                                start: startDateTime.toISOString(),
+                                end: endDateTime.toISOString(),
+                                description: `Cliente: ${transfer.email_cliente}, Num. viajeros: ${transfer.num_viajeros}`,
+                                location: transfer.descripcion_hotel || 'Ubicación no disponible',
+                                extendedProps: {
+                                    email_cliente: transfer.email_cliente,
+                                    num_viajeros: transfer.num_viajeros,
+                                    id_hotel: transfer.id_hotel,
+                                    id_destino: transfer.id_destino,
+                                    fecha_entrada: transfer.fecha_entrada,
+                                    hora_entrada: transfer.hora_entrada,
+                                    hora_recogida: transfer.hora_recogida,
+                                    numero_vuelo_entrada: transfer.numero_vuelo_entrada,
+                                    origen_vuelo_entrada: transfer.origen_vuelo_entrada,
+                                    fecha_vuelo_salida: transfer.fecha_vuelo_salida,
+                                    hora_vuelo_salida: transfer.hora_vuelo_salida,
+                                    numero_vuelo_vuelta: transfer.numero_vuelo_vuelta,
+                                    id_tipo_reserva: transfer.id_tipo_reserva,
+                                    descripcion_hotel: transfer.descripcion_hotel,
+                                    nombre_hotel: transfer.nombre_hotel
+                                }
+                            });
+                        } else {
+                            console.warn(`Evento con datos inválidos omitido: ${transfer.localizador}`);
+                        }
+                    }
+    
+                    // Verifica el trayecto de vuelta
+                    if (transfer.fecha_vuelo_salida && transfer.hora_vuelo_salida) {
+                        startDateTime = new Date(`${transfer.fecha_vuelo_salida}T${transfer.hora_vuelo_salida}`);
+                        endDateTime = new Date(startDateTime);
+                        endDateTime.setHours(startDateTime.getHours() + 1); // Duración de 1 hora
+    
+                        if (!isNaN(startDateTime.getTime()) && !isNaN(endDateTime.getTime())) {
+                            calendar.addEvent({
+                                title: `${transfer.localizador} - Vuelta`,
+                                start: startDateTime.toISOString(),
+                                end: endDateTime.toISOString(),
+                                description: `Cliente: ${transfer.email_cliente}, Num. viajeros: ${transfer.num_viajeros}`,
+                                location: transfer.descripcion_hotel || 'Ubicación no disponible',
+                                extendedProps: {
+                                    email_cliente: transfer.email_cliente,
+                                    num_viajeros: transfer.num_viajeros,
+                                    id_hotel: transfer.id_hotel,
+                                    id_destino: transfer.id_destino,
+                                    fecha_entrada: transfer.fecha_entrada,
+                                    hora_entrada: transfer.hora_entrada,
+                                    hora_recogida: transfer.hora_recogida,
+                                    numero_vuelo_entrada: transfer.numero_vuelo_entrada,
+                                    origen_vuelo_entrada: transfer.origen_vuelo_entrada,
+                                    fecha_vuelo_salida: transfer.fecha_vuelo_salida,
+                                    hora_vuelo_salida: transfer.hora_vuelo_salida,
+                                    numero_vuelo_vuelta: transfer.numero_vuelo_vuelta,
+                                    id_tipo_reserva: transfer.id_tipo_reserva,
+                                    descripcion_hotel: transfer.descripcion_hotel,
+                                    nombre_hotel: transfer.nombre_hotel
+                                }
+                            });
+                        } else {
+                            console.warn(`Evento con datos inválidos omitido: ${transfer.localizador}`);
+                        }
+                    }
+                });
+                calendar.render();
+            } catch (error) {
+                console.error('Hubo un problema al cargar los transfers:', error);
+            }
         }
     }
-}
 
 
     function showEventDetails(event) {
@@ -925,15 +989,18 @@ class Dashboard
     function updateDireccionHotel() {
         const select = document.getElementById('hotelDestino');
         const direccionInput = document.getElementById('direccionHotel');
+        const idHotelInput = document.getElementById('summaryHotelId');
         
         // Obtener la opción seleccionada
         const selectedOption = select.options[select.selectedIndex];
         
         // Obtener el atributo `data-direccion` de la opción seleccionada
         const direccion = selectedOption.getAttribute('data-direccion');
+        const idHotel = selectedOption.getAttribute('data-id');
         
         // Establecer la dirección en el campo de texto
         direccionInput.value = direccion || '';
+        idHotelInput.value = idHotel || '';
     }
 
     //Resetear el modal stepper cada vez que se cierra
@@ -943,6 +1010,12 @@ class Dashboard
         const vistaPanelLink = document.getElementById('vistaPanelLink');
         if (vistaPanelLink) {
             vistaPanelLink.addEventListener('click', function (e) {
+                loadView('views.php'); 
+            });
+        }
+        const vistaPanelLink2 = document.getElementById('vistaPanelLink2');
+        if (vistaPanelLink2) {
+            vistaPanelLink2.addEventListener('click', function (e) {
                 loadView('views.php'); 
             });
         }
