@@ -166,5 +166,26 @@ class TransferZonaEntity
     return ['error' => false, 'message' => 'La zona no está siendo utilizada y puede eliminarse.'];
     }
 
+    public function getNombreZona($id)
+{
+    try 
+    {
+        $query = "SELECT descripcion FROM transfer_zona WHERE id_zona = :id_zona";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id_zona', $id, PDO::PARAM_INT); // Usamos $id
+        $stmt->execute();
+        
+        $descripcion = $stmt->fetchColumn();
+
+        if ($descripcion) {
+            return $descripcion;
+        }
+
+    } catch(PDOException $e) {
+        error_log("Error al cargar la zona: " . $e->getMessage());
+    }
+    
+    return false;
+}
 
 }

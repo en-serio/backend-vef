@@ -17,17 +17,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/backend-vef/class/entity/transferVehi
 include_once $_SERVER['DOCUMENT_ROOT'] . '/backend-vef/class/entity/transferPreciosEntity.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/backend-vef/class/entity/transferZonaEntity.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/backend-vef/class/entity/transferHotelEntity.php';
-
-/*
-include_once '../entity/dbConnection.php';
-include_once '../controller/controller.php';
-include_once '../entity/clienteEntity.php';
-include_once '../entity/transferEntity.php';
-include_once '../entity/transferTipoReservaEntity.php';
-include_once '../entity/transferPreciosEntity.php';
-include_once '../entity/transferVehiculoEntity.php';
-include_once '../entity/transferZonaEntity.php';
-include_once '../entity/transferHotelEntity.php';*/
+include_once $_SERVER['DOCUMENT_ROOT'] . '/backend-vef/class/entity/hotelesEntity.php';
 
 
 
@@ -70,17 +60,73 @@ class TransferCtrl extends controller
        return $idVehiculo;
     }
 
-    function drawHotelesList():void {
-        $hotelEntity = new TransferHotelEntity;
-        $hoteles = $hotelEntity->getHotelesSinRepetir();
+    function drawHotelesList(): void {
+        $rol = $_SESSION['rol'];
+
+            switch ($rol) {
+                
+                case 1: // Administrador
+                    $hotelEntity = new HotelesEntity;
+                    $hoteles = $hotelEntity->getHoteles();
+                
+                    echo '<option value="" disabled selected>Escoge un hotel de la lista</option>';
+                
+                    foreach ($hoteles as $hotel) {
+                    echo '<option value="' . htmlspecialchars($hotel['nombre_hotel']) . '" data-id="' 
+                        . htmlspecialchars($hotel['id_hotel']) . '" data-direccion="' 
+                        . htmlspecialchars($hotel['direccion_hotel']) . '">' 
+                        . htmlspecialchars($hotel['nombre_hotel']) . '</option>';
+                    }
+                    break;
+    
+                case 2:
+                    $clienteEntity = new clienteEntity;
+                    $cliente = $clienteEntity->getClienteByUsername($_SESSION['user']);
+
+                    $hotelEntity = new HotelesEntity;
+                    $idHotel = $hotelEntity->getIdHotelByIdCliente($cliente['idCliente']);
+                    $hoteles = $hotelEntity->getHotelArray($idHotel);
+
+                
+                    echo '<option value="" disabled selected>Escoge un hotel de la lista</option>';
+                
+                    foreach ($hoteles as $hotel) {
+                    echo '<option value="' . htmlspecialchars($hotel['nombre_hotel']) . '" data-id="' 
+                        . htmlspecialchars($hotel['id_hotel']) . '" data-direccion="' 
+                        . htmlspecialchars($hotel['direccion_hotel']) . '">' 
+                        . htmlspecialchars($hotel['nombre_hotel']) . '</option>';
+                    }
+                break;
+
+                case 3: // Cliente
+                    $hotelEntity = new HotelesEntity;
+                    $hoteles = $hotelEntity->getHoteles();
+                
+                    echo '<option value="" disabled selected>Escoge un hotel de la lista</option>';
+                
+                    foreach ($hoteles as $hotel) {
+                    echo '<option value="' . htmlspecialchars($hotel['nombre_hotel']) . '" data-id="' 
+                        . htmlspecialchars($hotel['id_hotel']) . '" data-direccion="' 
+                        . htmlspecialchars($hotel['direccion_hotel']) . '">' 
+                        . htmlspecialchars($hotel['nombre_hotel']) . '</option>';
+                    }
+                    break;
+            }
+        }
+    
+/*    function drawHotelesList():void {
+        $hotelEntity = new HotelesEntity;
+        $hoteles = $hotelEntity->getHoteles();
 
         echo '<option value="" disabled selected>Escoge un hotel de la lista</option>';
                                                     
         foreach ($hoteles as $hotel) {
-            echo '<option value="' . htmlspecialchars($hotel['nombre_hotel']) . '" data-direccion="' 
-            . htmlspecialchars($hotel['direccion_hotel']) . '">' . htmlspecialchars($hotel['nombre_hotel']) . '</option>';
-        }
-}
+            echo '<option value="' . htmlspecialchars($hotel['nombre_hotel']) . '" data-id="' 
+                . htmlspecialchars($hotel['id_hotel']) . '" data-direccion="' 
+                . htmlspecialchars($hotel['direccion_hotel']) . '">' 
+                . htmlspecialchars($hotel['nombre_hotel']) . '</option>';
+    }
+    }*/
 
     function drawUserTransfer()
     {
@@ -198,13 +244,16 @@ class TransferCtrl extends controller
 
             switch ($_SESSION['rol']) {
                 case 1:
-                    $eliminarTransfer = '<button class="btn btn-sm btn-danger deleteTransferBtn" data-target="delete" data-id="'.$value['id_reserva'].'">Eliminar Transfer</button>';
+                    $editBtn = '<button class="btn btn-sm btn-primary editTransferBtn" data-target="edit" data-id="'.$value['id_reserva'].'">Editar</button>';
+                    $transferBtn = '<button class="btn btn-sm btn-danger deleteTransferBtn" data-target="delete" data-id="'.$value['id_reserva'].'">Eliminar Transfer</button>';
                     break;
                 case 2:
-                    $eliminarTransfer = '<button class="btn btn-sm btn-danger deleteTransferBtn" data-target="delete" data-id="'.$value['id_reserva'].'">Eliminar Transfer</button>';
+                    $editBtn = "";
+                    $transferBtn = '<button class="btn btn-sm btn-info viewTransferBtn" data-target="view" data-id="'.$value['id_reserva'].'">Ver</button>';
                     break;
                 case 3:
-                    $eliminarTransfer = '<button class="btn btn-sm btn-warning deleteTransferBtn" data-target="delete" data-id="'.$value['id_reserva'].'">Cancelar Transfer</button>';
+                    $editBtn = '<button class="btn btn-sm btn-primary editTransferBtn" data-target="edit" data-id="'.$value['id_reserva'].'">Editar</button>';
+                    $transferBtn = '<button class="btn btn-sm btn-warning deleteTransferBtn" data-target="delete" data-id="'.$value['id_reserva'].'">Cancelar Transfer</button>';
                     break;
             }
 
@@ -217,8 +266,8 @@ class TransferCtrl extends controller
                         <td>' . $hora_entrada . '</td>
                         <td>' . $hora_salida . '</td>
                         <td>' . htmlspecialchars($value['localizador']) . '</td>
-                        <td><button class="btn btn-sm btn-primary editTransferBtn" data-target="edit" data-id="'.$value['id_reserva'].'">Editar</button></td>
-                        <td>'.$eliminarTransfer.'</td>
+                        <td>'.$editBtn.'</td>
+                        <td>'.$transferBtn.'</td>
                     </tr>';
         }
     
@@ -226,6 +275,103 @@ class TransferCtrl extends controller
                 </table>';
 
             return $head.$out;
+    }
+
+    public function viewEditTransfer($transfer):string
+    {
+        $tipoTrayecto = '';
+    
+        switch ($transfer['id_tipo_reserva']) {
+            case 1:
+                $tipoTrayecto = 'Ida';
+                break;
+            case 2:
+                $tipoTrayecto = 'Vuelta';
+                break;
+            case 3:
+                $tipoTrayecto = 'Ida y Vuelta';
+                break;
+        }
+    
+        $fechaEntrada = ($transfer['fecha_entrada']) ? date('Y-m-d', strtotime($transfer['fecha_entrada'])) : null;
+        $horaRecogida = ($transfer['hora_recogida']) ? date('h:i:s', strtotime($transfer['hora_recogida'])) : null;
+        $fechaSalida = ($transfer['fecha_vuelo_salida']) ? date('Y-m-d', strtotime($transfer['fecha_vuelo_salida'])) : null;
+        $horaSalida = ($transfer['hora_vuelo_salida']) ? date('h:i:s', strtotime($transfer['hora_vuelo_salida'])) : null;
+        $horaEntrada = ($transfer['hora_entrada']) ? date('h:i:s',  strtotime($transfer['hora_entrada'])) : null;
+    
+        $footer = '<div class="modal-footer">
+                    <button type="button" class="btn btn-info" data-bs-dismiss="modal" aria-label="Close">Cerrar</button>
+                </div>';
+    
+        $datosPersonales = '<div class="row">
+                                <h4>Datos personales</h4>
+                                <div class="col-6">
+                                    <div class="p-1"><strong>Nombre:</strong> <input type="text" class="form-control" value="'.$transfer['nombre'].'" disabled></div>
+                                    <div class="p-1"><strong>Apellidos:</strong> <input type="text" class="form-control" value="'.$transfer['apellido1']." ". $transfer['apellido2'].'" disabled></div>
+                                    <div class="p-1">
+                                        <strong>Trayecto:</strong>
+                                        <input type="text" class="form-control" value="'.$tipoTrayecto.'" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-1"><strong>Teléfono:</strong> <input type="text" class="form-control" value="'.$transfer['telefono'].'" disabled></div>
+                                    <div class="p-1"><strong>Email:</strong> <input type="text" class="form-control" value="'.$transfer['email_cliente'].'" disabled></div>
+                                    <div class="p-1"><strong>Localizador reserva:</strong> <input type="text" class="form-control" value="'.$transfer['localizador'].'" disabled></div>
+                                </div>
+                            </div>
+                                <hr class="border border-light mt-3">';
+    
+        $ini = '<div class="row">';
+        $end = '</div>';
+    
+        $ida = '<div class="row" id="datosIda">
+                    <div class="row">
+                        <h4>Datos de la ida</h4>
+                        <div class="col-12 col-md-6">
+                            <div class="p-1"><strong>Fecha ida:</strong> <input type="date" class="form-control" value="'.$fechaEntrada.'" disabled></div>
+                            <div class="p-1"><strong>Hora transfer ida:</strong> <input type="time" class="form-control" value="'.$horaEntrada.'" disabled></div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="p-1"><strong>Número de vuelo:</strong> <input type="text" class="form-control" value="'.$transfer['numero_vuelo_entrada'].'" disabled></div>
+                            <div class="p-1"><strong>Aeropuerto llegada:</strong> <input type="text" class="form-control" value="'.$transfer['origen_vuelo_entrada'].'" disabled></div>
+                        </div>
+                    </div>
+                    <hr class="border border-light mb-3">
+                </div>';
+    
+        $vuelta = '<div class="row" id="datosVuelta">
+                        <div class="row">
+                            <h4>Datos de la vuelta</h4>
+                            <div class="col-12 col-md-6">
+                                <div class="p-1"><strong>Fecha vuelta:</strong> <input type="date" class="form-control" value="'.$fechaSalida.'" disabled></div>
+                                <div class="p-1"><strong>Hora recogida:</strong> <input type="time" class="form-control" value="'.$horaRecogida.'" disabled></div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="p-1"><strong>Número vuelo vuelta:</strong> <input type="text" class="form-control" value="'.$transfer['numero_vuelo_vuelta'].'" disabled></div>
+                                <div class="p-1"><strong>Hora del vuelo:</strong> <input type="time" class="form-control" value="'.$horaSalida.'" disabled></div>
+                            </div>
+                        </div>
+                    </div>';
+    
+        $hotel = '<hr class="border border-light mt-3">
+                <div class="row">
+                    <h4> Datos del hotel</h4>
+                    <div class="col-12 col-md-6">
+                        <div class="p-1"><strong>Hotel:</strong> <input type="text" class="form-control" value="'.$transfer['nombre_hotel'].'" disabled></div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="p-1"><strong>Número de viajeros:</strong> <input type="number" class="form-control" value="'.$transfer['num_viajeros'].'" disabled></div>
+                    </div>
+                    <div class="col-12">
+                        <div class="p-1 mb-5"><strong>Dirección:</strong> <input type="text" class="form-control" value="'.$transfer['direccion_hotel'].'" disabled></div>
+                    </div>
+                </div>';
+            
+        $body = "";
+        $body .= $hotel;
+        $out = $datosPersonales.$ini.$body.$ida.$vuelta.$end . $footer;
+    
+        return $out;
     }
 
     public function drawEditTransfer($transfer): string
@@ -328,23 +474,7 @@ class TransferCtrl extends controller
                 </div>';
             
         $body = "";
-
-
-        /*switch ($transfer['id_tipo_reserva']) {
-            case 1:
-                $body .= $ida.$vuelta;
-                break;
-            case 2:
-                $body .= $ida.$vuelta;
-                break;
-            case 3:
-                $body .= $ida.$vuelta;
-                break;
-        }*/
-
-
         $body .= $hotel;
-
         $out = $datosPersonales.$ini.$body.$ida.$vuelta.$end . $footer;
 
         return $out;
@@ -443,11 +573,72 @@ class TransferCtrl extends controller
                         $result->error = false;
                     break;
 
-
-                    case 2://rol hotel
-
-                    break;
-                        
+                    case 2: // rol hotel
+                        $clienteEntity = new clienteEntity;
+                        $cliente = $clienteEntity->getClienteByUsername($_SESSION['user']);
+                    
+                        $hotelEntity = new HotelesEntity;
+                        $idHotel = $hotelEntity->getIdHotelByIdCliente($cliente['idCliente']);
+                        $hoteles = $hotelEntity->getHotelArray($idHotel);
+                    
+                        $transferEntity = new TransferEntity;
+                        $transfers = $transferEntity->getAllTransfersActivos();
+                    
+                        $result->out = [];
+                        foreach ($transfers as $transfer) {
+                            $hotelFound = false;
+                            foreach ($hoteles as $hotel) {
+                                if ($transfer['id_hotel'] == $hotel['id_hotel']) {
+                                    $hotelFound = true;
+                                    break;
+                                }
+                            }
+                    
+                            if (!$hotelFound) {
+                                continue;
+                            }
+                    
+                            $hotel = new TransferHotelEntity;
+                            $hotelInfo = $hotel->getHotel($transfer['id_hotel']);
+                    
+                            $zona = new TransferZonaEntity;
+                            $zonaInfo = $zona->selectTransferZona($transfer['id_destino']);
+                    
+                          
+                            switch ($transfer['id_tipo_reserva']) {
+                                case 1:
+                                    $tipoTrayecto = 'Ida';
+                                    break;
+                                case 2:
+                                    $tipoTrayecto = 'Vuelta';
+                                    break;
+                                case 3:
+                                    $tipoTrayecto = 'Ida y Vuelta';
+                                    break;
+                            }
+                    
+                            $result->out[] = [
+                                'id_reserva' => $transfer['id_reserva'],
+                                'localizador' => $transfer['localizador'],
+                                'nombre_hotel' => $hotelInfo['nombre_hotel'],
+                                'descripcion_hotel' => $hotelInfo['direccion_hotel'],
+                                'id_tipo_reserva' => $tipoTrayecto,
+                                'email_cliente' => $transfer['email_cliente'],
+                                'descripcion' => $zonaInfo['descripcion'],
+                                'fecha_entrada' => $transfer['fecha_entrada'],
+                                'hora_entrada' => $transfer['hora_entrada'],
+                                'numero_vuelo_entrada' => $transfer['numero_vuelo_entrada'],
+                                'origen_vuelo_entrada' => $transfer['origen_vuelo_entrada'],
+                                'hora_vuelo_salida' => $transfer['hora_vuelo_salida'],
+                                'fecha_vuelo_salida' => $transfer['fecha_vuelo_salida'],
+                                'num_viajeros' => $transfer['num_viajeros'],
+                                'id_vehiculo' => $transfer['id_vehiculo'],
+                                'numero_vuelo_vuelta' => $transfer['numero_vuelo_vuelta'],
+                                'hora_recogida' => $transfer['hora_recogida']
+                            ];
+                        }
+                        break;
+                    
                     case 3: //rol cliente
                         $user =   $_SESSION['user'];
 
@@ -541,6 +732,22 @@ class TransferCtrl extends controller
 
 
                     case 2://rol hotel
+                        $user =   $_SESSION['user'];
+
+                        $clienteEntity = new clienteEntity;
+                        $cliente = $clienteEntity->getClienteByUsername($user);
+
+
+                        $hotelesEntity = new HotelesEntity;
+                        $idHotel = $hotelesEntity->getIdHotelByIdCliente($cliente['idCliente']);
+
+                        $transferEntity = new TransferEntity;
+                        $transfers = $transferEntity->getAllTransfersActivosByIdHotel($idHotel);
+                        $transferCtrl = new transferCtrl;
+
+                        $result->out = $transferCtrl->drawTransfers($transfers);
+
+                        $result->error = false;
 
                     break;
                         
@@ -700,7 +907,7 @@ class TransferCtrl extends controller
                         $horaVueloVuelta = $data['horaVueloVuelta'];
                         $horaRecogida = $data['horaRecogida'];
                         $numVueloVuelta = $data['numVueloVuelta'];
-                        $aeropuertoVuelta = $data['aeropuertoVuelta'];
+                        //$aeropuertoVuelta = $data['aeropuertoVuelta'];
 
                         $numViajeros = $data['numViajeros'];
 
@@ -875,6 +1082,40 @@ class TransferCtrl extends controller
                 exit();
             }
 
+            if($post['action']=="viewTransfer")
+            {
+                $result = new stdClass();
+                $result->error = false;
+                $result->message = null;
+                $result->out = null;
+
+                $idTransfer = $post['idTransfer'];
+                try
+                {
+
+                    if(!$idTransfer or $idTransfer ==null)
+                        throw new Exception ("No ha sido posible encontrar la reserva asociada");
+    
+                    $transferEntity = new TransferEntity;
+                    $transfer = $transferEntity->getTransferEdit($idTransfer);
+
+                    $transferCtrl = new TransferCtrl;
+                    $result->out = $transferCtrl->viewEditTransfer($transfer);
+
+                        
+
+                }catch(Exception $e)
+                {
+                    $result->error = true;
+                    $result->message = $e->getMessage();
+                }
+
+                
+                
+                echo json_encode($result);
+                exit();
+            }
+
             if($post["action"]=="createTransfer")
             {
                 $result = new stdClass();
@@ -902,7 +1143,8 @@ class TransferCtrl extends controller
                 $horaRecogida = $data['horaRecogida'];
                 $numeroVueloVuelta = $data['numeroVueloVuelta'];
                 $direccionHotel = $data['direccionVuelta'];
-                $hotel = $data['hotelIda'];
+                $nombreHotel = $data['hotelIda'];
+                $idHotel = $data['idHotel'];
 
                 
 
@@ -938,13 +1180,14 @@ class TransferCtrl extends controller
                         $pass = $transferCtrl->generarPasswordAleatorio();
                         $idCliente = $cliente->insertUser($user, $nombreCliente, $apellido1, $apellido2, $rol, $emailCliente, $telefonoCliente, $fechaSQL, $pass, $dniCliente);
                        
-                        //falta hacer coger el idHotel o crearlo si no existe, luego el id destino el id vehículo también
-                        $transferHotelEntity = new TransferHotelEntity;
+                        $hotelesEntity = new HotelesEntity;
+                        $hotel = $hotelesEntity->getHotelString($idHotel);
                         
                         //aquí como sólo queremos una zona y no tenemos la lógica para implementarlo, asiganmos una zona y un precio estandar para insertar el hotel
-                        $idZona = 1;
-                        $comision = 10;
-                        $idHotel = $transferHotelEntity->insertHotel($idZona, $comision, $idCliente, $user, $direccionHotel, $hotel);
+                        $idZona =$hotel['id_zona'];
+                        $comision = $hotel['comision'];;
+                        $transferHotelEntity = new TransferHotelEntity;
+                        $transferHotelEntity->insertHotel($idHotel, $idZona, $comision, $idCliente, $user, $direccionHotel, $nombreHotel);
                         
                         $idVehiculo = $transferCtrl->asignaVehiculo($idCliente);
 
@@ -998,11 +1241,7 @@ class TransferCtrl extends controller
                     {
                         $idCliente = $row['idCliente'];
 
-                        $transferHotelEntity = new TransferHotelEntity;
-                        $idZona = 1;//asignar una zona por defecto se debe cambiar?
-                        $comision = 10;
                         $user = $cliente->getNombreUsuario();
-
                         $cliente->setIdCliente($idCliente);
                         $cliente->setNombre($nombreCliente);
                         $cliente->setApellido1($apellido1);
@@ -1011,8 +1250,15 @@ class TransferCtrl extends controller
                         $cliente->setTelefono($telefonoCliente);
                         $cliente->updateCliente();
 
-                      
-                        $idHotel = $transferHotelEntity->insertHotel($idZona, $comision, $idCliente, $user, $hotel, $direccionHotel);
+                        $hotelesEntity = new HotelesEntity;
+                        $hotel = $hotelesEntity->getHotelString($idHotel);
+                        
+                        //aquí como sólo queremos una zona y no tenemos la lógica para implementarlo, asiganmos una zona y un precio estandar para insertar el hotel
+                        $idZona =$hotel['id_zona'];
+                        $comision = $hotel['comision'];
+                        $transferHotelEntity = new TransferHotelEntity;
+                        $transferHotelEntity->insertHotel($idHotel, $idZona, $comision, $idCliente, $user, $direccionHotel, $nombreHotel);
+
                         $idVehiculo = $transferCtrl->asignaVehiculo($idCliente);
 
                         if($tipoReserva=== 1)
@@ -1038,7 +1284,6 @@ class TransferCtrl extends controller
                             $horaIdaFormat=null;
                             $numeroVueloIda=null;
                             //$horaVueloVueltaFormat=null;
-
 
                             $transferPrecio = new TransferPreciosEntity;
                             //Precio fijo para un transfer

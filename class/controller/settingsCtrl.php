@@ -13,13 +13,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/backend-vef/class/entity/clienteEntit
 include_once $_SERVER['DOCUMENT_ROOT'] . '/backend-vef/class/entity/transferZonaEntity.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/backend-vef/class/entity/transferTipoReservaEntity.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/backend-vef/class/entity/transferHotelEntity.php';
-
-/*
-include_once '../entity/dbConnection.php';
-include_once '../controller/controller.php';
-include_once '../entity/clienteEntity.php';
-include_once '../entity/transferZonaEntity.php';*/
-
+include_once $_SERVER['DOCUMENT_ROOT'] . '/backend-vef/class/entity/hotelesEntity.php';
 
 
 class settingsCtrl extends controller
@@ -39,6 +33,20 @@ class settingsCtrl extends controller
         {
             echo '<option value="'. htmlspecialchars($zona['id_zona']) .'">'. 
             htmlspecialchars($zona['id_zona']) . ' - ' . htmlspecialchars($zona['descripcion']) .'</option>';
+        }
+
+    }
+
+    public function getUsuarios():void
+    {
+        $rol = 2;
+        $clienteEntity = new clienteEntity;
+        $clientes = $clienteEntity->getClientesByRol($rol);
+
+        foreach($clientes as $cliente)
+        {
+            echo '<option value="'. htmlspecialchars($cliente['idCliente']) .'">'. 
+            htmlspecialchars($cliente['nombre']) . ' - ' . htmlspecialchars($cliente['apellido1']) .' - ' . htmlspecialchars($cliente['nombreUsuario']) .'</option>';
         }
 
     }
@@ -79,30 +87,32 @@ class settingsCtrl extends controller
 
     function mostrarHoteles(){
 
-        $hotelEntity = new TransferHotelEntity;
-        $hoteles = $hotelEntity->getHotelesSinRepetir();
-        // Inicio de la tabla
+        $hotelesEntity = new HotelesEntity;
+        $hoteles = $hotelesEntity->getHoteles();
+
         $out = '<table class="table table-hover">
                     <thead>
                         <tr>
                             <th>#</th>
                             <th>Nombre</th>
-                            <th>ID Zona</th>
+                            <th>Zona</th>
                             <th>Comisión</th>
-                            <th>Usuario</th>
                             <th>Dirección</th>
                         </tr>
                     </thead>
                     <tbody>';
     
-        // Iterar sobre los hoteles
         foreach ($hoteles as $index => $hotel) {
+            $idZona = $hotel['id_zona'];
+            $zonaEntity = new TransferZonaEntity;
+            $nombre = $zonaEntity->getNombreZona($idZona);
+
+
             $out .= '<tr>
                         <td>' . ($index + 1) . '</td>
                         <td>' . htmlspecialchars($hotel['nombre_hotel']) . '</td>
-                        <td>' . htmlspecialchars($hotel['id_zona']) . '</td>
-                        <td>' . htmlspecialchars($hotel['Comision']) . '</td>
-                        <td>' . htmlspecialchars($hotel['usuario'] ?? '') . '</td>
+                        <td>' . htmlspecialchars($nombre) . '</td>
+                        <td>' . htmlspecialchars($hotel['comision']) . '</td>
                         <td>' . htmlspecialchars($hotel['direccion_hotel']) . '</td>
                     </tr>';
         }
@@ -114,8 +124,6 @@ class settingsCtrl extends controller
         echo $out;
     }
     
-    
-
 
     public static  function procesaPost()
     { 
@@ -273,15 +281,16 @@ class settingsCtrl extends controller
             $nombreHotel = $post['nombreHotel'];
             $zonaHotel  = $post['zonaHotelNumero'];
             $comisionHotel = $post['comisionHotel'];
-            $usuarioHotel = $_SESSION['user'];
             $direccionHotel = $post['direccionHotel'];
-            $idCliente = null;
-            
+            $idCliente = $post['usuario'];
+
+
+        
             try
             {
-                $hotelEntity = new TransferHotelEntity;
-                $idHotel = $hotelEntity->insertHotel($zonaHotel, $comisionHotel, $idCliente, $usuarioHotel, $nombreHotel, $direccionHotel);
-                $result->hotel = $hotelEntity->getHotel($idHotel);
+                $hotelEntity = new HotelesEntity;
+                $idHotel = $hotelEntity->insertHotel($zonaHotel, $comisionHotel, $idCliente, $nombreHotel, $direccionHotel);
+                $result->hotel = $hotelEntity->getHotelString($idHotel);
                 $result->error = false;
 
             }catch(Exception $e)

@@ -43,3 +43,4 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 }
+//php artsan make:model ->poner el nombre y crea la estructura; para el controlador es lo mismo y se hace por terminal
