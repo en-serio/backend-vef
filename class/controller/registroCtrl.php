@@ -1,8 +1,8 @@
 <?php
 
-require_once '../entity/dbConnection.php';
-require_once '../controller/controller.php';
-require_once '../entity/clienteEntity.php';
+include_once '../entity/dbConnection.php';
+include_once '../controller/controller.php';
+include_once '../entity/clienteEntity.php';
 
 
 class registroCtrl extends controller

@@ -1,7 +1,8 @@
 <?php
 
-require_once '../entity/dbConnection.php';
-require_once '../controller/controller.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/backend-vef/class/entity/dbConnection.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/backend-vef/class/controller/controller.php';
+
 
 class TransferVehiculoEntity 
 {
@@ -51,11 +52,11 @@ class TransferVehiculoEntity
     $stmt->bindParam(':idCliente', $idCliente);
 
     if ($stmt->execute()) {
-        $this->idVehiculo = $this->conn->lastInsertId(); // Obtener el último ID insertado
-        return true;
+        $idVehiculo = $this->conn->lastInsertId(); // Obtener el último ID insertado
+        return $idVehiculo;
     }
 
-    return false;
+    return null;
     }
 
     public function selectTransferVehiculo()

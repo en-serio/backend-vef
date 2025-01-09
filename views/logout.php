@@ -8,6 +8,6 @@ session_destroy();
 <script>
     location.reload();
     setTimeout(function(){
-        window.location.replace("../views/login.php");
+        window.location.replace("../");
     }, 100); 
 </script>

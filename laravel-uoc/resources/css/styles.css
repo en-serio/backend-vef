@@ -1,0 +1,75 @@
+.gradient-custom {
+    /* fallback for old browsers */
+    background: #6a11cb;
+    
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
+    
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
+    }
+.error-message {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.85rem;
+}
+
+#sidebar {
+    transition: width 0.3s ease;
+}
+
+#sidebar.sidebar-collapsed {
+    margin-left: 0;
+    overflow: hidden;
+}
+
+#main-content {
+    transition: margin-left 0.3s ease, width 0.3s ease;
+     /* Ajusta al ancho inicial del sidebar */
+}
+
+body, html {
+    overflow-x: hidden;
+    width: 100%;
+}
+p {
+    font-size: 1 rem !important;
+}
+.btn-group-lg>.btn, .btn-lg {
+    
+    --bs-btn-font-size: 1rem;
+}
+   
+.hide {
+    display: none;
+}
+
+.main-content {
+
+    padding: 1rem;
+    overflow-y: auto; /* Permite que solo el contenido principal sea desplazable */
+    height: 100vh; /* Asegura que ocupe toda la altura de la ventana */
+    transition: padding-left 0.3s ease;
+}
+.main-content::-webkit-scrollbar {
+    display: none; /* Esto oculta la barra de desplazamiento */
+}
+
+.main-content.sidebar-collapsed {
+    padding-left: 0;
+    margin-left:0px; /* Elimina padding cuando el sidebar se colapsa */
+}
+
+@media (max-width: 768px) {
+    .main-content {
+    margin-left: 60px; 
+    padding: 1rem;
+    overflow-y: auto; /* Permite que solo el contenido principal sea desplazable */
+    height: 100vh; /* Asegura que ocupe toda la altura de la ventana */
+    }
+}
+
+.tooltip {
+    display: block !important;
+    visibility: visible !important;
+}

@@ -1,7 +1,6 @@
 <?php
 
-require_once '../entity/dbConnection.php';
-require_once '../controller/controller.php';
+
 
 Class clienteEntity
 {
@@ -121,7 +120,7 @@ Class clienteEntity
             return null;
         }
 
-        public function getCliente($id) :object
+        public function getCliente($id) :array
         {
             $sql = 'SELECT * FROM cliente WHERE idCliente = :idCliente LIMIT 1'; 
             
@@ -135,7 +134,7 @@ Class clienteEntity
             
             if ($row) {
                 $this->idCliente = $row['idCliente'];
-                $this->nombreUsuario = $row['nombre'];
+                $this->nombre = $row['nombre'];
                 $this->apellido1 = $row['apellido1'];
                 $this->apellido2 = $row['apellido2'];
                 $this->email = $row['email'];
@@ -152,47 +151,77 @@ Class clienteEntity
             
             return null;
         }
-        
 
-
-        public function updateCliente() 
+        public function getClientesByRol($rol) :array
         {
-            $fechaSQL = date('Y-m-d H:i:s');
-            $sql = 'UPDATE cliente SET 
-                        nombre = :nombre, 
-                        apellido1 = :apellido1, 
-                        apellido2 = :apellido2, 
-                        email = :email, 
-                        telefono = :telefono, 
-                        updated = :updated, 
-                        nombreUsuario = :nombreUsuario, 
-                        password = :password, 
-                        dni = :dni  
-                    WHERE idCliente = :idCliente';
-            
-
+            $sql = 'SELECT * FROM cliente WHERE rol = :rol'; 
             $stmt = $this->conn->prepare($sql);
-        
-            $stmt->bindParam(':idCliente', $this->idCliente);
-            $stmt->bindParam(':nombre', $this->nombre);
-            $stmt->bindParam(':apellido1', $this->apellido1);
-            $stmt->bindParam(':apellido2', $this->apellido2);
-            $stmt->bindParam(':email', $this->email);
-            $stmt->bindParam(':telefono', $this->telefono);
-            $stmt->bindParam(':updated', $fechaSQL); 
-            $stmt->bindParam(':nombreUsuario', $this->nombreUsuario);
-            $stmt->bindParam(':password', $this->password);
-            $stmt->bindParam(':rol', $this->rol);
-            $stmt->bindParam(':dni', $this->dni);
             
+            $stmt->bindParam(':rol', $rol, PDO::PARAM_INT); 
+            $stmt->execute();
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-            // Ejecutar la consulta
-            if ($stmt->execute()) {
-                return true;
-            }
-            return false;
+            return $rows;
+    
         }
         
+
+
+
+        public function updateCliente()
+        {
+            $fechaSQL = date('Y-m-d H:i:s');
+            $sql = 'UPDATE cliente SET updated = :updated';
+            $params = [':updated' => $fechaSQL];
+
+            if (!empty($this->nombre)) {
+                $sql .= ', nombre = :nombre';
+                $params[':nombre'] = $this->nombre;
+            }
+            if (!empty($this->apellido1)) {
+                $sql .= ', apellido1 = :apellido1';
+                $params[':apellido1'] = $this->apellido1;
+            }
+            if (!empty($this->apellido2)) {
+                $sql .= ', apellido2 = :apellido2';
+                $params[':apellido2'] = $this->apellido2;
+            }
+            if (!empty($this->email)) {
+                $sql .= ', email = :email';
+                $params[':email'] = $this->email;
+            }
+            if (!empty($this->telefono)) {
+                $sql .= ', telefono = :telefono';
+                $params[':telefono'] = $this->telefono;
+            }
+            if (!empty($this->nombreUsuario)) {
+                $sql .= ', nombreUsuario = :nombreUsuario';
+                $params[':nombreUsuario'] = $this->nombreUsuario;
+            }
+            if (!empty($this->password)) {
+                $sql .= ', password = :password';
+                $params[':password'] = $this->password;
+            }
+            if (!empty($this->dni)) {
+                $sql .= ', dni = :dni';
+                $params[':dni'] = $this->dni;
+            }
+            if (!empty($this->rol)) {
+                $sql .= ', rol = :rol';
+                $params[':rol'] = $this->rol;
+            }
+
+            $sql .= ' WHERE idCliente = :idCliente';
+            $params[':idCliente'] = $this->idCliente;
+
+            $stmt = $this->conn->prepare($sql);
+
+            foreach ($params as $key => $value) {
+                $stmt->bindValue($key, $value);
+            }
+
+            return $stmt->execute();
+        }        
 
         public function deleteCliente($id) {
             $sql = "DELETE FROM cliente WHERE idCliente = :idCliente";

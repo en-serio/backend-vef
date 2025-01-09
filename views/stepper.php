@@ -1,3 +1,9 @@
+<?php
+include_once $_SERVER['DOCUMENT_ROOT'] . '/backend-vef/class/entity/dbConnection.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/backend-vef/class/controller/controller.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/backend-vef/class/controller/transferCtrl.php';
+
+?>
 <!-- Modal para Crear Transfer -->
 <div class="modal fade" id="addReservaModal" tabindex="-1" aria-labelledby="addReservaModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -129,17 +135,20 @@
                                     <h6 class="fw-bold mb-3 pb-2 border-bottom text-center">Información del Trayecto</h6>
 
                                     <div class="row mb-3">
-                                        <div class="col-6">
-                                            <label for="hotelDestino" class="form-label">Hotel de destino/recogida</label>
-                                            <input type="text" class="form-control" id="hotelDestino" placeholder="Nombre del hotel">
-                                        </div>
-                                        <div class="col-6">
+                                        <div class="col-4">
                                             <label for="numeroViajeros" class="form-label">Número de viajeros</label>
-                                            <input type="number" class="form-control" id="numeroViajeros" placeholder="Número de personas">
+                                            <input type="number" class="form-control" id="numeroViajeros" placeholder="Número">
                                         </div>
-                                        <div class="col-12 mt-2">
+                                        <div class="col-8">
+                                            <label for="hotelDestino" class="form-label">Hotel de destino/recogida</label>
+                                                <select class="form-select" id="hotelDestino" onchange="updateDireccionHotel()">
+                                                    <?php $obj = new TransferCtrl;
+                                                        $obj->drawHotelesList();?>
+                                                </select>
+                                        </div>
+                                        <div class="col-12">
                                             <label for="direccionHotel" class="form-label">Dirección del hotel</label>
-                                            <input type="text" class="form-control" id="direccionHotel" placeholder="Nombre del hotel">
+                                            <input type="text" class="form-control" id="direccionHotel" placeholder="Dirección del hotel" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -147,41 +156,11 @@
                                 <!-- Caja para datos personales del cliente -->
                                 <div class="col-12 col-md-8 col-lg-8 text-start mb-4 p-3 border rounded shadow-sm">
                                     <h6 class="fw-bold mb-3 pb-2 border-bottom text-center">Datos Personales</h6>
-                                    <div class="row mb-3">
-                                        <div class="col-6">
-                                            <label for="nombreCliente" class="form-label">Nombre </label>
-                                            <input type="text" class="form-control" id="nombreCliente" placeholder="Nombre">
-                                        </div>
-                                        <div class="col-6">
-                                            <label for="nombreCliente" class="form-label">Apellido 1</label>
-                                            <input type="text" class="form-control" id="apellido1" placeholder="Apellido 2">
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-6">
-                                            <label for="nombreCliente" class="form-label">Apellido 2</label>
-                                            <input type="text" class="form-control" id="apellido2" placeholder="Apellido 1">
-                                        </div>
-                                        <div class="col-6">
-                                            <label for="emailCliente" class="form-label">Correo electrónico</label>
-                                            <input type="email" class="form-control" id="emailCliente" placeholder="Correo electrónico">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <label for="telefonoCliente" class="form-label">Teléfono de contacto</label>
-                                            <input type="tel" class="form-control" id="telefonoCliente" placeholder="Número de teléfono">
-                                        </div>
-                                        <div class="col-6">
-                                            <label for="dniCliente" class="form-label">DNI/Pasaporte</label>
-                                            <input type="text" class="form-control" id="dniCliente" placeholder="DNI o pasaporte">
-                                        </div>
-                                    </div>
+                                    <?php $obj = new TransferCtrl;
+                                            $obj->drawUserTransfer()?>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Paso 4: Confirmación -->
                         <!-- Paso 4: Confirmación -->
                         <div class="content-container" stepper-label="4" style="display: none;">
                             <h5 class="fw-bold mb-4 text-center">Paso 4</h5>
@@ -191,26 +170,24 @@
                                     <h6 class="fw-bold mb-3 pb-2 border-bottom text-center">Resumen de la Reserva</h6>
                                     <!-- Resumen de reserva -->
                                         <div><strong>Trayecto:</strong> <span id="summaryTrayecto"></span></div>
-                                        <div><strong>Fecha ida:</strong> <span id="summaryFechaIda"></span></div>
-                                        <div><strong>Hora ida:</strong> <span id="summaryHoraIda"></span></div>
-                                        <div><strong>Número de vuelo:</strong> <span id="summaryNumeroVueloIda"></span></div>
-                                        <div><strong>Aeropuerto:</strong> <span id="summaryAeropuertoOrigen"></span></div>
-                                        
-                                        
-                                        <hr class="border-top border-primary">
-
+                                        <div id="summaryIdaSection" style="display: none;">
+                                            <div><strong>Fecha ida:</strong> <span id="summaryFechaIda"></span></div>
+                                            <div><strong>Hora ida:</strong> <span id="summaryHoraIda"></span></div>
+                                            <div><strong>Número de vuelo:</strong> <span id="summaryNumeroVueloIda"></span></div>
+                                            <div><strong>Aeropuerto:</strong> <span id="summaryAeropuertoOrigen"></span></div>
+                                        </div>
                                         <div id="summaryVueltaSection" style="display: none;">
-                                        <div><strong>Fecha vuelta:</strong> <span id="summaryFechaVuelta"></span></div>
-                                        <div><strong>Hora recogida:</strong> <span id="summaryHoraRecogida"></span></div>
-                                        <div><strong>Hora del vuelo:</strong> <span id="summaryHoraVueloVuelta"></span></div>
-                                        <div><strong>Número vuelo vuelta:</strong> <span id="summaryNumeroVueloVuelta"></span></div>
-
+                                            <div><strong>Fecha vuelta:</strong> <span id="summaryFechaVuelta"></span></div>
+                                            <div><strong>Hora recogida:</strong> <span id="summaryHoraRecogida"></span></div>
+                                            <div><strong>Hora del vuelo:</strong> <span id="summaryHoraVueloVuelta"></span></div>
+                                            <div><strong>Número vuelo vuelta:</strong> <span id="summaryNumeroVueloVuelta"></span></div>
+                                        </div>
                                         <hr class="border-top border-primary">
-
+                                    <div id="summaryHotel" style="display: none;">
                                         <div><strong>Hotel:</strong> <span id="summaryHotelDestino"></span></div>
                                         <div><strong>Dirección:</strong> <span id="summaryDireccionHotel"></span></div>
                                         <div><strong>Número de viajeros:</strong> <span id="summaryNumeroViajeros"></span></div>
-
+                                        <input type="hidden" id="summaryHotelId" name="summaryHotelId" value="">
                                     </div>
                                 </div>
                             </div>

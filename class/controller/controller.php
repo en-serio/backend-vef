@@ -1,7 +1,11 @@
 <?php
-require_once '../entity/dbConnection.php';
-require_once '../controller/controller.php';
-require_once '../entity/userEntity.php';
+
+include_once $_SERVER['DOCUMENT_ROOT'] . '/backend-vef/class/entity/dbConnection.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/backend-vef/class/controller/controller.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/backend-vef/class/entity/userEntity.php';
+/*include_once '../entity/dbConnection.php';
+include_once '../controller/controller.php';
+include_once '../entity/userEntity.php';*/
 
 class controller
 {

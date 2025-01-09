@@ -190,78 +190,26 @@ class TransferEntity
     return null;
     }
 
-
-    // UPDATE
-    /*public function update($idCliente, $email, $tipoReserva, $localizador, $fechaSQL, $fechaIda, $horaIda, $numeroVueloIda, $aeropuertoOrigen, $fechaVuelta, $horaVueloVuelta, 
-    $horaRecogida, $numeroViajeros, $idVehiculo, $numeroVueloVuelta, $idHotel)
-    {
-        $sql = "UPDATE transfer_reservas SET 
-                    localizador = :localizador,
-                    id_hotel = :idHotel,
-                    id_tipo_reserva = :idTipoReserva,
-                    email_cliente = :email,
-                    updated = :updated,
-                    id_destino = :idDestino,
-                    fecha_entrada = :fechaEntrada,
-                    hora_entrada = :horaEntrada,
-                    nu_vuelo_entrada = :nuVueloEntrada,
-                    origen_vuelo_entrada = :origenVueloEntrada,
-                    hora_vuelo_salida = :horaVueloSalida,
-                    fecha_vuelo_salida = :fechaVueloSalida,
-                    num_viajeros = :numViajeros,
-                    id_vehiculo = :idVehiculo
-                WHERE id_reserva = :idReserva";
-
-        $stmt = $this->conn->prepare($sql);
-
-
-        // Bind params
-        $stmt->bindParam(':localizador', $localizador);
-        $stmt->bindParam(':id_hotel', $idHotel);
-        $stmt->bindParam(':id_tipo_reserva', $tipoReserva);
-        $stmt->bindParam(':email_cliente', $email);
-        $stmt->bindParam(':fecha_reserva', $fechaSQL);
-        $stmt->bindParam(':fecha_modificacion', $fechaSQL);
-        $stmt->bindParam(':id_destino', $id_destino);
-        $stmt->bindParam(':fecha_entrada', $fechaIda);
-        $stmt->bindParam(':hora_entrada', $horaIda);
-        $stmt->bindParam(':numero_vuelo_entrada', $numeroVueloIda);
-        $stmt->bindParam(':origen_vuelo_entrada', $aeropuertoOrigen);
-        $stmt->bindParam(':hora_vuelo_salida', $horaVueloVuelta);
-        $stmt->bindParam(':fecha_vuelo_salida', $fechaVuelta);
-        $stmt->bindParam(':num_viajeros', $numeroViajeros);
-        $stmt->bindParam(':id_vehiculo', $idVehiculo);
-        $stmt->bindParam(':numero_vuelo_vuelta', $numeroVueloVuelta);
-        $stmt->bindParam(':hora_recogida', $horaRecogida);
-
-        if ($stmt->execute()) {
-            return true;
-        }
-        return false;
-    }*/
-
     public function update($idReserva, $data)
     {
-        // Construir dinámicamente la consulta SQL
+
         $sql = "UPDATE transfer_reservas SET ";
         $setClauses = [];
         $params = [];
     
-        // Recorrer el array de datos y construir las cláusulas SET
         foreach ($data as $key => $value) {
             $setClauses[] = "$key = :$key";
             $params[":$key"] = $value;
         }
     
-        // Completar la consulta SQL con WHERE
+
         $sql .= implode(", ", $setClauses);
         $sql .= " WHERE id_reserva = :idReserva";
         $params[":idReserva"] = $idReserva;
     
-        // Preparar y ejecutar la consulta
+
         $stmt = $this->conn->prepare($sql);
     
-        // Ejecutar la consulta con los parámetros
         if ($stmt->execute($params)) {
             return true;
         }
@@ -271,11 +219,11 @@ class TransferEntity
 
 
     // DELETE
-    public function delete()
+    public function delete($idReserva)
     {
         $sql = "DELETE FROM transfer_reservas WHERE id_reserva = :idReserva";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':idReserva', $this->idReserva);
+        $stmt->bindParam(':idReserva', $idReserva);
 
         if ($stmt->execute()) {
             return true;
@@ -314,7 +262,7 @@ class TransferEntity
 
     public function getAllTransfersActivos():array
     {
-    $sql = "SELECT * FROM transfer_reservas WHERE fecha_entrada >= CURDATE() OR fecha_vuelo_salida >= CURDATE() ORDER BY email_cliente;";
+    $sql = "SELECT * FROM transfer_reservas WHERE fecha_entrada >= CURDATE() OR fecha_vuelo_salida >= CURDATE() ORDER BY email_cliente";
     $stmt = $this->conn->prepare($sql);
     $stmt->execute();
 
@@ -323,6 +271,40 @@ class TransferEntity
         if ($row) {
             return $row;
         }
+    }
+
+    public function getAllTransfersActivosByIdHotel($idHotel): array
+    {
+        if (empty($idHotel)) {
+            throw new Exception("El ID del hotel es inválido.");
+        }
+    
+        // Aplanar el array de arrays
+        $idHotel = array_map(function($item) {
+            return $item['id_hotel'];
+        }, $idHotel);
+    
+        $placeholders = implode(',', array_fill(0, count($idHotel), '?'));
+    
+        $sql = "SELECT * FROM transfer_reservas 
+                WHERE id_hotel IN ($placeholders) 
+                AND (fecha_entrada >= CURDATE() OR fecha_vuelo_salida >= CURDATE()) 
+                ORDER BY email_cliente";
+    
+        $stmt = $this->conn->prepare($sql);
+    
+        foreach ($idHotel as $index => $id) {
+            $stmt->bindValue($index + 1, $id, PDO::PARAM_INT);
+        }
+    
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        if ($rows) {
+            return $rows;
+        }
+    
+        return [];
     }
 
     public function getTransferEdit ($idReserva):array
@@ -374,6 +356,48 @@ class TransferEntity
         }
         return null;
         }
+
+        public function getTransfersByHotelArray(Array $idHotel = null): array
+        {
+
+            $sql = "SELECT * 
+            FROM transfer_reservas WHERE id_hotel = :id_hotel";
+        
+            $sql .= " ORDER BY email_cliente;";
+            $stmt = $this->conn->prepare($sql);
+
+            if ($idHotel) 
+            {
+                $stmt->bindValue(':id_hotel', $idHotel, PDO::PARAM_INT);
+            }
+            $stmt->execute();
+            $row = $stmt->fetchAll(PDO::FETCH_ASSOC);         
+
+            return $row ?: []; 
+        }
+
+        public function getTransfersByHotelFecha($idHotel, $fechaIni, $fechaFin): array
+        {
+
+            $sql = "SELECT * 
+            FROM transfer_reservas
+            WHERE id_hotel = :id_hotel 
+            AND (
+                (fecha_entrada BETWEEN :fechaInicio AND :fechaFin) 
+                OR (fecha_vuelo_salida BETWEEN :fechaInicio AND :fechaFin)
+            )";
+
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindValue(':id_hotel', $idHotel, PDO::PARAM_INT);
+            $stmt->bindValue(':fechaInicio', $fechaIni, PDO::PARAM_STR);
+            $stmt->bindValue(':fechaFin', $fechaFin, PDO::PARAM_STR);
+
+            $stmt->execute();
+            $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    return $row ?: [];
+        }
+
     
 }
 

@@ -1,11 +1,15 @@
 <?php
+include_once $_SERVER['DOCUMENT_ROOT'] . '/backend-vef/class/entity/dbConnection.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/backend-vef/class/controller/controller.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/backend-vef/class/entity/clienteEntity.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/backend-vef/class/entity/transferZonaEntity.php';
 
-require_once '../entity/dbConnection.php';
-require_once '../controller/controller.php';
+
 
 class TransferHotelEntity 
 {
     private $conn;
+    private $idTranferHotel;
     private $idHotel;
     private $idZona;
     private $comision;
@@ -20,15 +24,17 @@ class TransferHotelEntity
         $this->conn = $db->getConnection();
     }
 
+    public function getIdTranferHotel($idTranferHotel) {$this->idTranferHotel = $idTranferHotel;}
     public function getIdHotel() {return $this->idHotel;}
     public function getIdZona() {return $this->idZona;}
     public function getComision() {return $this->comision;}
     public function getUsuario() {return $this->usuario;}
     public function getIdCliente() {return $this->idCliente;}
-    public function getNombreHotel($nombreHotel) {$this->nombreHotel = $nombreHotel;}
-    public function getDireccionHotel($direccionHotel) {$this->direccionHotel = $direccionHotel;}
+    public function getNombreHotel() {return $this->nombreHotel;}
+    public function getDireccionHotel() {return $this->direccionHotel;}
 
     // Setters
+    public function setIdTranferHotel($idTranferHotel) {$this->idTranferHotel = $idTranferHotel;}
     public function setIdHotel($idHotel) {$this->idHotel = $idHotel;}
     public function setIdZona($idZona) {$this->idZona = $idZona;  }
     public function setComision($comision) {$this->comision = $comision;}
@@ -37,56 +43,67 @@ class TransferHotelEntity
     public function setNombreHotel($nombreHotel) {$this->nombreHotel = $nombreHotel;}
     public function setDireccionHotel($direccionHotel) {$this->direccionHotel = $direccionHotel;}
 
-    public function mapaDB($row)
+    public function mapaDB($data)
     {
-        $this->idHotel = $row['idHotel'];
-        $this->idZona = $row['idZona'];
-        $this->comision = $row['comision'];
-        $this->usuario = $row['usuario'];
-        $this->idCliente = $row['idCliente'];
-        $this->nombreHotel = $row['nombre_hotel'];
-        $this->direccionHotel = $row['direccion_hotel'];
-    }
 
+        $obj = [];
+        $obj['id_tranfer_hotel'] = $this->getIdHotel();
+        $obj['id_hotel'] = $this->getIdHotel();
+        $obj['id_zona'] = $this->getIdZona();
+        $obj['Comision'] = $this->getComision();
+        $obj['usuario'] = $this->getUsuario();
+        $obj['idCliente'] = $this->getIdCliente();
+        $obj['nombre_hotel'] = $this->getNombreHotel();
+        $obj['direccion_hotel'] = $this->getDireccionHotel();
+        
+    return $obj;
+
+    }
+    
     // CRUD
-    public function createHotel()
+    public function insertHotel($idHotel, $idZona, $comision, $idCliente, $user, $direccionHotel, $nombreHotel)
     {
-        $sql = "INSERT INTO tranfer_hotel (id_zona, comision, usuario, idCliente, nombre_hotel, direccion_hotel) 
-                VALUES (:id_zona, :comision, :usuario, :idCliente, :nombre_hotel, :direccion_hotel)";
+        $sql = "INSERT INTO tranfer_hotel (id_hotel, id_zona, comision, usuario, idCliente, nombre_hotel, direccion_hotel) 
+                VALUES (:id_hotel, :id_zona, :comision, :usuario, :idCliente, :nombre_hotel, :direccion_hotel)";
         
         $stmt = $this->conn->prepare($sql);
-        //$stmt->bindParam(':idHotel', $this->idHotel);
-        $stmt->bindParam(':id_zona', $this->idZona);
-        $stmt->bindParam(':comision', $this->comision);
-        $stmt->bindParam(':usuario', $this->usuario);
-        $stmt->bindParam(':idCliente', $this->idCliente);
+        $stmt->bindParam(':id_hotel', $idHotel);
+        $stmt->bindParam(':id_zona', $idZona);
+        $stmt->bindParam(':comision', $comision);
+        $stmt->bindParam(':usuario', $user);
+        $stmt->bindParam(':idCliente', $idCliente);
         $stmt->bindParam(':nombre_hotel', $nombreHotel);
         $stmt->bindParam(':direccion_hotel', $direccionHotel);
 
-        return $stmt->execute();
+        if ($stmt->execute()) {
+            $this->idTranferHotel = $this->conn->lastInsertId(); 
+            return $this->idHotel;
+        }
+        return false;
     }
 
     public function getHotel($id)
     {
-        $sql = "SELECT * FROM transfer_hotel WHERE idHotel = :idHotel";
+        $sql = "SELECT * FROM tranfer_hotel WHERE id_hotel = :id_hotel";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':idHotel', $id);
+        $stmt->bindParam(':id_hotel', $id);
         $stmt->execute();
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($row) {
             $this->mapaDB($row);
-            return $this;
+            return $row;
         }
 
         return null;
     }
 
+
     public function update()
     {
-        $sql = "UPDATE transfer_hotel 
-                SET idZona = :idZona, comision = :comision, usuario = :usuario, idCliente = :idCliente, nombreHotel = :nombre_hotel, direccionHotel = :direccion_hotel 
+        $sql = "UPDATE tranfer_hotel 
+                SET id_hotel = :id_hotel, idZona = :idZona, comision = :comision, usuario = :usuario, idCliente = :idCliente, nombreHotel = :nombre_hotel, direccionHotel = :direccion_hotel 
                 WHERE idHotel = :idHotel";
 
         $stmt = $this->conn->prepare($sql);
@@ -103,32 +120,13 @@ class TransferHotelEntity
 
     public function delete($id)
     {
-        $sql = "DELETE FROM transfer_hotel WHERE idHotel = :idHotel";
+        $sql = "DELETE FROM tranfer_hotel WHERE id_tranfer_hotel = :id_tranfer_hotel";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':idHotel', $id);
+        $stmt->bindParam(':id_tranfer_hotel', $id);
 
         return $stmt->execute();
     }
 
 
-    public function insertHotel($idZona, $comision, $idCliente, $user, $nombreHotel, $direccionHotel)
-    {
-        $sql = "INSERT INTO tranfer_hotel (id_zona, comision, usuario, idCliente, nombre_hotel, direccion_hotel) 
-                VALUES (:id_zona, :comision, :usuario, :idCliente, :nombre_hotel, :direccion_hotel)";
-        
-        $stmt = $this->conn->prepare($sql);
-        //$stmt->bindParam(':idHotel', $this->idHotel);
-        $stmt->bindParam(':id_zona', $idZona);
-        $stmt->bindParam(':comision', $comision);
-        $stmt->bindParam(':usuario', $user);
-        $stmt->bindParam(':idCliente', $idCliente);
-        $stmt->bindParam(':nombre_hotel', $nombreHotel);
-        $stmt->bindParam(':direccion_hotel', $direccionHotel);
-
-        if ($stmt->execute()) {
-            $this->idHotel = $this->conn->lastInsertId(); // Obtener el último ID insertado
-            return $this->idHotel;
-        }
-        return false;
-    }
+    
 }

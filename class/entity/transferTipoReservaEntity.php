@@ -1,6 +1,6 @@
 <?php
 
-class TransferTipoReserva 
+class TransferTipoReservaEntity 
 {
     private $conn; // Conexión a la base de datos
 
@@ -22,8 +22,7 @@ class TransferTipoReserva
 
     return $obj;
 
-}
-
+    }
     
     public function getIdTipoReserva(){return $this->idTipoReserva;}
     public function setIdTipoReserva($idTipoReserva){$this->idTipoReserva = $idTipoReserva;}
@@ -34,18 +33,38 @@ class TransferTipoReserva
 
     public function insertTransferTipoReserva()
     {
+    // Array con los tipos de reserva
+    $tiposReserva = [
+        ['id' => 1, 'descripcion' => 'Ida'],
+        ['id' => 2, 'descripcion' => 'Vuelta'],
+        ['id' => 3, 'descripcion' => 'Ida y Vuelta']
+    ];
 
-    $query = "INSERT INTO transfer_tipo_reserva (descripcion) VALUES (:descripcion)";
+    $query = "SELECT COUNT(*) FROM transfer_tipo_reserva WHERE id_tipo_reserva IN (1, 2, 3)";
     $stmt = $this->conn->prepare($query);
-    $stmt->bindParam(':descripcion', $this->descripcion);
+    $stmt->execute();
+    $count = $stmt->fetchColumn();
 
-
-    if ($stmt->execute()) {
-        return true;
+    if ($count == 3) {
+        throw new Exception("Tipos de viajes ya inicializados.");
     }
 
-    return false;
+    $query = "INSERT INTO transfer_tipo_reserva (id_tipo_reserva, Descripción) VALUES (:id_tipo_reserva, :Descripción)";
+    $stmt = $this->conn->prepare($query);
+
+
+    foreach ($tiposReserva as $tipo) {
+
+        $stmt->bindParam(':id_tipo_reserva', $tipo['id_tipo_reserva']);
+        $stmt->bindParam(':Descripción', $tipo['Descripción']);
+        
+        if (!$stmt->execute()) {
+            throw new Exception("Error al insertar el tipo de reserva: " . $tipo['descripcion']);
+        }
     }
+    return true;
+    }
+
 
     public function selectTransferTipoReserva()
     {
@@ -91,10 +110,8 @@ class TransferTipoReserva
     $query = "DELETE FROM transfer_tipo_reserva WHERE id_tipo_reserva = :id_tipo_reserva";
     $stmt = $this->conn->prepare($query);
 
-    // Vinculamos el parámetro
     $stmt->bindParam(':id_tipo_reserva', $this->idTipoReserva);
 
-    // Ejecutamos la consulta
     if ($stmt->execute()) {
         return true;
     }

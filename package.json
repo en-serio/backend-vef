@@ -4,7 +4,10 @@
     "@fullcalendar/daygrid": "^6.1.15",
     "@fullcalendar/interaction": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.15",
+    "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
-    "sweetalert2": "^11.14.3"
+    "laravel-vite-plugin": "^1.1.1",
+    "sweetalert2": "^11.14.3",
+    "vite": "^6.0.3"
   }
 }

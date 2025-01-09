@@ -1,4 +1,4 @@
-<?php require_once '../class/controller/perfilCtrl.php';?>
+<?php include_once '../class/controller/perfilCtrl.php';?>
 
     <h5>Perfil</h5>
         <div class="row">

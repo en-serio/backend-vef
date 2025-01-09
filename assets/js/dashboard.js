@@ -1,16 +1,17 @@
 class Dashboard 
 {
-    constructor()
-    {
-
-    }
+    constructor(){}
 }
 
     function toggleSidebar() {
         const sidebar = document.querySelector('.sidebar');
-        if (sidebar) {
-            sidebar.classList.toggle('hidden');
-        }
+        const mainContent = document.querySelector('.main-content');
+
+        // Alternar la clase que mueve el sidebar fuera de la vista
+        sidebar.classList.toggle('hidden');
+
+        // Alternar el padding-left del main-content para moverlo
+        mainContent.classList.toggle('sidebar-collapsed');
     }
 
     let currentStep = 1;
@@ -61,14 +62,14 @@ class Dashboard
         
     function validateStep(step) {
         let valid = true;
-
+    
         // Remover errores previos
         document.querySelectorAll('.form-control').forEach(input => {
             input.classList.remove('is-invalid');
             const errorMessage = input.parentNode.querySelector('.error-message');
             if (errorMessage) errorMessage.remove(); // Eliminar mensaje de error específico
         });
-
+    
         if (step === 1) {
             const selectedTrayecto = document.querySelector('input[name="trayecto"]:checked');
             if (!selectedTrayecto) {
@@ -84,16 +85,28 @@ class Dashboard
                 { id: 'aeropuertoOrigen', message: "Introduce el aeropuerto de origen." },
                 { id: 'numeroVueloIda', message: "Introduce el número de vuelo." }
             ];
-
+    
             requiredFields.forEach(field => {
                 const input = document.getElementById(field.id);
-                if (!input?.value) {
+                if (input && input.offsetParent !== null && !input.value) { // Validar solo campos visibles
                     valid = false;
                     input.classList.add('is-invalid');
                     this.showError(input, field.message);
                 }
             });
-
+    
+            const fechaEntradaInput = document.getElementById('fechaIda');
+            if (fechaEntradaInput) {
+                const fechaEntrada = new Date(fechaEntradaInput.value);
+                const hoy = new Date();
+                hoy.setHours(0, 0, 0, 0);
+                if (fechaEntrada < hoy) {
+                    valid = false;
+                    fechaEntradaInput.classList.add('is-invalid');
+                    this.showError(fechaEntradaInput, "La fecha no puede ser anterior a hoy.");
+                }
+            }
+    
             const trayecto = document.querySelector('input[name="trayecto"]:checked')?.value;
             if (trayecto === 'idaVuelta' || trayecto === 'vuelta') {
                 const vueltaFields = [
@@ -102,9 +115,10 @@ class Dashboard
                     { id: 'horaRecogida', message: "Selecciona la hora de recogida." },
                     { id: 'numeroVueloVuelta', message: "Introduce el número de vuelo de vuelta." }
                 ];
+    
                 vueltaFields.forEach(field => {
                     const input = document.getElementById(field.id);
-                    if (!input?.value) {
+                    if (input && input.offsetParent !== null && !input.value) { // Validar solo campos visibles
                         valid = false;
                         input.classList.add('is-invalid');
                         this.showError(input, field.message);
@@ -123,49 +137,80 @@ class Dashboard
                 { id: 'telefonoCliente', message: "Campo obligatorio." },
                 { id: 'dniCliente', message: "Campo obligatorio." }
             ];
-        
+    
             requiredFields.forEach(field => {
                 const input = document.getElementById(field.id);
-                const errorMessage = input?.parentNode.querySelector('.error-message');
-                if (errorMessage) errorMessage.remove(); // Remueve mensaje anterior
-        
-                if (!input?.value) {
+                if (input && input.offsetParent !== null && !input.value) { // Validar solo campos visibles
                     valid = false;
-                    input?.classList.add('is-invalid');
+                    input.classList.add('is-invalid');
                     this.showError(input, field.message);
-                }                     
-                
+                }
             });
-        
-            // Validación de correo electrónico
+    
             const emailInput = document.getElementById('emailCliente');
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex básico para correos
-            if (emailInput) {
-                const errorMessage = emailInput.parentNode.querySelector('.error-message');
-                if (errorMessage) errorMessage.remove(); // Remueve mensaje anterior
-        
-                if (!emailRegex.test(emailInput.value)) {
-                    valid = false;
-                    emailInput.classList.add('is-invalid');
-                    this.showError(emailInput, "Introduce un correo válido.");
-                    console.warn("Validación fallida: el email no es válido.");
-                }
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (emailInput && !emailRegex.test(emailInput.value)) {
+                valid = false;
+                emailInput.classList.add('is-invalid');
+                this.showError(emailInput, "Introduce un correo válido.");
             }
-        
-            // Validación de número de teléfono (entero)
+    
             const telefonoInput = document.getElementById('telefonoCliente');
-            if (telefonoInput) {
-                const errorMessage = telefonoInput.parentNode.querySelector('.error-message');
-                if (errorMessage) errorMessage.remove(); // Remueve mensaje anterior
-        
-                if (!/^\d+$/.test(telefonoInput.value) || telefonoInput.value.length < 9) {
-                    valid = false;
-                    telefonoInput.classList.add('is-invalid');
-                    this.showError(telefonoInput, "Introduce un número de teléfono válido.");
-                    console.warn("Validación fallida: el teléfono no es válido.");
-                }
+            if (telefonoInput && (!/^\d+$/.test(telefonoInput.value) || telefonoInput.value.length < 9)) {
+                valid = false;
+                telefonoInput.classList.add('is-invalid');
+                this.showError(telefonoInput, "Introduce un número de teléfono válido.");
             }
         }
+    
+        return valid;
+    }
+    
+
+    function validateTransferDates() {
+        const horaVueloVueltaInput = document.getElementById('horaVueloVuelta');
+        const horaRecogidaInput = document.getElementById('horaRecogida');
+        let valid = true;
+    
+        // Eliminar mensajes de error previos
+        const errorVueloMessage = horaVueloVueltaInput.parentNode.querySelector('.error-message');
+        if (errorVueloMessage) errorVueloMessage.remove();
+        
+        const errorRecogidaMessage = horaRecogidaInput.parentNode.querySelector('.error-message');
+        if (errorRecogidaMessage) errorRecogidaMessage.remove();
+    
+        // Verificamos si ambos campos tienen valor
+        if (horaVueloVueltaInput.value && horaRecogidaInput.value) {
+            // Convertir las horas a objetos Date para comparación
+            const fechaActual = new Date();
+            const horaVuelo = new Date(fechaActual.toDateString() + ' ' + horaVueloVueltaInput.value);
+            const horaRecogida = new Date(fechaActual.toDateString() + ' ' + horaRecogidaInput.value);
+    
+
+            if (horaRecogida >= horaVuelo) {
+                valid = false;
+                horaRecogidaInput.classList.add('is-invalid');
+                this.showError(horaRecogidaInput, "La hora de recogida no puede ser igual a la del vuelo.");
+            }    
+            
+            const tresHorasEnMilisegundos = 3 * 60 * 60 * 1000; // 3 horas en milisegundos
+            if (horaRecogida - horaVuelo > tresHorasEnMilisegundos) {
+                valid = false;
+                horaRecogidaInput.classList.add('is-invalid');
+                this.showError(horaRecogidaInput, "La hora de recogida debe ser al menos 3 horas anterior a la del vuelo.");
+            }
+        } else {
+            valid = false;
+            if (!horaVueloVueltaInput.value) {
+                horaVueloVueltaInput.classList.add('is-invalid');
+                this.showError(horaVueloVueltaInput, "Selecciona la hora del vuelo.");
+            }
+            if (!horaRecogidaInput.value) {
+                horaRecogidaInput.classList.add('is-invalid');
+                this.showError(horaRecogidaInput, "Selecciona la hora de recogida.");
+            }
+        }
+    
         return valid;
     }
 
@@ -175,7 +220,6 @@ class Dashboard
         errorMessage.innerText = message;
         inputElement.parentNode.appendChild(errorMessage);
     }
-
 
     function previousStep() {
         if (currentStep > 1) {
@@ -195,10 +239,6 @@ class Dashboard
             })
             .catch(error => console.error('Error cargando el modal:', error));
     }
-
-    //Resetear el modal stepper cada vez que se cierra
-    document.getElementById('addReservaModal').addEventListener('show.bs.modal', resetStepper);
-
 
     function resetStepper() {
         currentStep = 1;
@@ -235,7 +275,6 @@ class Dashboard
         document.getElementById('summaryVueltaSection').style.display = 'none';*/
     }
 
-
     function submitTransfer() {        
         var transferData = {
             trayecto: $('#summaryTrayecto').text(),
@@ -258,7 +297,8 @@ class Dashboard
             fechaVuelta: $('#summaryFechaVuelta').text(),
             horaVueloVuelta: $('#summaryHoraVueloVuelta').text(),
             horaRecogida: $('#summaryHoraRecogida').text(),
-            numeroVueloVuelta: $('#summaryNumeroVueloVuelta').text()
+            numeroVueloVuelta: $('#summaryNumeroVueloVuelta').text(),
+            idHotel: $('#summaryHotelId').val() 
             
         };
         var transfer = JSON.stringify(transferData)
@@ -271,17 +311,14 @@ class Dashboard
                     Swal.fire({
                         icon: 'success',
                         title: '¡Éxito!',
-                        text: d.message +"Localizador de la reserva:"+ d.localizador,
+                        text: d.message +" Localizador de la reserva: "+ d.localizador +". "
+                        + "Precio: "+ d.precio + "€",
                         didClose: () => {
 
                             $('#addReservaModal').modal('hide');
                             $('.modal-backdrop').remove();
                             resetStepper();
 
-                            /*const modalElement = document.getElementById('addReservaModal'); // ID de tu modal
-                            const modalInstance = bootstrap.Modal.getInstance(modalElement);
-                            // Elimina el overlay (en algunos casos puede que no se elimine automáticamente)
-                            document.querySelector('.swal2-container').classList.add('hidden'); // Oculta el contenedor de SweetAlert2*/
                         }
                     });
                     
@@ -301,9 +338,7 @@ class Dashboard
                 });
             }
         });
-        }
-
-
+    }
 
     function updateDateTimeFields() {
         const trayecto = document.querySelector('input[name="trayecto"]:checked').value;
@@ -322,7 +357,6 @@ class Dashboard
 
     function resumenDatosTransfer() 
     {
-
         const trayectoInput = document.querySelector('input[name="trayecto"]:checked');
         const trayecto = trayectoInput?.value;
         const trayectoText = trayectoInput?.nextSibling?.textContent?.trim();
@@ -332,26 +366,32 @@ class Dashboard
 
         // Mostrar/Ocultar campos dependiendo del trayecto
         const vueltaSection = document.getElementById('summaryVueltaSection');
+        const idaSection = document.getElementById('summaryIdaSection');
+        const hotelSection = document.getElementById('summaryHotel');
 
         if (trayecto == 'ida') {
             vueltaSection.style.display = 'none'; 
+            idaSection.style.display = 'block'; 
+            hotelSection.style.display = 'block'; 
             // Asegúrate de procesar los datos del hotel
-            document.getElementById('summaryHotelDestino').innerText;
-            document.getElementById('summaryDireccionHotel').innerText;
+             document.getElementById('summaryHotelDestino').innerText = 'N/A';
+            document.getElementById('summaryDireccionHotel').innerText = 'N/A';
         } else if (trayecto == 'vuelta') {
 
             vueltaSection.style.display = 'block'; 
+            hotelSection.style.display = 'block';
 
             document.getElementById('summaryFechaIda').innerText = 'N/A';
             document.getElementById('summaryHoraIda').innerText = 'N/A';
             document.getElementById('summaryAeropuertoOrigen').innerText = 'N/A';
             document.getElementById('summaryNumeroVueloIda').innerText = 'N/A';
-            document.getElementById('summaryHotelDestino').innerText = 'N/A';
-            document.getElementById('summaryDireccionHotel').innerText = 'N/A';
+            
         } else if (trayecto == 'idaVuelta') {
 
+            idaSection.style.display = 'block'; 
             vueltaSection.style.display = 'block'; 
-        }direccionHotel
+            hotelSection.style.display = 'block'
+        }
 
         const fieldsToFill = [
             { id: 'fechaIda', summaryId: 'summaryFechaIda' },
@@ -424,19 +464,35 @@ class Dashboard
         $("#dynamicContent .editTransferBtn").off().click(function () {
 
             const idTransfer = $(this).attr('data-id');
-            gestionTransfer(idTransfer);
+            const type = $(this).attr('data-target');
+            gestionTransfer(idTransfer, type);
+
         });
+
+        $("#dynamicContent .viewTransferBtn").off().click(function () {
+
+            const idTransfer = $(this).attr('data-id');
+            const type = $(this).attr('data-target');
+            gestionViewTransfer(idTransfer, type);
+
+        });
+
+        $("#dynamicContent .deleteTransferBtn").off().click(function () {
+
+            const idTransfer = $(this).attr('data-id');
+            const type = $(this).attr('data-target');
+            deleteTransfer(idTransfer, type);
+        });
+        
 
     }
 
     function callbackSaveData()
     {
-        console.log($("#modalEditBody .saveEditBtn").length);
         $("#modalEditBody .saveEditBtn").off().click(function () {
 
             const idTransfer = $(this).attr('data-id');
             saveEditData(idTransfer);
-            console.log($("Botón pulsado" .idTransfer));
         });
         
     }
@@ -468,20 +524,21 @@ class Dashboard
 
         $.post("../class/controller/transferCtrl.php", {controller: "transferCtrl", action: "saveEditData",transfer:transfer, idTransfer:idTransfer}, function (data) {
             try {
-
-                console.log(data); 
-
                 var d= JSON.parse(data);
 
                 if (!d.error) {
-                    
+
+                    loadTransfers();
+
                     Swal.fire({
                         icon: 'success',
                         title: '¡Éxito!',
                         text: d.message,
                     }).then(() => {
+                        
                         $('#editTransferModal').modal('hide');
                         $('.modal-backdrop').remove();
+                        
                     });
 
                 } else {
@@ -502,15 +559,14 @@ class Dashboard
                     });
             }
         }); 
-}
+    }
 
 
     function logout(){
 
                 $.post("../class/controller/loginCtrl.php", {controller: "loginCtrl", action: "logout"}, function (data) {
                     try {
-    
-                        console.log(data);
+ 
                         var d= JSON.parse(data);
         
                         if (!d.error) {
@@ -541,9 +597,9 @@ class Dashboard
                             });
                     }
                 }); 
-        }
+    }
 
-        function loadTransfers(){
+    function loadTransfers(){
 
             $.post("../class/controller/transferCtrl.php", {controller: "transferCtrl", action: "loadTransfer"}, function (data) {
                 try {
@@ -551,7 +607,7 @@ class Dashboard
                     var d= JSON.parse(data);
     
                     if (!d.error) {
-                        $('#dynamicContent').html(d);
+                        $('#dynamicContent').html(d.out);
                         callbackTransfer();
 
                     } else {
@@ -571,9 +627,53 @@ class Dashboard
             }); 
     }
 
-    function gestionTransfer(idTransfer){            
+    function deleteTransfer(idTransfer, type){            
 
-        $.post("../class/controller/transferCtrl.php", {controller: "transferCtrl", action: "editTransfer", idTransfer:idTransfer}, function (data) {
+        Swal.fire({
+            title: "Vas a eliminar el transfer",
+            text: "Esta acción no puede deshacerse.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Eliminar transfer"
+        }).then((result) => {
+            // Si el usuario confirma la eliminación
+            if (result.isConfirmed) {
+        $.post("../class/controller/transferCtrl.php", {controller: "transferCtrl", action: "deleteTransfer", idTransfer:idTransfer, type:type}, function (data) {
+        
+            try {
+                var d = JSON.parse(data);  
+                if (!d.error) {  
+                    Swal.fire({
+                        title: "Transfer eliminado!",
+                        text: "Tu transfer se ha cancelado correctamente.",
+                        icon: "success"
+                    });
+                    $('[data-id="' + idTransfer + '"]').closest('tr').remove();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: d.message, 
+                    });
+                }
+            } catch (e) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: e.message,
+                });
+            }
+        });
+        } 
+    });
+    }
+
+    function gestionTransfer(idTransfer, type){     
+
+
+        $.post("../class/controller/transferCtrl.php", {controller: "transferCtrl", action: "editTransfer", idTransfer:idTransfer, type:type}, function (data) {
             try {
     
                 var d= JSON.parse(data);  
@@ -581,18 +681,17 @@ class Dashboard
                     
                     $('#modalEditBody').html(d.out);
                     $('#editTransferModal').modal('show');
+                    actualizarVisibilidadTrayecto();
                     callbackSaveData();
+                    
 
                 } else {
                     
                     Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: d.message, 
-
-                    
+                    text: d.message,    
                 });
-                console.log(d);
                 }
             } catch (e) {
                 
@@ -603,22 +702,127 @@ class Dashboard
                     });
             }
         }); 
-}
-    
+    }
 
-    function initializeCalendar() {
+    function gestionViewTransfer(idTransfer, type){     
+
+
+        $.post("../class/controller/transferCtrl.php", {controller: "transferCtrl", action: "viewTransfer", idTransfer:idTransfer, type:type}, function (data) {
+            try {
+    
+                var d= JSON.parse(data);  
+                if (!d.error) {      
+                    
+                    $('#modalEditBody').html(d.out);
+                    $('#editTransferModal').modal('show');
+                   
+                } else {
+                    
+                    Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: d.message,    
+                });
+                }
+            } catch (e) {
+                
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: e.message,
+                    });
+            }
+        }); 
+    }
+    
+   async function fetchActiveTransfers() {
+        try {
+            const response = fetch('../class/controller/transferCtrl.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    controller: 'transferCtrl',
+                    action: 'loadTransfer',    
+                }),
+            });
+
+            const text = response.text();
+    
+            if (response.ok) {
+                const result = await response.json();
+    
+                if (result.error) {
+                    console.error('Error en el servidor:', result.message);
+                    return [];
+                }
+    
+                return result.data.map(transfer => {
+                    const startDateTime = new Date(`${transfer.fecha_entrada}T${transfer.hora_entrada}`);
+                    const endDateTime = new Date(startDateTime);
+                    endDateTime.setHours(startDateTime.getHours() + 1);
+                    return {
+                        title: `Reserva #${transfer.localizador}`,
+                        start: startDateTime.toISOString(),
+                        end: endDateTime.toISOString(),
+                        description: `Cliente: ${transfer.email_cliente}, Num. viajeros: ${transfer.num_viajeros}`,
+                        location: `Hotel ID: ${transfer.id_hotel}, Destino: ${transfer.id_destino}`,
+                    };
+                });
+            } else {
+                console.error('Error en la solicitud:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Hubo un problema con la solicitud:', error);
+        }
+    }
+    
+    async function loadTransfersCalendar() {
+            try {
+                const response = await fetch('../class/controller/transferCtrl.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        controller: 'transferCtrl',  
+                        action: 'loadCalendarTransfer' 
+                    })
+                });
+        
+                if (!response.ok) {
+                    throw new Error(`Error en la solicitud: ${response.statusText}`);
+                }
+        
+                const data = await response.json();  
+        
+                
+                if (data.error) {
+                    throw new Error(data.message);
+                }
+        
+                return data.out;  
+        
+            } catch (error) {
+                console.error('Error al cargar los transfers:', error);
+                return []; 
+            }
+    }
+
+    async function initializeCalendar() {
         var calendarEl = document.getElementById('calendar');
         if (calendarEl) {
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 locale: 'es',
-                initialView: 'timeGridWeek', 
-                height: '100%', 
-                contentHeight: 'auto', 
+                initialView: 'dayGridMonth',
+                height: '100%',
+                contentHeight: 'auto',
                 editable: false,
                 selectable: true,
                 headerToolbar: {
                     left: 'prev,next today',
-                    center: 'title', // Título del mes o semana
+                    center: 'title',
                     right: 'dayGridMonth,timeGridWeek'
                 },
                 buttonText: {
@@ -628,88 +832,234 @@ class Dashboard
                     day: 'Día',
                     list: 'Agenda'
                 },
-                events: [
-                    {
-                        title: 'Transfer 1',
-                        start: '2024-12-15T08:00:00',
-                        end: '2024-11-15T10:00:00'
-                    },
-                    {
-                        title: 'Transfer 2',
-                        start: '2024-10-20T12:00:00',
-                        end: '2024-10-20T14:00:00'
-                    }
-                ]
+                events: [],
+                eventClick: function(info) {
+                    var event = info.event;
+                    showEventDetails(event);
+                }
             });
-            calendar.render();
+    
+            try {
+                const transfers = await loadTransfersCalendar();
+                transfers.forEach(transfer => {
+                    let startDateTime = null;
+                    let endDateTime = null;
+    
+                    // Verifica el trayecto de ida
+                    if (transfer.fecha_entrada && transfer.hora_entrada) {
+                        startDateTime = new Date(`${transfer.fecha_entrada}T${transfer.hora_entrada}`);
+                        endDateTime = new Date(startDateTime);
+                        endDateTime.setHours(startDateTime.getHours() + 1); // Duración de 1 hora
+    
+                        if (!isNaN(startDateTime.getTime()) && !isNaN(endDateTime.getTime())) {
+                            calendar.addEvent({
+                                title: `${transfer.localizador} - Ida`,
+                                start: startDateTime.toISOString(),
+                                end: endDateTime.toISOString(),
+                                description: `Cliente: ${transfer.email_cliente}, Num. viajeros: ${transfer.num_viajeros}`,
+                                location: transfer.descripcion_hotel || 'Ubicación no disponible',
+                                extendedProps: {
+                                    email_cliente: transfer.email_cliente,
+                                    num_viajeros: transfer.num_viajeros,
+                                    id_hotel: transfer.id_hotel,
+                                    id_destino: transfer.id_destino,
+                                    fecha_entrada: transfer.fecha_entrada,
+                                    hora_entrada: transfer.hora_entrada,
+                                    hora_recogida: transfer.hora_recogida,
+                                    numero_vuelo_entrada: transfer.numero_vuelo_entrada,
+                                    origen_vuelo_entrada: transfer.origen_vuelo_entrada,
+                                    fecha_vuelo_salida: transfer.fecha_vuelo_salida,
+                                    hora_vuelo_salida: transfer.hora_vuelo_salida,
+                                    numero_vuelo_vuelta: transfer.numero_vuelo_vuelta,
+                                    id_tipo_reserva: transfer.id_tipo_reserva,
+                                    descripcion_hotel: transfer.descripcion_hotel,
+                                    nombre_hotel: transfer.nombre_hotel
+                                }
+                            });
+                        } else {
+                            console.warn(`Evento con datos inválidos omitido: ${transfer.localizador}`);
+                        }
+                    }
+    
+                    // Verifica el trayecto de vuelta
+                    if (transfer.fecha_vuelo_salida && transfer.hora_vuelo_salida) {
+                        startDateTime = new Date(`${transfer.fecha_vuelo_salida}T${transfer.hora_vuelo_salida}`);
+                        endDateTime = new Date(startDateTime);
+                        endDateTime.setHours(startDateTime.getHours() + 1); // Duración de 1 hora
+    
+                        if (!isNaN(startDateTime.getTime()) && !isNaN(endDateTime.getTime())) {
+                            calendar.addEvent({
+                                title: `${transfer.localizador} - Vuelta`,
+                                start: startDateTime.toISOString(),
+                                end: endDateTime.toISOString(),
+                                description: `Cliente: ${transfer.email_cliente}, Num. viajeros: ${transfer.num_viajeros}`,
+                                location: transfer.descripcion_hotel || 'Ubicación no disponible',
+                                extendedProps: {
+                                    email_cliente: transfer.email_cliente,
+                                    num_viajeros: transfer.num_viajeros,
+                                    id_hotel: transfer.id_hotel,
+                                    id_destino: transfer.id_destino,
+                                    fecha_entrada: transfer.fecha_entrada,
+                                    hora_entrada: transfer.hora_entrada,
+                                    hora_recogida: transfer.hora_recogida,
+                                    numero_vuelo_entrada: transfer.numero_vuelo_entrada,
+                                    origen_vuelo_entrada: transfer.origen_vuelo_entrada,
+                                    fecha_vuelo_salida: transfer.fecha_vuelo_salida,
+                                    hora_vuelo_salida: transfer.hora_vuelo_salida,
+                                    numero_vuelo_vuelta: transfer.numero_vuelo_vuelta,
+                                    id_tipo_reserva: transfer.id_tipo_reserva,
+                                    descripcion_hotel: transfer.descripcion_hotel,
+                                    nombre_hotel: transfer.nombre_hotel
+                                }
+                            });
+                        } else {
+                            console.warn(`Evento con datos inválidos omitido: ${transfer.localizador}`);
+                        }
+                    }
+                });
+                calendar.render();
+            } catch (error) {
+                console.error('Hubo un problema al cargar los transfers:', error);
+            }
         }
     }
 
 
-        // Añade un listener para el enlace de "Panel de vistas"
-        document.addEventListener('DOMContentLoaded', function () {
-            const vistaPanelLink = document.getElementById('vistaPanelLink');
-            if (vistaPanelLink) {
-                vistaPanelLink.addEventListener('click', function (e) {
-                    e.preventDefault(); // Previene el recargo de página
-                    loadView('views.php'); // Carga views.php en #dynamicContent
-                });
-            }
+    function showEventDetails(event) {
+        let reservaInfo = '';
+    
+        // Mostrar solo la información relevante dependiendo del tipo de reserva
+        if (event.extendedProps.id_tipo_reserva === 'Ida') {
+            reservaInfo = `
+                <p><strong>Fecha entrada:</strong> ${event.extendedProps.fecha_entrada}</p>
+                <p><strong>Llegada:</strong> ${event.extendedProps.hora_entrada}</p>
+                <p><strong>Número de vuelo entrada:</strong> ${event.extendedProps.numero_vuelo_entrada}</p>
+                <p><strong>Origen vuelo entrada:</strong> ${event.extendedProps.origen_vuelo_entrada}</p>
+            `;
+        } else if (event.extendedProps.id_tipo_reserva === 'Vuelta') {
+            reservaInfo = `
+                <p><strong>Fecha vuelta:</strong> ${event.extendedProps.fecha_vuelo_salida}</p>
+                <p><strong>Hora recogida:</strong> ${event.extendedProps.hora_recogida}</p>
+                <p><strong>Hora vuelo:</strong> ${event.extendedProps.hora_vuelo_salida}</p>
+                <p><strong>Vuelo vuelta:</strong> ${event.extendedProps.numero_vuelo_vuelta}</p>
+            `;
+        } else if (event.extendedProps.id_tipo_reserva === 'Ida y Vuelta') {
+            reservaInfo = `
+                <p><strong>Fecha entrada:</strong> ${event.extendedProps.fecha_entrada}</p>
+                <p><strong>Llegada:</strong> ${event.extendedProps.hora_entrada}</p>
+                <p><strong>Recogida:</strong> ${event.extendedProps.hora_recogida || 'No disponible'}</p>
+                <p><strong>Vuelo entrada:</strong> ${event.extendedProps.numero_vuelo_entrada}</p>
+                <p><strong>Origen vuelo entrada:</strong> ${event.extendedProps.origen_vuelo_entrada}</p>
+                <p><strong>Fecha vuelta:</strong> ${event.extendedProps.fecha_vuelo_salida}</p>
+                <p><strong>Hora recogida:</strong> ${event.extendedProps.hora_recogida}</p>
+                <p><strong>Hora vuelo:</strong> ${event.extendedProps.hora_vuelo_salida}</p>
+                <p><strong>Número de vuelo vuelta:</strong> ${event.extendedProps.numero_vuelo_vuelta}</p>
+            `;
+        }
+    
+        // Crear el contenido del modal
+        var modalContent = `
+            <p><strong>Localizador:</strong> ${event.title}</p>
+            <p><strong>Cliente:</strong> ${event.extendedProps.email_cliente}</p>
+            <p><strong>Viajeros:</strong> ${event.extendedProps.num_viajeros}</p>
+            <p><strong>Hotel:</strong> ${event.extendedProps.nombre_hotel}</p>
+            <p><strong>Destino:</strong> ${event.extendedProps.descripcion_hotel}</p>
+            ${reservaInfo}
+        `;
+    
+        // Mostrar el modal con Swal
+        Swal.fire({
+            title: 'Detalles del Transfer',
+            html: modalContent,
+            icon: 'info',
+            showCloseButton: true
         });
+    }
 
+    function loadDatosUser() {       
+            // Asignamos los valores a los campos del formulario
+            document.getElementById('nombreCliente').value = document.getElementById('nombreCliente').getAttribute('data-value');
+            document.getElementById('apellido1').value = document.getElementById('apellido1').getAttribute('data-value');
+            document.getElementById('apellido2').value = document.getElementById('apellido2').getAttribute('data-value');
+            document.getElementById('emailCliente').value = document.getElementById('emailCliente').getAttribute('data-value');
+            document.getElementById('telefonoCliente').value =document.getElementById('telefonoCliente').getAttribute('data-value');
+            document.getElementById('dniCliente').value = document.getElementById('dniCliente').getAttribute('data-value');
+    }
 
-       /* document.addEventListener('DOMContentLoaded', function () {
-            const gestionTransferPanelLink = document.getElementById('gestionTransferPanelLink');
-            if (gestionTransferPanelLink) {
-                gestionTransferPanelLink.addEventListener('click', function (e) {
-                    e.preventDefault(); // Previene el recargo de página
-                    loadView('gestionTransfers.php');
-                });
+    function updateDireccionHotel() {
+        const select = document.getElementById('hotelDestino');
+        const direccionInput = document.getElementById('direccionHotel');
+        const idHotelInput = document.getElementById('summaryHotelId');
+        
+        // Obtener la opción seleccionada
+        const selectedOption = select.options[select.selectedIndex];
+        
+        // Obtener el atributo `data-direccion` de la opción seleccionada
+        const direccion = selectedOption.getAttribute('data-direccion');
+        const idHotel = selectedOption.getAttribute('data-id');
+        
+        // Establecer la dirección en el campo de texto
+        direccionInput.value = direccion || '';
+        idHotelInput.value = idHotel || '';
+    }
+
+    //Resetear el modal stepper cada vez que se cierra
+    document.getElementById('addReservaModal').addEventListener('show.bs.modal', resetStepper);
+    
+    document.addEventListener('DOMContentLoaded', function () {
+        const vistaPanelLink = document.getElementById('vistaPanelLink');
+        if (vistaPanelLink) {
+            vistaPanelLink.addEventListener('click', function (e) {
+                loadView('views.php'); 
+            });
+        }
+        const vistaPanelLink2 = document.getElementById('vistaPanelLink2');
+        if (vistaPanelLink2) {
+            vistaPanelLink2.addEventListener('click', function (e) {
+                loadView('views.php'); 
+            });
+        }
+        
+    });
+
+    $(document).ready(function () {
+        $(".gestionTransferBtn").click(function () {
+            loadTransfers();
+        })
+    });
+
+    function actualizarVisibilidadTrayecto() {
+        const tipoTrayectoSelect = document.querySelector('.tipoTrayecto');
+    
+        if (tipoTrayectoSelect) {
+
+            function updateTrayectoVisibility() {
+                const tipoTrayecto = tipoTrayectoSelect.value;
+    
+
+                const datosIda = document.getElementById('datosIda');
+                const datosVuelta = document.getElementById('datosVuelta');
+    
+                if (datosIda && datosVuelta) {
+                    if (tipoTrayecto === 'ida') {
+                        datosIda.style.display = 'block';
+                        datosVuelta.style.display = 'none';
+                    } else if (tipoTrayecto === 'vuelta') {
+                        datosIda.style.display = 'none';
+                        datosVuelta.style.display = 'block';
+                    } else if (tipoTrayecto === 'ida_vuelta') {
+                        datosIda.style.display = 'block';
+                        datosVuelta.style.display = 'block';
+                    }
+                } else {
+                    console.error("Los elementos 'datosIda' y/o 'datosVuelta' no existen en el DOM.");
+                }
             }
-        });*/
 
-
-        /*document.addEventListener('DOMContentLoaded', function () {
-            const vistaPanelLink = document.getElementById('vistaPanelLink');
-            const dynamicContent = document.getElementById('dynamicContent');
-
-            // Función para cargar contenido dinámico en dynamicContent
-            function loadView(viewUrl) {
-                fetch(viewUrl)
-                    .then(response => response.text())
-                    .then(html => {
-                        dynamicContent.innerHTML = html;
-                        initializeCalendar(); // Inicializar el calendario después de cargar la vista
-                    })
-                    .catch(error => console.error('Error al cargar el contenido:', error));
-            }
-
-            // Evento para cargar views.php al hacer clic en "Panel de vistas"
-            if (vistaPanelLink) {
-                vistaPanelLink.addEventListener('click', function (e) {
-                    e.preventDefault(); // Evita que se recargue la página
-                    loadView('views.php'); // Ruta relativa al archivo views.php
-                });
-            }
-        });*/
-
-
-        $(document).ready(function () {
-            $(".gestionTransferBtn").click(function () {
-                //e.preventDefault();
-                loadTransfers();
-            })
-
-
-           
-
-            /*$(document).on('click', '.editTransferBtn', function(e) {  
-                e.preventDefault(); 
-                gestionTransfer();
-            })*/
-
-           /* $(document).on("click", ".submitBtn", function (e) {
-                e.preventDefault();
-                submitTransfer();
-            });*/
-        });
+            updateTrayectoVisibility();
+    
+            tipoTrayectoSelect.addEventListener('change', updateTrayectoVisibility);
+        } else {
+            console.error("El select 'tipoTrayecto' no se encuentra en el DOM.");
+        }
+    }
